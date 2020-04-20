@@ -30,7 +30,7 @@ def query_nodes(file="data.json"):
 
 def query_edges(file="data.json"):
     d = read_data(file)
-    return list(set([v.split(";") for v in d['edges']]))
+    return [v.split(";") for v in set(d['edges'])]
 
 def write_node(node,file="data.json"):
     d = read_data(file)
@@ -63,7 +63,7 @@ def del_edge(u,v,file="data.json"):
 
 def write_edge(u,v,file="data.json"):
     d = read_data(file)
-    if (v,u) not in query_edges():
+    if (v,u) and (u,v) not in query_edges():
         d['edges'].append(str_pair(u,v))
     d['edges'] = list(set(d['edges']))
     write_data(d,file)
