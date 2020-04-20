@@ -14,7 +14,7 @@ def write_data(d,file="data.json"):
 	with open(file,"w") as f:
 		json.dump(d,f)
 def str_pair(u,v):
-	return f'{u};{v}'
+	return f'{u.lower()};{v.lower()}'
 
 def graph(file="data.json"):
 	G = nx.Graph()
@@ -34,13 +34,13 @@ def query_edges(file="data.json"):
 
 def write_node(node,file="data.json"):
 	d = read_data(file)
-	d['nodes'].append(node)
+	d['nodes'].append(node.lower())
 	write_data(d,file)
 
 def del_node(node,file="data.json"):
 	d = read_data(file)
 	if node in d['nodes']:
-		d['nodes'].remove(node)
+		d['nodes'].remove(node.lower())
 		found = True
 	else:
 		found = False
