@@ -1,4 +1,6 @@
 import streamlit as st
+import networkx as nx
+from db import *
 import random
 
 mode = st.radio("Modality",
@@ -6,19 +8,15 @@ mode = st.radio("Modality",
 
 if mode == "Enter new node":
 	field = st.text_input('Text field')
-	if st.button("Append"):
-		with open('nodes.txt','a') as f:
-			f.write(field+"\n")
-else:
-	with open('nodes.txt','r') as f:
-		fields =  f.readlines()
-	fields = [f.strip("\n") for f in fields]
-	index = random.randint(0,len(fields)-1)
-	field1 = st.selectbox("Source",fields,index=index)
-	index = random.randint(0,len(fields)-1)
-	field2 = st.selectbox("Target",fields,index=index)
+	if field: 
+		write_node(field)
+if mode == "Connect nodes":
+	fields = query_nodes()
+	field1 = st.selectbox("Source",fields)
+	field2 = st.selectbox("Target",fields)
+	button = st.button("Connect")
+	if field1 and field2 and button: 
+		write_edge(field1,field2)
 
-	if st.button("Append"):
-		with open('edges.txt','a') as f:
-			f.write(f"{field1} {field2}\n")
-
+nx.draw(graph())
+st.pyplot()
