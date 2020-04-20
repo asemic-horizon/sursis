@@ -32,7 +32,7 @@ if mode == "Connect nodes":
 st.write("## Graph visualization")
 
 
-layout = st.radio("Algorithm",["planar","spring"])
+layout = st.radio("Algorithm",["spring","planar"])
 G = graph()
 if layout == "spring":
 	pos = nx.spring_layout(G)
