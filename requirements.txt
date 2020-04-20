@@ -1,3 +1,4 @@
 streamlit
 networkx
 matplotlib
+scipy
