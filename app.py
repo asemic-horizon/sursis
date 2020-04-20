@@ -31,9 +31,15 @@ if mode == "Connections":
 
 st.write("## Graph visualization")
 
+algo0 = "Spring (large-scale structure, disconnected components)"
+algo1 = "Kamada-Kawai (better spacing and readability)"
+algo = st.radio("Algorithm",[algo0,algo1])
 
 G = graph()
-pos = nx.kamada_kawai_layout(G)
+if algo == algo0:
+    pos = nx.spring_layout(G)
+else:
+    pos = nx.kamada_kawai_layout(G)
 nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2)
 
 st.pyplot()
