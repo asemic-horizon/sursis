@@ -34,7 +34,7 @@ st.write("## Graph visualization")
 
 G = graph()
 pos = nx.kamada_kawai_layout(G)
-nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8)
+nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2)
 
 st.pyplot()
 
@@ -46,8 +46,8 @@ if same:
     st.write("## Spanning tree")
 else:
     st.write("## Minimum tree")
-pos = nx.kamada_kawai_layout(H)
-nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8)
+pos = nx.planar_layout(H)
+nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2)
 
 st.pyplot()
 
@@ -55,6 +55,6 @@ J = nx.maximum_spanning_tree(G)
 if not same:
     st.write("## Maximum tree")
     pos = nx.planar_layout(J)
-    nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8)
+    nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2)
 
 st.pyplot()
