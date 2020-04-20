@@ -11,6 +11,16 @@ Sursis runs locally; or preferrably on a cheap VPS/Digital Ocean-type VM so you'
 
 Usage is also very simple:
 
+## Installing
+
+Clone the repository,
+
+    pip install -r requirements.txt
+
+To run,
+
+    streamlit run app.py
+
 ## Data entry
 
 ### Node input 
