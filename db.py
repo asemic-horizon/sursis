@@ -23,7 +23,7 @@ def graph(file="data.json"):
 	for u,v in query_edges(file):
 		G.add_edge(u,v)
 	return G
-	
+
 def query_nodes(file="data.json"):
 	d = read_data(file)
 	return d['nodes']
@@ -36,6 +36,27 @@ def write_node(node,file="data.json"):
 	d = read_data(file)
 	d['nodes'].append(node)
 	write_data(d,file)
+
+def del_node(node,file="data.json"):
+	d = read_data(file)
+	if node in d['nodes']:
+		d['nodes'].remove(node)
+		found = True
+	else:
+		found = False
+	write_data(d,file)
+	return found
+
+def del_edge(u,v,file="data.json"):
+	d = read_data(file)
+	edge = str_pair(u,v)
+	if edge in d['edges']:
+		_ = d['edges'].remove(edge)
+		found = True
+	else:
+		found = False
+	write_data(d,file)
+	return found
 
 def write_edge(u,v,file="data.json"):
 	d = read_data(file)
