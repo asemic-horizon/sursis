@@ -55,14 +55,15 @@ def del_node(node,file="data.json"):
 
 def del_edge(u,v,file="data.json"):
     d = read_data(file)
-    edge = str_pair(u,v)
-    if edge in d['edges']:
-        _ = d['edges'].remove(edge)
-        found = True
-    else:
-        found = False
-    write_data(d,file)
-    return found
+    found = False
+    for edge in [str_pair(u,v),str_pair(v,u)]:
+        if edge in d['edges']:
+            _ = d['edges'].remove(edge)
+            found = found or True
+        else:
+            found = found or False
+        write_data(d,file)
+        return found
 
 def write_edge(u,v,file="data.json"):
     d = read_data(file)
