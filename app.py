@@ -17,7 +17,7 @@ if mode == "Nodes":
 		if not found:
 			st.write("(Node not found.)")
 if mode == "Connections":
-	fields = query_nodes().reverse()
+	fields = list(reversed(query_nodes()))
 	field1 = st.selectbox("Source",fields,index=0)
 	field2 = st.selectbox("Target",fields,index=1)
 	add_button = st.button("Connect")
