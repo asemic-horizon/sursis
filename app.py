@@ -52,7 +52,7 @@ if same:
     st.write("### Spanning tree")
 else:
     st.write("## Minimum tree")
-pos = nx.spiral_layout(H)
+pos = nx.kamada_kawai_layout(H)
 nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2)
 
 st.pyplot()
