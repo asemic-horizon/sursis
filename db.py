@@ -1,5 +1,7 @@
 import os, json
 import networkx as nx 
+import shutil
+from time import ctime
 
 def read_data(file="data.json"):
     if os.path.exists(file):
@@ -13,6 +15,7 @@ def read_data(file="data.json"):
 def write_data(d,file="data.json"):
     with open(file,"w") as f:
         json.dump(d,f)
+    shutil.copyfile(file,f"{ctime()}.json")
 def str_pair(u,v):
     return f'{u.lower()};{v.lower()}'
 
@@ -42,8 +45,8 @@ def del_node(node,file="data.json"):
     d = read_data(file)
     if node in d['nodes']:
         d['nodes'].remove(node.lower())
-        edges = query_edges(file)
-        d['edges'] = [str_pair(u,v) for u,v in edges if u==node.lower() or v==node.lower()]
+        #edges = query_edges(file)
+        #d['edges'] = [str_pair(u,v) for u,v in edges if u==node.lower() or v==node.lower()]
         found = True
     else:
         found = False
