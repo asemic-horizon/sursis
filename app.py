@@ -2,7 +2,7 @@ import streamlit as st
 import networkx as nx
 from db import *
 import random
-st.write("## Data entry")
+st.write("### Data entry")
 mode = st.radio("Mode",
 	["Nodes","Connections"])
 
@@ -29,7 +29,7 @@ if mode == "Connections":
 		if not found:
 			st.write("(Edge nt found.)")
 
-st.write("## Graph visualization")
+st.write("### Graph visualization")
 
 algo0 = "Spring (large-scale structure, disconnected components)"
 algo1 = "Kamada-Kawai (better spacing and readability)"
@@ -49,7 +49,7 @@ H = nx.minimum_spanning_tree(G)
 J = nx.maximum_spanning_tree(H)
 same = H.edges()==J.edges()
 if same:
-    st.write("## Spanning tree")
+    st.write("### Spanning tree")
 else:
     st.write("## Minimum tree")
 pos = nx.spiral_layout(H)
