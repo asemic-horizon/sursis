@@ -7,7 +7,7 @@ mode = st.radio("Mode",
 	["Nodes","Connections"])
 
 if mode == "Nodes":
-	field = st.text_input('Text field')
+	field = st.text_input('Enter node name')
 	add_button = st.button("Add")
 	del_button = st.button("Delete")
 	if field and add_button: 
@@ -27,15 +27,25 @@ if mode == "Connections":
 	if field1 and field2 and del_button:
 		found = del_edge(field1, field2)
 		if not found:
-			st.write("(Edge nt found.)")
+			st.write("(Edge not found.)")
 
 st.write("### Graph visualization")
 
-algo0 = "Spring (large-scale structure, disconnected components)"
-algo1 = "Kamada-Kawai (better spacing and readability)"
-algo = st.radio("Algorithm",[algo0,algo1])
+ego = st.checkbox("Full graph",value=True)
+if ego:
+	center = None
+	radius = None
+else:
+	fields = query_nodes()
+	chosen = random.randint(1,len(fields-1))
+	center = st.selectbox("Choose nodes",fields,index=chosen)
+	radius = st.slider("Radius",1,6,1)
 
-G = graph()
+algo0 = "Large-scale structure"
+algo1 = "Readability"
+algo = st.radio("Prioritize",[algo0,algo1])
+
+G = graph(center = center, radius = radius)
 if algo == algo0:
     pos = nx.spring_layout(G)
 else:
@@ -49,18 +59,18 @@ H = nx.minimum_spanning_tree(G)
 J = nx.maximum_spanning_tree(H)
 same = H.edges()==J.edges()
 if same:
-    st.write("### Spanning tree")
+    st.write("#### Spanning tree")
 else:
-    st.write("## Minimum tree")
-pos = nx.kamada_kawai_layout(H)
+    st.write("#### Minimum tree")
+pos = nx.spring_layout(H)
 nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2)
 
 st.pyplot()
 
 J = nx.maximum_spanning_tree(G)
 if not same:
-    st.write("## Maximum tree")
-    pos = nx.spiral_layout(J)
+    st.write("#### Maximum tree")
+    pos = nx.spring_layout(J)
     nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2)
 
 st.pyplot()

@@ -20,13 +20,16 @@ def write_data(d,file="data.json"):
 def str_pair(u,v):
     return f'{u.lower()};{v.lower()}'
 
-def graph(file="data.json"):
+def graph(center = None, radius = None, file="data.json"):
     G = nx.Graph()
     for node in query_nodes(file):
         G.add_node(node)
     for u,v in query_edges(file):
         G.add_edge(u,v)
+    if center and radius:
+        G = nx.ego_graph(G,n=center, radius=radius)
     return G
+
 
 def query_nodes(file="data.json"):
     d = read_data(file)
