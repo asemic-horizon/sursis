@@ -2,6 +2,7 @@ import os, json
 import networkx as nx 
 import shutil
 from time import ctime
+from numpy import unique
 
 def read_data(file="data.json"):
     if os.path.exists(file):
@@ -29,17 +30,11 @@ def graph(file="data.json"):
 
 def query_nodes(file="data.json"):
     d = read_data(file)
-    return list(set(d['nodes']))
+    return unique(d['nodes'])
 
 def query_edges(file="data.json"):
     d = read_data(file)
     return [v.split(";") for v in set(d['edges'])]
-
-def write_node(node,file="data.json"):
-    d = read_data(file)
-    d['nodes'].append(node.lower())
-    d['nodes']=list(set(d['nodes']))
-    write_data(d,file)
 
 def del_node(node,file="data.json"):
     d = read_data(file)
@@ -55,18 +50,24 @@ def del_node(node,file="data.json"):
 
 def del_edge(u,v,file="data.json"):
     d = read_data(file)
-    edge = str_pair(u,v)
-    if edge in d['edges']:
-        _ = d['edges'].remove(edge)
-        found = True
-    else:
-        found = False
-    write_data(d,file)
-    return found
+    found = False
+    for edge in [str_pair(u,v),str_pair(v,u)]:
+        if edge in d['edges']:
+            _ = d['edges'].remove(edge)
+            found = found or True
+        else:
+            found = found or False
+        write_data(d,file)
+        return found
 
 def write_edge(u,v,file="data.json"):
     d = read_data(file)
     if (v,u) and (u,v) not in query_edges():
         d['edges'].append(str_pair(u,v))
-    d['edges'] = list(set(d['edges']))
+    write_data(d,file)
+
+def write_node(node,file="data.json"):
+    d = read_data(file)
+    if node not in d['nodes']:
+        d['nodes'].append(node.lower()) 
     write_data(d,file)
