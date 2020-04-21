@@ -52,7 +52,7 @@ if same:
     st.write("## Spanning tree")
 else:
     st.write("## Minimum tree")
-pos = nx.planar_layout(H)
+pos = nx.spiral_layout(H)
 nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2)
 
 st.pyplot()
@@ -60,7 +60,7 @@ st.pyplot()
 J = nx.maximum_spanning_tree(G)
 if not same:
     st.write("## Maximum tree")
-    pos = nx.planar_layout(J)
+    pos = nx.spiral_layout(J)
     nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2)
 
 st.pyplot()
