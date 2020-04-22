@@ -2,6 +2,11 @@ import streamlit as st
 import networkx as nx
 from db import *
 import random
+
+def representative(fields):
+	middle = len(fields)//2 if len(fields)>4 else 1
+	middle_ = middle + 1 if middle>1 else 1
+	return middle, middle_
 st.write("### Data entry")
 mode = st.radio("Mode",
 	["Nodes","Connections"])
@@ -18,10 +23,9 @@ if mode == "Nodes":
 			st.write("(Node not found.)")
 if mode == "Connections":
 	fields = list(reversed(query_nodes()))
-	middle = len(fields)//2 if len(fields)>4 else 1
-	middle_ = middle + 1 if middle>1 else 1
-	field1 = st.selectbox("Source",fields,index=middle)
-	field2 = st.selectbox("Target",fields,index=middle_)
+	u,v = representative(fields)
+	field1 = st.selectbox("Source",fields,index=u)
+	field2 = st.selectbox("Target",fields,index=v)
 	add_button = st.button("Connect")
 	del_button = st.button("Disconnect")
 	if field1 and field2 and add_button: 
@@ -39,7 +43,7 @@ if ego:
 	radius = None
 else:
 	fields = query_nodes()
-	center = st.selectbox("Choose nodes",fields)
+	center = st.selectbox("Choose nodes",fields,index = u)
 	radius = st.slider("Radius",1,10,1)
 
 algo0 = "Large-scale structure"
