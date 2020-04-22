@@ -3,16 +3,16 @@ import networkx as nx
 from db import *
 import random
 
-salient0 = 0
-salient1 = 0
-
+def representative(fields):
+	middle = len(fields)//2 if len(fields)>4 else 1
+	middle_ = middle + 1 if middle>1 else 1
+	return middle, middle_
 st.write("### Data entry")
 mode = st.radio("Mode",
 	["Nodes","Connections"])
 
 if mode == "Nodes":
 	field = st.text_input('Enter node name')
-	salient0 = salient1; salient1 = field
 	add_button = st.button("Add")
 	del_button = st.button("Delete")
 	if field and add_button: 
@@ -23,8 +23,9 @@ if mode == "Nodes":
 			st.write("(Node not found.)")
 if mode == "Connections":
 	fields = list(reversed(query_nodes()))
-	field1 = st.selectbox("Source",fields,index=salient1)
-	field2 = st.selectbox("Target",fields,index=salient0)
+	u,v = representative(fields)
+	field1 = st.selectbox("Source",fields,index=u)
+	field2 = st.selectbox("Target",fields,index=v)
 	add_button = st.button("Connect")
 	del_button = st.button("Disconnect")
 	if field1 and field2 and add_button: 
