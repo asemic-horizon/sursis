@@ -42,7 +42,9 @@ def query_edges(file="data.json"):
 def del_node(node,file="data.json"):
     d = read_data(file)
     if node in d['nodes']:
-        d['nodes'].remove(node.lower())
+        u = d['nodes']
+        u.remove(node.lower())
+        d['nodes'] = u
         #edges = query_edges(file)
         #d['edges'] = [str_pair(u,v) for u,v in edges if u==node.lower() or v==node.lower()]
         found = True
