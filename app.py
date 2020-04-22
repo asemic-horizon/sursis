@@ -63,7 +63,6 @@ st.pyplot()
 messages = [
 	f"Clustering coefficient: {100*nx.average_clustering(G):2.2f}%",
 	f"{nx.number_connected_components(G)} components",
-	f"$\sigma$={nx.algorithms.smallworld.sigma(G):2.4f},$\omega$={nx.algorithms.smallworld.omega(G):2.4f}"
 ]
 for msg in messages:
 	st.write(msg)
