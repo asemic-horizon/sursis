@@ -61,7 +61,7 @@ nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2)
 st.pyplot()
 
 messages = [
-	f"Clustering coefficient: {100*nx.clustering(G):2.2f}%",
+	f"Clustering coefficient: {100*nx.average_clustering(G):2.2f}%",
 	f"{nx.number_connected_components(G)} components",
 	f"$\sigma$={nx.algorithms.smallworld.sigma:2.4f},$\omega$={nx.algorithms.smallworld.omega:2.4f}"
 ]
