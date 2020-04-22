@@ -12,10 +12,10 @@ mode = st.radio("Mode",
 
 if mode == "Nodes":
 	field = st.text_input('Enter node name')
+	salient0 = salient1; salient1 = field
 	add_button = st.button("Add")
 	del_button = st.button("Delete")
 	if field and add_button: 
-		salient0 = salient1; salient1 = field
 		write_node(field)
 	if field and del_button:
 		found = del_node(field)
