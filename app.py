@@ -62,7 +62,7 @@ st.pyplot()
 
 messages = [
 f"{nx.number_of_nodes(G)} nodes, {nx.number_of_edges(G)} edges, {100*nx.density(G):2.2f}% density",
-f"{100*nx.average_clustering(G):2.2f}% of triangles,{100*nx.algorithms.cluster.transitivity(G):2.2f}% of triads",
+f"{100*nx.average_clustering(G):2.2f}% of triangles, {100*nx.algorithms.cluster.transitivity(G):2.2f}% of triads",
 f"{nx.number_connected_components(G)} components",
 ]
 for msg in messages:
