@@ -65,7 +65,7 @@ messages = [
 	f"{nx.number_connected_components(G)} components",
 ]
 for msg in messages:
-	st.write(msg)
+	st.write(f"* {msg}")
 
 H = nx.minimum_spanning_tree(G)
 J = nx.maximum_spanning_tree(H)
