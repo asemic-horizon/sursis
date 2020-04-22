@@ -38,7 +38,7 @@ if ego:
 else:
 	fields = query_nodes()
 	center = st.selectbox("Choose nodes",fields)
-	radius = st.slider("Radius",1,6,1)
+	radius = st.slider("Radius",1,10,1)
 
 algo0 = "Large-scale structure"
 algo1 = "Readability"
