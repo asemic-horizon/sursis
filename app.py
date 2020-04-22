@@ -18,8 +18,10 @@ if mode == "Nodes":
 			st.write("(Node not found.)")
 if mode == "Connections":
 	fields = list(reversed(query_nodes()))
-	field1 = st.selectbox("Source",fields,index=0)
-	field2 = st.selectbox("Target",fields,index=1)
+	middle = len(fields)//2 if len(fields)>4 else 1
+	middle_ = middle + 1 if middle>1 else 1
+	field1 = st.selectbox("Source",fields,index=middle)
+	field2 = st.selectbox("Target",fields,index=middle_)
 	add_button = st.button("Connect")
 	del_button = st.button("Disconnect")
 	if field1 and field2 and add_button: 
