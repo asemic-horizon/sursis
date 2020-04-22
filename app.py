@@ -37,8 +37,7 @@ if ego:
 	radius = None
 else:
 	fields = query_nodes()
-	chosen = random.randint(1,len(fields-1))
-	center = st.selectbox("Choose nodes",fields,index=chosen)
+	center = st.selectbox("Choose nodes",fields)
 	radius = st.slider("Radius",1,6,1)
 
 algo0 = "Large-scale structure"
