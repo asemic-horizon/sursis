@@ -43,6 +43,7 @@ if ego:
 	radius = None
 else:
 	fields = query_nodes()
+	u, _ = representative(fields)
 	center = st.selectbox("Choose nodes",fields,index = u)
 	radius = st.slider("Radius",1,10,1)
 
