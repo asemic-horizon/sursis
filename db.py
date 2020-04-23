@@ -13,6 +13,7 @@ def read_data(file="data.json"):
     else:
         d = {"nodes":[], "edges":[]}
     return d
+
 def write_data(d,file="data.json"):
     with open(file,"w") as f:
         json.dump(d,f)
@@ -23,7 +24,7 @@ def graph(center = None, radius = None, file="data.json"):
     G = nx.Graph()
     for node in list_nodes(file):
         G.add_node(node)
-    for u,v in query_edges(file):
+    for u,v in list_edges(file):
         G.add_edge(u,v)
     if center and radius:
         G = nx.ego_graph(G,n=center, radius=radius)
@@ -34,7 +35,7 @@ def list_nodes(file="data.json"):
     d = read_data(file)
     return list(unique(d['nodes']))
 
-def query_edges(file="data.json"):
+def list_edges(file="data.json"):
     d = read_data(file)
     return [v.split(";") for v in set(d['edges'])]
 
@@ -44,7 +45,7 @@ def del_node(node,file="data.json"):
         u = d['nodes']
         u.remove(node.lower())
         d['nodes'] = u
-        #edges = query_edges(file)
+        #edges = list_edges(file)
         #d['edges'] = [str_pair(u,v) for u,v in edges if u==node.lower() or v==node.lower()]
         found = True
     else:
@@ -66,7 +67,7 @@ def del_edge(u,v,file="data.json"):
 
 def write_edge(u,v,file="data.json"):
     d = read_data(file)
-    if (v,u) and (u,v) not in query_edges():
+    if (v,u) and (u,v) not in list_edges():
         d['edges'].append(str_pair(u,v))
     write_data(d,file)
 
