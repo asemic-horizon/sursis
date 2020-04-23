@@ -14,7 +14,8 @@ if input_mode == "Basic data entry":
 	st.write("**Nodes**")
 	field = st.text_input('Enter node name')
 	confounders = ui.similar(field)
-
+	if field and confounders:
+		st.write(f"(Similarly-named nodes: {','.join(confounders)})")
 	add_button = st.button("Add node")
 	del_button = st.button("Delete node")
 	if field and add_button: 
