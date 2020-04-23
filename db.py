@@ -52,8 +52,8 @@ def del_node(node,file="data.json"):
         u.remove(node.lower())
         d['nodes'] = u
         # remove edges
-        for edge in query_connections(node):
-            del_edge(edge)
+        for u,v in query_connections(node):
+            del_edge(u,v)
         found = True
     else:
         found = False
