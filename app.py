@@ -8,20 +8,25 @@ def representative(fields):
 	middle_ = middle + 1 if middle>1 else 1
 	return middle, middle_
 st.write("### Data entry")
-mode = st.radio("Mode",
-	["Nodes","Connections"])
 
-if mode == "Nodes":
+input_mode = st.radio(["Basic data entry","Advanced functionality"])
+
+
+if input_mode == "Basic data entry":
+# node entry
+	st.write("**Nodes**")
 	field = st.text_input('Enter node name')
-	add_button = st.button("Add")
-	del_button = st.button("Delete")
+	add_button = st.button("Add node")
+	del_button = st.button("Delete node")
 	if field and add_button: 
 		write_node(field)
 	if field and del_button:
 		found = del_node(field)
 		if not found:
 			st.write("(Node not found.)")
-if mode == "Connections":
+	st.write("----")
+#edge entry
+	st.write("**Connections**")
 	fields = list(reversed(query_nodes()))
 	u,v = representative(fields)
 	field1 = st.selectbox("Source",fields,index=u)
@@ -34,6 +39,8 @@ if mode == "Connections":
 		found = del_edge(field1, field2)
 		if not found:
 			st.write("(Edge not found.)")
+elif input_mode == "Advanced functionality":
+	st.write("**Advanced functionality TK**")
 
 st.write("### Graph visualization")
 
