@@ -14,7 +14,7 @@ def representative(fields):
 	return middle, middle_
 
 
-def similar(node,substring_length = 5, max_examples = 4):
+def similar(node,substring_length = 3, max_examples = 4):
 	effective_length = min(len(node),substring_length)
 	nodes = db.query_nodes()
 	candidates = [n for n in nodes if n[:effective_length]==node[:effective_length]]
