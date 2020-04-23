@@ -9,7 +9,7 @@ def representative(fields):
 	return middle, middle_
 st.write("### Data entry")
 
-input_mode = st.radio(options=["Basic data entry","Advanced functionality"])
+input_mode = st.radio(label="Mode",options=["Basic data entry","Advanced functionality"])
 
 
 if input_mode == "Basic data entry":
