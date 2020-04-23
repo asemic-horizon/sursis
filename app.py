@@ -1,12 +1,9 @@
 import streamlit as st
 import networkx as nx
 from db import *
+import ui_modules as ui
 import random
 
-def representative(fields):
-	middle = len(fields)//2 if len(fields)>4 else 1
-	middle_ = middle + 1 if middle>1 else 1
-	return middle, middle_
 st.write("### Data entry")
 
 input_mode = st.radio(label="Mode",options=["Basic data entry","Advanced functionality"])
@@ -16,6 +13,9 @@ if input_mode == "Basic data entry":
 # node entry
 	st.write("**Nodes**")
 	field = st.text_input('Enter node name')
+	confounders = ui.similar(field)
+	if confounders: 
+		st.write("(Nodes with similar names: {','.join(confounders)}")
 	add_button = st.button("Add node")
 	del_button = st.button("Delete node")
 	if field and add_button: 
@@ -24,11 +24,11 @@ if input_mode == "Basic data entry":
 		found = del_node(field)
 		if not found:
 			st.write("(Node not found.)")
-	st.write("----")
+	ui.separator()
 #edge entry
 	st.write("**Connections**")
 	fields = list(reversed(query_nodes()))
-	u,v = representative(fields)
+	u,v = ui.representative(fields)
 	field1 = st.selectbox("Source",fields,index=u)
 	field2 = st.selectbox("Target",fields,index=v)
 	add_button = st.button("Connect")
@@ -42,6 +42,7 @@ if input_mode == "Basic data entry":
 elif input_mode == "Advanced functionality":
 	st.write("**Advanced functionality TK**")
 
+ui.separator()
 st.write("### Graph visualization")
 
 ego = st.checkbox("Full graph",value=True)
@@ -66,14 +67,8 @@ else:
 nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2)
 
 st.pyplot()
-
-messages = [
-f"{nx.number_of_nodes(G)} nodes, {nx.number_of_edges(G)} edges, {100*nx.density(G):2.2f}% density",
-f"{100*nx.average_clustering(G):2.2f}% of triangles, {100*nx.algorithms.cluster.transitivity(G):2.2f}% of triads",
-f"{nx.number_connected_components(G)} components",
-]
-for msg in messages:
-	st.write(f"* {msg}")
+ui.separator()
+ui.graph_stats(G)
 
 H = nx.minimum_spanning_tree(G)
 J = nx.maximum_spanning_tree(H)
