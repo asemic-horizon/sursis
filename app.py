@@ -57,8 +57,8 @@ elif input_mode == "Advanced functionality":
 		new_node = st.text_input("New node", value=f"{node_1}/{node_2}")
 		merge_button = st.button("Merge")
 		if merge_button:
-			db.merge_nodes(node_1,node_2)
-			
+			db.merge_nodes(node_1,node_2, new_node)
+
 ui.separator()
 st.write("### Graph visualization")
 
