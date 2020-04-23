@@ -21,7 +21,7 @@ def str_pair(u,v):
 
 def graph(center = None, radius = None, file="data.json"):
     G = nx.Graph()
-    for node in query_nodes(file):
+    for node in list_nodes(file):
         G.add_node(node)
     for u,v in query_edges(file):
         G.add_edge(u,v)
@@ -30,9 +30,9 @@ def graph(center = None, radius = None, file="data.json"):
     return G
 
 
-def query_nodes(file="data.json"):
+def list_nodes(file="data.json"):
     d = read_data(file)
-    return unique(d['nodes'])
+    return list(unique(d['nodes']))
 
 def query_edges(file="data.json"):
     d = read_data(file)

@@ -1,9 +1,10 @@
 import streamlit as st
 import networkx as nx
-from db import *
-import ui_modules as ui
 import random
 import layout
+#
+import db
+import ui_modules as ui
 
 st.write("### Data entry")
 
@@ -13,38 +14,39 @@ input_mode = st.radio(label="Mode",options=["Basic data entry","Advanced functio
 if input_mode == "Basic data entry":
 # node entry
 	st.write("**Nodes**")
-	field = st.text_input('Enter node name')
-	confounders = ui.similar(field)
-	if not field:
+	node = st.text_input('Enter node name')
+	confounders = ui.similar(node)
+	if not node:
 		go_ahead = False
-	if field and not confounders:
+	if node and not confounders:
 		go_ahead = True
-	if field and confounders:
+	if node and confounders:
 		go_ahead = st.checkbox(f"(Checked similarly-named nodes: {','.join(confounders)})",value=False)
 	if go_ahead:
 		add_button = st.button("Add node")
 		del_button = st.button("Delete node")
-		if field and add_button: 
-			write_node(field)
-		if field and del_button:
-			found = del_node(field)
+		if node and add_button: 
+			db.write_node(node)
+		if node and del_button:
+			found = db.del_node(node)
 			if not found:
 				st.write("(Node not found.)")
 	ui.separator()
 #edge entry
 	st.write("**Connections**")
-	fields = list(reversed(query_nodes()))
-	u,v = ui.representative(fields)
-	field1 = st.selectbox("Source",fields,index=u)
-	field2 = st.selectbox("Target",fields,index=v)
+	nodes = db.list_nodes()
+	u,v = ui.representative(nodes)
+	node_1 = st.selectbox("Source",nodes,index=u)
+	node_2 = st.selectbox("Target",nodes,index=v)
 	add_button = st.button("Connect")
 	del_button = st.button("Disconnect")
-	if field1 and field2 and add_button: 
-		write_edge(field1,field2)
-	if field1 and field2 and del_button:
-		found = del_edge(field1, field2)
+	if node_1 and node_2 and add_button: 
+		db.write_edge(node_1,node_2)
+	if node_1 and node_2 and del_button:
+		found = db.del_edge(node_1, node_2)
 		if not found:
 			st.write("(Edge not found.)")
+
 elif input_mode == "Advanced functionality":
 	st.write("**Advanced functionality TK**")
 
@@ -56,8 +58,8 @@ if ego:
 	center = None
 	radius = None
 else:
-	fields = query_nodes()
-	u, _ = uir.epresentative(fields)
+	fields = db.list_nodes()
+	u, _ = ui.representative(fields)
 	center = st.selectbox("Choose nodes",fields,index = u)
 	radius = st.slider("Radius",1,10,1)
 
