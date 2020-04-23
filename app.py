@@ -14,16 +14,21 @@ if input_mode == "Basic data entry":
 	st.write("**Nodes**")
 	field = st.text_input('Enter node name')
 	confounders = ui.similar(field)
+	if not field:
+		go_ahead = False
+	if field and not confounders:
+		go_ahead = True
 	if field and confounders:
-		st.write(f"(Similarly-named nodes: {','.join(confounders)})")
-	add_button = st.button("Add node")
-	del_button = st.button("Delete node")
-	if field and add_button: 
-		write_node(field)
-	if field and del_button:
-		found = del_node(field)
-		if not found:
-			st.write("(Node not found.)")
+		go_ahead = st.checkbox(f"(Checked similarly-named nodes: {','.join(confounders)})",value=False)
+	if go_ahead:
+		add_button = st.button("Add node")
+		del_button = st.button("Delete node")
+		if field and add_button: 
+			write_node(field)
+		if field and del_button:
+			found = del_node(field)
+			if not found:
+				st.write("(Node not found.)")
 	ui.separator()
 #edge entry
 	st.write("**Connections**")
