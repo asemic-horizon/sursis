@@ -20,6 +20,7 @@ def similar(node,substring_length = 3, max_examples = 4):
 	candidates = [n for n in nodes if n[:effective_length]==node[:effective_length] and n!=node]
 	effective_num_candidates = min(len(candidates),max_examples)
 	return list(set(np.random.choice(candidates,effective_num_candidates)))
+
 def graph_stats(G):
 	messages = [
 	f"{nx.number_of_nodes(G)} nodes, {nx.number_of_edges(G)} edges, {100*nx.density(G):2.2f}% density",
