@@ -3,6 +3,7 @@ import networkx as nx
 from db import *
 import ui_modules as ui
 import random
+import layout
 
 st.write("### Data entry")
 
@@ -56,7 +57,7 @@ if ego:
 	radius = None
 else:
 	fields = query_nodes()
-	u, _ = ui.representative(fields)
+	u, _ = uir.epresentative(fields)
 	center = st.selectbox("Choose nodes",fields,index = u)
 	radius = st.slider("Radius",1,10,1)
 
