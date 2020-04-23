@@ -48,8 +48,17 @@ if input_mode == "Basic data entry":
 			st.write("(Edge not found.)")
 
 elif input_mode == "Advanced functionality":
-	st.write("**Advanced functionality TK**")
-
+	st.write("**Node merge**")
+	nodes = db.list_nodes()
+	u,v = ui.representative(nodes)
+	node_1 = st.selectbox("Source 1",nodes,index=u)
+	node_2 = st.selectbox("Source 2",nodes,index=v)
+	if node_1 in nodes and node_2 in nodes:
+		new_node = st.text_input("New node", value=f"{node_1}/{node_2}")
+		merge_button = st.button("Merge")
+		if merge_button:
+			db.merge_nodes(node_1,node_2)
+			
 ui.separator()
 st.write("### Graph visualization")
 

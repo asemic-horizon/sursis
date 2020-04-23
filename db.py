@@ -60,6 +60,14 @@ def del_node(node,file="data.json"):
     write_data(d,file)
     return found
 
+def merge_nodes(node1,node2,new_name = None, file="data.json"):
+    if new_name == None:
+        new_name = f"{node1}/{node2}"
+    write_node(new_name)
+    new_edges = query_connections(node1)\
+              + query_connections(node2)
+    for edge in new_edges:
+        write_edge(edge)
 def del_edge(u,v,file="data.json"):
     d = read_data(file)
     found = False
