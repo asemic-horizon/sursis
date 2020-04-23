@@ -67,7 +67,7 @@ algo0 = "Large-scale structure"
 algo1 = "Readability"
 algo = st.radio("Prioritize",[algo0,algo1])
 
-G = graph(center = center, radius = radius)
+G = db.graph(center = center, radius = radius)
 if algo == algo0:
     pos = nx.spring_layout(G)
 else:
