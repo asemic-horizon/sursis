@@ -30,7 +30,6 @@ def graph(center = None, radius = None, file="data.json"):
         G = nx.ego_graph(G,n=center, radius=radius)
     return G
 
-
 def list_nodes(file="data.json"):
     d = read_data(file)
     return list(unique(d['nodes']))
@@ -39,14 +38,22 @@ def list_edges(file="data.json"):
     d = read_data(file)
     return [v.split(";") for v in set(d['edges'])]
 
+def query_connections(node,file="data.json"):
+    nodes = list_nodes(file)
+    edges = list_edges(file)
+    connected = [(u,v) for u,v in edges if\
+                    (u==node) or (v==node)]
+    return connected
+
 def del_node(node,file="data.json"):
     d = read_data(file)
     if node in d['nodes']:
         u = d['nodes']
         u.remove(node.lower())
         d['nodes'] = u
-        #edges = list_edges(file)
-        #d['edges'] = [str_pair(u,v) for u,v in edges if u==node.lower() or v==node.lower()]
+        # remove edges
+        for edge in query_connections(node):
+            del_edge(edge)
         found = True
     else:
         found = False
