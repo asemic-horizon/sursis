@@ -66,6 +66,7 @@ def merge_nodes(node1,node2,new_name = None, file="data.json"):
     write_node(new_name)
     new_edges = query_connections(node1)\
               + query_connections(node2)
+    del_node(node1); del_node(node2)
     for u,v in new_edges:
         write_edge(u,v)
 def del_edge(u,v,file="data.json"):
