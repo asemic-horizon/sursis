@@ -49,6 +49,7 @@ if input_mode == "Basic data entry":
 	del_button = st.button("Disconnect")
 	if node_1 and node_2 and add_button: 
 		db.write_edge(node_1,node_2)
+		fst = nodes.index(node_1); snd = nodes.index(node_2)
 		ui.confirm()
 	if node_1 and node_2 and del_button:
 		found = db.del_edge(node_1, node_2)
