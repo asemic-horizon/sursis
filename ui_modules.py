@@ -2,6 +2,7 @@ import streamlit as st
 import networkx as nx 
 import numpy as np
 from time import ctime
+from numpy.random import choice
 import db
 
 def separator():
@@ -11,9 +12,10 @@ def confirm():
 	st.write(f"Operation confirmed at {ctime()}.")
 
 def representative(fields):
-	middle = len(fields)//2 if len(fields)>4 else 1
-	middle_ = middle + 1 if middle>1 else 1
-	return middle, middle_
+	return choice(fields,2)
+	# middle = len(fields)//2 if len(fields)>4 else 1
+	# middle_ = middle + 1 if middle>1 else 1
+	# return middle, middle_
 
 
 def similar(node,substring_length = 3, max_examples = 4):
