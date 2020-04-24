@@ -27,7 +27,7 @@ if input_mode == "Basic data entry":
 		del_button = st.button("Delete node")
 		if node and add_button: 
 			db.write_node(node)
-			st.write("Operation confirmed.")
+			ui.confirm()
 		if node and del_button:
 			found = db.del_node(node)
 			if not found:
@@ -43,7 +43,7 @@ if input_mode == "Basic data entry":
 	del_button = st.button("Disconnect")
 	if node_1 and node_2 and add_button: 
 		db.write_edge(node_1,node_2)
-		st.write("Operation confirmed")
+		ui.confirm()
 	if node_1 and node_2 and del_button:
 		found = db.del_edge(node_1, node_2)
 		if not found:
@@ -60,7 +60,7 @@ elif input_mode == "Advanced functionality":
 		merge_button = st.button("Merge")
 		if merge_button:
 			db.merge_nodes(node_1,node_2, new_node)
-			st.write("Operation confirmed.")
+			ui.confirm()
 
 ui.separator()
 st.write("### Graph visualization")

@@ -1,12 +1,14 @@
 import streamlit as st 
 import networkx as nx 
 import numpy as np
+from time import ctime
 import db
 
 def separator():
 	st.write("----")
 
-
+def confirm():
+	st.write(f"Operation confirmed at {ctime()}.")
 
 def representative(fields):
 	middle = len(fields)//2 if len(fields)>4 else 1
