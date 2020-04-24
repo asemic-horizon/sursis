@@ -12,7 +12,8 @@ def confirm():
 	st.write(f"Operation confirmed at {ctime()}.")
 
 def representative(fields):
-	return choice(range(len(fields)),2)
+	u, v = choice(range(len(fields)),2)
+	return int(u), int(v)
 	# middle = len(fields)//2 if len(fields)>4 else 1
 	# middle_ = middle + 1 if middle>1 else 1
 	# return middle, middle_
