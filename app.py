@@ -8,6 +8,10 @@ import ui_modules as ui
 
 st.write("### Data entry")
 
+temp = db.list_nodes()
+fst = len(temp)-1
+snd = len(temp)-2
+
 input_mode = st.radio(label="Mode",options=["Basic data entry","Advanced functionality"])
 
 
@@ -27,18 +31,20 @@ if input_mode == "Basic data entry":
 		del_button = st.button("Delete node")
 		if node and add_button: 
 			db.write_node(node)
+			nodes = db.list_edges()
+			snd = fst; fst = nodes.index(node)
 			ui.confirm()
 		if node and del_button:
 			found = db.del_node(node)
+			fst = snd
 			if not found:
 				st.write("(Node not found.)")
 	ui.separator()
 #edge entry
 	st.write("**Connections**")
 	nodes = db.list_nodes()
-	u,v = ui.representative(nodes)
-	node_1 = st.selectbox("Source",nodes,index=u)
-	node_2 = st.selectbox("Target",nodes,index=v)
+	node_1 = st.selectbox("Source",nodes,index=fst)
+	node_2 = st.selectbox("Target",nodes,index=snd)
 	add_button = st.button("Connect")
 	del_button = st.button("Disconnect")
 	if node_1 and node_2 and add_button: 
