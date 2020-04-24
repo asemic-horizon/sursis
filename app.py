@@ -31,9 +31,12 @@ if input_mode == "Basic data entry":
 		del_button = st.button("Delete node")
 		if node and add_button: 
 			db.write_node(node)
-			nodes = db.list_edges()
-			snd = fst; fst = nodes.index(node)
 			ui.confirm()
+			nodes = db.list_edges()
+			try:
+				snd = fst; fst = nodes.index(node)
+			except:
+				st.write("(Minor failure setting defaults.)")
 		if node and del_button:
 			found = db.del_node(node)
 			fst = snd
