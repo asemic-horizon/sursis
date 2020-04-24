@@ -69,11 +69,13 @@ ego = st.checkbox("Full graph",value=True)
 if ego:
 	center = None
 	radius = None
+	alpha = 0.5
 else:
 	fields = db.list_nodes()
 	u, _ = ui.representative(fields)
 	center = st.selectbox("Choose nodes",fields,index = u)
 	radius = st.slider("Radius",1,10,1)
+	alpha = 1
 
 algo0 = "Large-scale structure"
 algo1 = "Readability"
@@ -84,7 +86,7 @@ if algo == algo0:
     pos = nx.spring_layout(G)
 else:
     pos = nx.kamada_kawai_layout(G)
-nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2)
+nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2,alpha=alpha)
 
 st.pyplot()
 ui.separator()
