@@ -82,7 +82,7 @@ if ego:
 	alpha = 0.5
 else:
 	fields = db.list_nodes()
-	u, _ = fields[fst]
+	u = fst
 	center = st.selectbox("Choose nodes",fields,index = u)
 	radius = st.slider("Radius",1,10,1)
 	alpha = 1
