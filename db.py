@@ -52,17 +52,17 @@ def del_node(node,file="data.json"):
     d = read_data(file)
     found = True
     while found:
-    if node in d['nodes']:
-        u = d['nodes']
-        u.remove(node.lower())
-        d['nodes'] = u
-        # remove edges
-        candidates = query_connections(node)
-        for u,v in candidates: 
-            del_edge(u,v)
-        found = True
-    else:
-        found = False
+        if node in d['nodes']:
+            u = d['nodes']
+            u.remove(node.lower())
+            d['nodes'] = u
+            # remove edges
+            candidates = query_connections(node)
+            for u,v in candidates: 
+                del_edge(u,v)
+            found = True
+        else:
+            found = False
     write_data(d,file)
     return found
 
