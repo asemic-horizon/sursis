@@ -25,7 +25,8 @@ def graph(center = None, radius = None, file="data.json"):
     for node in list_nodes(file):
         G.add_node(node)
     for u,v in list_edges(file):
-        G.add_edge(u,v)
+        if u,v in G.nodes():
+            G.add_edge(u,v)
     if center and radius:
         G = nx.ego_graph(G,n=center, radius=radius)
     return G
@@ -63,7 +64,7 @@ def del_node(node,file="data.json"):
 def merge_nodes(node1,node2,new_name = None, file="data.json"):
     if new_name == None:
         new_name = f"{node1}/{node2}"
-    write_node(new_name)
+    write_no&de(new_name)
     new_edges = query_connections(node1)\
               + query_connections(node2)
     del_node(node1); del_node(node2)
@@ -92,3 +93,4 @@ def write_node(node,file="data.json"):
     if node not in d['nodes']:
         d['nodes'].append(node.lower()) 
     write_data(d,file)
+&&
