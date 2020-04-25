@@ -39,7 +39,7 @@ def list_nodes(file="data.json"):
 
 def list_edges(file="data.json"):
     d = read_data(file)
-    return list(unique([v.split(";") for v in set(d['edges'])]))
+    return [v.split(";") for v in set(d['edges'])]
 
 def query_connections(node,file="data.json"):
     nodes = list_nodes(file)
