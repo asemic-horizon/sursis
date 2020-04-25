@@ -1,7 +1,7 @@
 import os, json
 import networkx as nx 
 import shutil
-from time import ctime
+from time import ctime, sleep
 from numpy import unique
 
 def read_data(file="data.json"):
