@@ -93,4 +93,3 @@ def write_node(node,file="data.json"):
     if node not in d['nodes']:
         d['nodes'].append(node.lower()) 
     write_data(d,file)
-&&
