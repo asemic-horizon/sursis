@@ -54,7 +54,7 @@ elif op_mode == conn_mode:
 			st.write("(Edge not found.)")
 elif op_mode == merge_mode:
 	nodes = db.list_nodes()
-	u,v = ui.representative(nodes)
+	u,v = 1,3
 	node_1 = st.selectbox("Source 1",nodes,index=u)
 	node_2 = st.selectbox("Source 2",nodes,index=v)
 	if node_1 in nodes and node_2 in nodes:
