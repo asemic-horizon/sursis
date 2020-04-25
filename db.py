@@ -50,6 +50,8 @@ def query_connections(node,file="data.json"):
 
 def del_node(node,file="data.json"):
     d = read_data(file)
+    found = True
+    while found:
     if node in d['nodes']:
         u = d['nodes']
         u.remove(node.lower())
