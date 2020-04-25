@@ -6,18 +6,16 @@ import layout
 import db
 import ui_modules as ui
 
-st.write("### Data entry")
+node_mode = "Node entry"
+conn_mode = "Connection entry"
+merge_mode = "Merge"
+view_mode = "Visualization"
 
-temp = db.list_nodes()
-fst = len(temp)-1
-snd = len(temp)-2
+st.write("## `sursis`")
 
-input_mode = st.radio(label="Mode",options=["Basic data entry","Advanced functionality"])
+op_mode = st.radio(label="Operation mode",options[node_mode,conn_mode,merge_mode, view_mode])
 
-
-if input_mode == "Basic data entry":
-# node entry
-	st.write("**Nodes**")
+if op_mode == node_mode:
 	node = st.text_input('Enter node name')
 	confounders = ui.similar(node)
 	if not node:
@@ -33,18 +31,12 @@ if input_mode == "Basic data entry":
 			db.write_node(node)
 			ui.confirm()
 			nodes = db.list_edges()
-			try:
-				snd = fst; fst = nodes.index(node)
-			except:
-				st.write("(Minor failure setting defaults.)")
 		if node and del_button:
 			found = db.del_node(node)
 			fst = snd
 			if not found:
 				st.write("(Node not found.)")
-	ui.separator()
-#edge entry
-	st.write("**Connections**")
+elif op_mode == conn_mode:
 	nodes = db.list_nodes()
 	node_1 = st.selectbox("Source",nodes,index=fst)
 	node_2 = st.selectbox("Target",nodes,index=snd)
@@ -58,9 +50,7 @@ if input_mode == "Basic data entry":
 		found = db.del_edge(node_1, node_2)
 		if not found:
 			st.write("(Edge not found.)")
-
-elif input_mode == "Advanced functionality":
-	st.write("**Node merge**")
+elif op_mode == merge_mode:
 	nodes = db.list_nodes()
 	u,v = ui.representative(nodes)
 	node_1 = st.selectbox("Source 1",nodes,index=u)
@@ -72,52 +62,51 @@ elif input_mode == "Advanced functionality":
 			db.merge_nodes(node_1,node_2, new_node)
 			ui.confirm()
 
-ui.separator()
-st.write("### Graph visualization")
+elif op_mode == view_mode:
 
-ego = st.checkbox("Full graph",value=True)
-if ego:
-	center = None
-	radius = None
-	alpha = 0.5
-else:
-	fields = db.list_nodes()
-	u = fst
-	center = st.selectbox("Choose nodes",fields,index = u)
-	radius = st.slider("Radius",1,10,1)
-	alpha = 1
+	ego = st.checkbox("Full graph",value=True)
+	if ego:
+		center = None
+		radius = None
+		alpha = 0.5
+	else:
+		fields = db.list_nodes()
+		u = fst
+		center = st.selectbox("Choose nodes",fields,index = u)
+		radius = st.slider("Radius",1,10,1)
+		alpha = 1
 
-algo0 = "Large-scale structure"
-algo1 = "Readability"
-algo = st.radio("Prioritize",[algo0,algo1])
+	algo0 = "Large-scale structure"
+	algo1 = "Readability"
+	algo = st.radio("Prioritize",[algo0,algo1])
 
-G = db.graph(center = center, radius = radius)
-if algo == algo0:
-    pos = nx.spring_layout(G)
-else:
-    pos = nx.kamada_kawai_layout(G)
-nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2,alpha=alpha)
+	G = db.graph(center = center, radius = radius)
+	if algo == algo0:
+	    pos = nx.spring_layout(G)
+	else:
+	    pos = nx.kamada_kawai_layout(G)
+	nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2,alpha=alpha)
 
-st.pyplot()
-ui.separator()
-ui.graph_stats(G)
+	st.pyplot()
+	ui.separator()
+	ui.graph_stats(G)
 
-H = nx.minimum_spanning_tree(G)
-J = nx.maximum_spanning_tree(H)
-same = H.edges()==J.edges()
-if same:
-    st.write("#### Spanning tree")
-else:
-    st.write("#### Minimum tree")
-pos = nx.spring_layout(H)
-nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2)
+	H = nx.minimum_spanning_tree(G)
+	J = nx.maximum_spanning_tree(H)
+	same = H.edges()==J.edges()
+	if same:
+	    st.write("#### Spanning tree")
+	else:
+	    st.write("#### Minimum tree")
+	pos = nx.spring_layout(H)
+	nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2)
 
-st.pyplot()
+	st.pyplot()
 
-J = nx.maximum_spanning_tree(G)
-if not same:
-    st.write("#### Maximum tree")
-    pos = nx.spring_layout(J)
-    nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2)
+	J = nx.maximum_spanning_tree(G)
+	if not same:
+	    st.write("#### Maximum tree")
+	    pos = nx.spring_layout(J)
+	    nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2)
 
-st.pyplot()
+	st.pyplot()
