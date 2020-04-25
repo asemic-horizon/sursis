@@ -47,11 +47,11 @@ elif op_mode == conn_mode:
 		db.write_edge(node_1,node_2)
 		ui.confirm()
 	if node_1 and node_2 and del_button:
-		found = db.del_edge(node_1, node_2)
-		if found:
-			ui.confirm()
-		if not found:
-			st.write("(Edge not found.)")
+		found = True
+		while found:
+			found = db.del_edge(node_1, node_2)
+		st.write("(Edge deleted.)")
+		ui.confirm()
 elif op_mode == merge_mode:
 	nodes = db.list_nodes()
 	u,v = 1,3
