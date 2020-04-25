@@ -25,7 +25,7 @@ def graph(center = None, radius = None, file="data.json"):
     for node in list_nodes(file):
         G.add_node(node)
     for u,v in list_edges(file):
-        if u,v in G.nodes():
+        if u in G.nodes() and v in G.nodes():
             G.add_edge(u,v)
     if center and radius:
         G = nx.ego_graph(G,n=center, radius=radius)
