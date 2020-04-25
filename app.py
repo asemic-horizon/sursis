@@ -20,7 +20,7 @@ if op_mode == node_mode:
 #	confounders = ui.similar(node)
 	if not node:
 		go_ahead = False
-	if node# and not confounders:
+	if node:# and not confounders:
 		go_ahead = True
 	# if node and confounders:
 	# 	go_ahead = st.checkbox(f"(Checked similarly-named nodes: {','.join(confounders)})",value=False)
