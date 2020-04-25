@@ -6,8 +6,8 @@ import layout
 import db
 import ui_modules as ui
 
-node_mode = "Node entry"
-conn_mode = "Connection entry"
+node_mode = "Edit nodes"
+conn_mode = "Edit connections"
 merge_mode = "Merge"
 view_mode = "Visualization"
 
