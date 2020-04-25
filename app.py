@@ -33,18 +33,16 @@ if op_mode == node_mode:
 			nodes = db.list_edges()
 		if node and del_button:
 			found = db.del_node(node)
-			fst = snd
 			if not found:
 				st.write("(Node not found.)")
 elif op_mode == conn_mode:
 	nodes = db.list_nodes()
-	node_1 = st.selectbox("Source",nodes,index=fst)
-	node_2 = st.selectbox("Target",nodes,index=snd)
+	node_1 = st.selectbox("Source",nodes,index=-1)
+	node_2 = st.selectbox("Target",nodes,index=1)
 	add_button = st.button("Connect")
 	del_button = st.button("Disconnect")
 	if node_1 and node_2 and add_button: 
 		db.write_edge(node_1,node_2)
-		fst = nodes.index(node_1); snd = nodes.index(node_2)
 		ui.confirm()
 	if node_1 and node_2 and del_button:
 		found = db.del_edge(node_1, node_2)
@@ -71,7 +69,7 @@ elif op_mode == view_mode:
 		alpha = 0.5
 	else:
 		fields = db.list_nodes()
-		u = fst
+		u = 1
 		center = st.selectbox("Choose nodes",fields,index = u)
 		radius = st.slider("Radius",1,10,1)
 		alpha = 1
