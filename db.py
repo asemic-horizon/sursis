@@ -75,7 +75,9 @@ def del_edge(u,v,file="data.json"):
     found = False
     for edge in [str_pair(u,v),str_pair(v,u)]:
         if edge in d['edges']:
-            _ = d['edges'].remove(edge)
+            edges_ = d['edges']
+            edges_.remove(edge)
+            d['edges'] = edges_
             found = found or True
         else:
             found = found or False
