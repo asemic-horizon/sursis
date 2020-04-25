@@ -5,6 +5,7 @@ from time import ctime
 from numpy import unique
 
 def read_data(file="data.json"):
+    sleep(0.2)
     if os.path.exists(file):
         with open(file,"r") as f:
             d = json.load(f)
@@ -17,6 +18,7 @@ def read_data(file="data.json"):
 def write_data(d,file="data.json"):
     with open(file,"w") as f:
         json.dump(d,f)
+    sleep(0.2)
 def str_pair(u,v):
     return f'{u.lower()};{v.lower()}'
 
@@ -37,7 +39,7 @@ def list_nodes(file="data.json"):
 
 def list_edges(file="data.json"):
     d = read_data(file)
-    return [v.split(";") for v in set(d['edges'])]
+    return list(unique([v.split(";") for v in set(d['edges'])]))
 
 def query_connections(node,file="data.json"):
     nodes = list_nodes(file)
@@ -53,7 +55,8 @@ def del_node(node,file="data.json"):
         u.remove(node.lower())
         d['nodes'] = u
         # remove edges
-        for u,v in query_connections(node):
+        candidates = query_connections(node)
+        for u,v in candidates: 
             del_edge(u,v)
         found = True
     else:
@@ -70,6 +73,7 @@ def merge_nodes(node1,node2,new_name = None, file="data.json"):
     del_node(node1); del_node(node2)
     for u,v in new_edges:
         write_edge(u,v)
+
 def del_edge(u,v,file="data.json"):
     d = read_data(file)
     found = False
