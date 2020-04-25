@@ -87,7 +87,9 @@ elif op_mode == view_mode:
 	    pos = nx.spring_layout(G)
 	else:
 	    pos = nx.kamada_kawai_layout(G)
-	nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2,alpha=alpha)
+
+	font_size = 11 if G.number_of_nodes()<50 else 9
+	nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=font_size,width=0.2,alpha=alpha)
 
 	st.pyplot()
 	ui.separator()
