@@ -13,7 +13,8 @@ view_mode = "Visualization"
 
 st.write("## `sursis`")
 
-op_mode = st.radio(label="Operation mode",options=[node_mode,conn_mode,merge_mode, view_mode])
+op_mode = st.sidebar(\
+	st.radio(label="Operation mode",options=[view_mode,node_mode,conn_mode,merge_mode]))
 
 if op_mode == node_mode:
 	node = st.text_input('Enter node name')
@@ -66,7 +67,7 @@ elif op_mode == merge_mode:
 
 elif op_mode == view_mode:
 
-	ego = st.checkbox("Full graph",value=True)
+	ego = st.checkbox("Full graph",value=False)
 	if ego:
 		center = None
 		radius = None
@@ -75,7 +76,7 @@ elif op_mode == view_mode:
 		fields = db.list_nodes()
 		u = 1
 		center = st.selectbox("Choose nodes",fields,index = u)
-		radius = st.slider("Radius",1,10,1)
+		radius = st.number_input("Radius",value=1)
 		alpha = 1
 
 	algo0 = "Large-scale structure"
