@@ -37,7 +37,7 @@ if op_mode == node_mode:
 				st.write("(Node not found.)")
 elif op_mode == conn_mode:
 	nodes = db.list_nodes()
-	node_1 = st.selectbox("Source",nodes,index=-1)
+	node_1 = st.selectbox("Source",nodes,index=3)
 	node_2 = st.selectbox("Target",nodes,index=1)
 	add_button = st.button("Connect")
 	del_button = st.button("Disconnect")
