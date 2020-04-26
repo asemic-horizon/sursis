@@ -32,7 +32,9 @@ if op_mode == node_mode:
 elif op_mode == conn_mode:
 	nodes = db.list_nodes()
 	state = db.state()
-	u,v = state["last_add"], state["blast_add"]
+	#u,v = state["last_add"], state["blast_add"]
+	u = "jazz"
+	v = "atomic blonde"
 	node_1 = st.selectbox("Source",nodes,index=nodes.index(u))
 	node_2 = st.selectbox("Target",nodes,index=nodes.index(v))
 	add_button = st.button("Connect")
@@ -67,7 +69,7 @@ elif op_mode == view_mode:
 		alpha = 0.5
 	else:
 		fields = db.list_nodes()
-		u = fields.index(db.state()["last_query"])
+		u = fields.index("jerry")
 		center = st.selectbox("Choose nodes",fields,index = u)
 		radius = st.number_input("Radius",value=1)
 		alpha = 1
