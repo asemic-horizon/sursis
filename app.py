@@ -33,8 +33,8 @@ elif op_mode == conn_mode:
 	nodes = db.list_nodes()
 	state = db.state()
 	u,v = state["last_add"], state["blast_add"]
-	node_1 = st.selectbox("Source",nodes,index=u)
-	node_2 = st.selectbox("Target",nodes,index=v)
+	node_1 = st.selectbox("Source",nodes,index=nodes.index(u))
+	node_2 = st.selectbox("Target",nodes,index=nodes.index(v))
 	add_button = st.button("Connect")
 	del_button = st.button("Disconnect")
 	if node_1 and node_2 and add_button: 
