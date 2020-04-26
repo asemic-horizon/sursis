@@ -17,26 +17,18 @@ op_mode = st.sidebar.radio(label="Operation mode",options=[view_mode,node_mode,c
 
 if op_mode == node_mode:
 	node = st.text_input('Enter node name')
-#	confounders = ui.similar(node)
-	if not node:
-		go_ahead = False
-	if node:# and not confounders:
-		go_ahead = True
-	# if node and confounders:
-	# 	go_ahead = st.checkbox(f"(Checked similarly-named nodes: {','.join(confounders)})",value=False)
-	if go_ahead:
-		add_button = st.button("Add node")
-		del_button = st.button("Delete node")
-		if node and add_button: 
-			db.write_node(node)
+	add_button = st.button("Add node")
+	del_button = st.button("Delete node")
+	if node and add_button: 
+		db.write_node(node)
+		ui.confirm()
+		nodes = db.list_edges()
+	if node and del_button:
+		found = db.del_node(node)
+		if found:
 			ui.confirm()
-			nodes = db.list_edges()
-		if node and del_button:
-			found = db.del_node(node)
-			if found:
-				ui.confirm()
-			if not found:
-				st.write("(Node not found.)")
+		if not found:
+			st.write("(Node not found.)")
 elif op_mode == conn_mode:
 	nodes = db.list_nodes()
 	node_1 = st.selectbox("Source",nodes,index=3)
@@ -73,7 +65,7 @@ elif op_mode == view_mode:
 		alpha = 0.5
 	else:
 		fields = db.list_nodes()
-		u = 1
+		u = fields.index(db.state()["last_query"])
 		center = st.selectbox("Choose nodes",fields,index = u)
 		radius = st.number_input("Radius",value=1)
 		alpha = 1

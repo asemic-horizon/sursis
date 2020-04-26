@@ -11,6 +11,13 @@ def read_data(file="data.json"):
             d = json.load(f)
         if "nodes" not in d: d["nodes"]=list()
         if "edges" not in d: d["edges"]=list()
+        if "state" not in d and d["nodes"]: 
+            d["state"]={\
+            "last_query": d["nodes"][0],
+            "last_add":d["nodes"][0]
+            "blast_add": d["nodes"][0] }
+        elif "state" not in d and not d["nodes"]:
+            d["state"]=dict()
     else:
         d = {"nodes":[], "edges":[]}
     return d
@@ -44,6 +51,7 @@ def list_edges(file="data.json"):
 def query_connections(node,file="data.json"):
     nodes = list_nodes(file)
     edges = list_edges(file)
+    d["state"]["last_query"] = node
     connected = [(u,v) for u,v in edges if\
                     (u==node) or (v==node)]
     return connected
@@ -99,5 +107,11 @@ def write_edge(u,v,file="data.json"):
 def write_node(node,file="data.json"):
     d = read_data(file)
     if node not in d['nodes']:
-        d['nodes'].append(node.lower()) 
+        d['nodes'].append(node.lower())
+        d["blast_add"] = d["last_add"]
+        d["last_add"] =  node
     write_data(d,file)
+
+def state(file="data.json"):
+    d = read_data(file)
+    return d["state"]
