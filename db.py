@@ -11,15 +11,9 @@ def read_data(file="data.json"):
             d = json.load(f)
         if "nodes" not in d: d["nodes"]=list()
         if "edges" not in d: d["edges"]=list()
-        if "state" not in d and d["nodes"]: 
-            d["state"]={\
-            "last_query": d["nodes"][0],
-            "last_add":d["nodes"][0],
-            "blast_add": d["nodes"][0] }
-        elif "state" not in d and not d["nodes"]:
-            d["state"]=dict()
+        if "state" not in d: d["state"]=dict()
     else:
-        d = {"nodes":[], "edges":[],state:{"last_query":d["nodes"][0],"last_add":d["nodes"][0],"blast_add":d["nodes"][0]}}
+        d = {"nodes":[], "edges":[],state:{}}
     return d
 
 def write_data(d,file="data.json"):
@@ -114,4 +108,11 @@ def write_node(node,file="data.json"):
 
 def state(file="data.json"):
     d = read_data(file)
-    return d["state"]
+    if "state" in d and "last_add" in d["state"]:
+        return d["state"]
+    else:
+        first_node = list_nodes()[0]
+        d["state"]["last_add"] = first_node
+        d["state"]["blast_add"] = first_node
+        d["state"]["last_query"] = first_node
+        write_data(file)
