@@ -14,7 +14,7 @@ def read_data(file="data.json"):
         if "state" not in d and d["nodes"]: 
             d["state"]={\
             "last_query": d["nodes"][0],
-            "last_add":d["nodes"][0]
+            "last_add":d["nodes"][0],
             "blast_add": d["nodes"][0] }
         elif "state" not in d and not d["nodes"]:
             d["state"]=dict()
