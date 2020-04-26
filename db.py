@@ -108,8 +108,7 @@ def write_node(node,file="data.json"):
     d = read_data(file)
     if node not in d['nodes']:
         d['nodes'].append(node.lower())
-        d["blast_add"] = d["last_add"]
-        d["last_add"] =  node
+
     write_data(d,file)
 
 def state(file="data.json"):
