@@ -49,7 +49,9 @@ def list_edges(file="data.json"):
 def query_connections(node,file="data.json"):
     nodes = list_nodes(file)
     edges = list_edges(file)
+    d = read_data(file)
     d["state"]["last_query"] = node
+    write_data(d,file)
     connected = [(u,v) for u,v in edges if\
                     (u==node) or (v==node)]
     return connected
