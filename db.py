@@ -19,7 +19,7 @@ def read_data(file="data.json"):
         elif "state" not in d and not d["nodes"]:
             d["state"]=dict()
     else:
-        d = {"nodes":[], "edges":[]}
+        d = {"nodes":[], "edges":[],state:{"last_query":d["nodes"][0],"last_add":d["nodes"][0],"blast_add":d["nodes"][0]}}
     return d
 
 def write_data(d,file="data.json"):
