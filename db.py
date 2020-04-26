@@ -19,7 +19,7 @@ def read_data(file="data.json"):
 def write_data(d,file="data.json"):
     with open(file,"w") as f:
         json.dump(d,f)
-    shutil.copyfile(file,ctime())
+    shutil.copyfile(file,ctime()+".json")
     sleep(0.2)
 def str_pair(u,v):
     return f'{u.lower()};{v.lower()}'
