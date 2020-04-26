@@ -25,6 +25,9 @@ def str_pair(u,v):
     return f'{u.lower()};{v.lower()}'
 
 def graph(center = None, radius = None, file="data.json"):
+    d = read_data(file)
+    d['last_query'] = center
+    write_data(d,file)
     G = nx.Graph()
     for node in list_nodes(file):
         G.add_node(node)
