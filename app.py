@@ -7,7 +7,7 @@ import db
 import ui_modules as ui
 
 node_mode = "Add/delete nodes"
-conn_mode = "Add/ connections"
+conn_mode = "Add/delete connections"
 nonn_mode = "Connect new node to existing"
 merge_mode = "Merge"
 view_mode = "Visualization"
