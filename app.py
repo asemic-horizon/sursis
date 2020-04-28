@@ -14,7 +14,7 @@ view_mode = "Visualization"
 
 st.write("## `sursis`")
 
-op_mode = st.sidebar.radio(label="Operation mode",options=[view_mode,node_mode,conn_mode,merge_mode])
+op_mode = st.sidebar.radio(label="Operation mode",options=[view_mode,node_mode,conn_mode, nonn_mode, merge_mode])
 
 if op_mode == node_mode:
 	node = st.text_input('Enter node name')
