@@ -50,6 +50,7 @@ elif op_mode == conn_mode:
 		st.write("(Edge deleted.)")
 		ui.confirm()
 elif op_mode == nonn_mode:
+	nodes = db.list(nodes)
 	node_1 = st.selectbox("Existing",nodes,index=nodes.index("jazz"))
 	node_2 = st.text_input('New')
 
