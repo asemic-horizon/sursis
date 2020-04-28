@@ -6,8 +6,9 @@ import layout
 import db
 import ui_modules as ui
 
-node_mode = "Edit nodes"
-conn_mode = "Edit connections"
+node_mode = "Add/delete nodes"
+conn_mode = "Add/ connections"
+nonn_mode = "Connect new node to existing"
 merge_mode = "Merge"
 view_mode = "Visualization"
 
@@ -48,6 +49,14 @@ elif op_mode == conn_mode:
 			found = db.del_edge(node_1, node_2)
 		st.write("(Edge deleted.)")
 		ui.confirm()
+elif op_mode == nonn_mode:
+	node_1 = st.selectbox("Existing",nodes,index=nodes.index("jazz"))
+	node_2 = st.text_input('New')
+
+	nonn_button = st.button("Add and connect")
+	if node_1 and node_2 and nonn_button:
+		db.write_node(node_2); ui.confirm()
+		db.write_edge(node_1,node_2); ui.confirm()
 elif op_mode == merge_mode:
 	nodes = db.list_nodes()
 	u,v = 1,3
