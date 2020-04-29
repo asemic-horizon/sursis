@@ -5,6 +5,7 @@ import layout
 #
 import db
 import ui_modules as ui
+import viz, physical
 
 node_mode = "Add/delete nodes"
 conn_mode = "Add/delete connections"
@@ -89,15 +90,8 @@ elif op_mode == view_mode:
 	algo = st.radio("Prioritize",[algo0,algo1])
 
 	G = db.graph(center = center, radius = radius)
-	if algo == algo0:
-	    pos = nx.spring_layout(G)
-	else:
-	    pos = nx.kamada_kawai_layout(G)
+	viz.draw_bw(G,nx.spring_layout if algo==algo0 else nx.kamada_kawai_layout)
 
-	font_size = 11 if G.number_of_nodes()<50 else 9
-	nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=font_size,width=0.2,alpha=alpha)
-
-	st.pyplot()
 	ui.separator()
 	ui.graph_stats(G)
 
@@ -109,14 +103,10 @@ elif op_mode == view_mode:
 	else:
 	    st.write("#### Minimum tree")
 	pos = nx.spring_layout(H)
-	nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2)
+	viz.draw_bw(G,nx.spring_layout)
 
-	st.pyplot()
-
-	J = nx.maximum_spanning_tree(G)
 	if not same:
 	    st.write("#### Maximum tree")
 	    pos = nx.spring_layout(J)
-	    nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=8,width=0.2)
-
+	    viz.draw_bw(J, nx.spring_layout)
 	st.pyplot()
