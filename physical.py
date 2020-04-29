@@ -1,7 +1,11 @@
 import networkx as nx 
 import scipy
 import numpy as np
+from joblib import Memory
 
+memory = Memory("./cache")
+
+@memory.cache
 def potential(graph : nx.Graph,density_vector : np.ndarray):
 	rho = density_vector.reshape(1,-1)
 	L = nx.laplacian_matrix(graph)
