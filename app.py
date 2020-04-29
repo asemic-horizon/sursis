@@ -7,6 +7,7 @@ import db
 import ui_modules as ui
 import viz, physical
 
+db.calculate_potential()
 node_mode = "Add/delete nodes"
 conn_mode = "Add/delete connections"
 nonn_mode = "Connect new node to existing"
