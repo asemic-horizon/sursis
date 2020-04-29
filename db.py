@@ -2,7 +2,7 @@ import os, json
 import networkx as nx 
 import shutil
 from time import ctime, sleep
-from numpy import unique
+from numpy import unique, array
 import physical as phys
 
 def read_data(file="data.json"):
@@ -37,7 +37,7 @@ def calculate_potential(file="data.json"):
 
 def read_potential(file="data.json"):
     d = read_data(file)
-    return np.array(list(d["potential"].values()))
+    return array(list(d["potential"].values()))
 
 def graph(center = None, radius = None, file="data.json"):
     d = read_data(file)
