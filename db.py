@@ -37,7 +37,7 @@ def calculate_potential(file="data.json"):
 
 def read_potential(file="data.json"):
     d = read_data(file)
-    return d["potential"].values()
+    return np.array(list(d["potential"].values()))
 
 def graph(center = None, radius = None, file="data.json"):
     d = read_data(file)
