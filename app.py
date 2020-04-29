@@ -84,13 +84,16 @@ elif op_mode == view_mode:
 		center = st.selectbox("Choose nodes",fields,index = u)
 		radius = st.number_input("Radius",value=1)
 		alpha = 1
-
+	color = st.checkbox("Color",value = True)
 	algo0 = "Large-scale structure"
 	algo1 = "Readability"
 	algo = st.radio("Prioritize",[algo0,algo1])
 
 	G = db.graph(center = center, radius = radius)
-	viz.draw_bw(G,nx.spring_layout if algo==algo0 else nx.kamada_kawai_layout)
+	if color:
+		viz.draw_color(G,pos_fun = nx.spring_layout if algo==algo0 else nx.kamada_kawai_layout)	
+	else:
+		viz.draw_bw(G, pos_fun = nx.spring_layout if algo==algo0 else nx.kamada_kawai_layout)
 
 	ui.separator()
 	ui.graph_stats(G)
