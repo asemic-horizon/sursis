@@ -32,7 +32,7 @@ def calculate_potential(file="data.json"):
     w = (potential - potential.min())/(potential.max() - potential.min())
 
     d = read_data(file)
-    d["potential"] = zip(list(G.nodes()),list(w))
+    d["potential"] = dict(zip(list(G.nodes()),list(w)))
     write_data(d,file)
 
 def read_potential(file="data.json"):
