@@ -18,7 +18,7 @@ def draw_color(G, pot, pos_fun=nx.spring_layout, cmap="gnuplot"):
 	font_size = 11 if G.number_of_nodes()<50 else 9
 	alpha = 0.5
 	node_size = 75
-	scheme = plt.get_cmap(cmap)
+	scheme = mpl.pyplot.get_cmap(cmap)
 	cnorm = colors.Normalize(vmin=0, vmax = 1)
 	smap = cm.ScalarMappable(norm=cnorm, cmap=scheme)
 	colorvals = smap.to_rgba(pot)
