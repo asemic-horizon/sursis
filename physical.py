@@ -16,7 +16,7 @@ def potential(graph : nx.Graph,density_vector : np.ndarray):
 def graph_potential(graph : nx.Graph):
 #	degrees = np.array(list(dict(graph.degree()).values()))
 	metric = nx.betweenness_centrality(G)
-	metric = =np.array(list(dict(metric).values()))
+	metric =np.array(list(dict(metric).values()))
 #	density = np.vectorize(lambda x: 0 if x==0 else 1/x)
 	return potential(graph, metric)
 
