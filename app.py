@@ -86,7 +86,7 @@ elif op_mode == view_mode:
 		alpha = 0.5
 	else:
 		fields = db.list_nodes()
-		u = fields.index("jerry")
+		u = fields.index("jazz")
 		center = st.selectbox("Choose nodes",fields,index = u)
 		radius = st.number_input("Radius",value=1)
 		alpha = 1
