@@ -12,7 +12,7 @@ def read_data(file="data.json"):
             d = json.load(f)
         if "nodes" not in d: d["nodes"]=list()
         if "edges" not in d: d["edges"]=list()
-        if "potential" not in d: d['potential'] = calculate_potential()
+        #if "potential" not in d: d['potential'] = calculate_potential()
         if "state" not in d: d["state"]=dict()
     else:
         d = {"nodes":[], "edges":[],state:{}}
