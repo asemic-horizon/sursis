@@ -3,6 +3,7 @@ import networkx as nx
 import shutil
 from time import ctime, sleep
 from numpy import unique
+import physical as phys
 
 def read_data(file="data.json"):
     sleep(0.2)
@@ -11,6 +12,7 @@ def read_data(file="data.json"):
             d = json.load(f)
         if "nodes" not in d: d["nodes"]=list()
         if "edges" not in d: d["edges"]=list()
+        if "potential" not in d: d['potential'] = calculate_potential()
         if "state" not in d: d["state"]=dict()
     else:
         d = {"nodes":[], "edges":[],state:{}}
@@ -23,6 +25,19 @@ def write_data(d,file="data.json"):
     sleep(0.2)
 def str_pair(u,v):
     return f'{u.lower()};{v.lower()}'
+
+def calculate_potential(file="data.json"):
+    G = graph(center = None, file = file)
+    potential = phys.graph_potential(G)
+    w = (potential - potential.min())/(potential.max() - potential.min())
+
+    d = read_data(file)
+    d["potential"] = zip(list(G.nodes()),list(w))
+    write_data(d,file)
+
+def read_potential(file="data.json"):
+    d = read_data(file)
+    return d["potential"].values()
 
 def graph(center = None, radius = None, file="data.json"):
     d = read_data(file)
@@ -108,6 +123,7 @@ def write_node(node,file="data.json"):
     d = read_data(file)
     if node not in d['nodes']:
         d['nodes'].append(node.lower())
+        calculate_potential(file)
 
     write_data(d,file)
 
