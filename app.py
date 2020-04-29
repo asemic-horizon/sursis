@@ -91,7 +91,7 @@ elif op_mode == view_mode:
 	algo = st.radio("Prioritize",[algo0,algo1])
 
 	G = db.graph(center = center, radius = radius)
-	pot = db.read_potential()
+	pot = db.read_potential(G)
 	if color:
 		viz.draw_color(G,pot = pot, pos_fun = nx.spring_layout if algo==algo0 else nx.kamada_kawai_layout)	
 	else:
