@@ -73,7 +73,7 @@ elif op_mode == merge_mode:
 			ui.confirm()
 
 elif op_mode == view_mode:
-	cmap = "bone"
+	cmap = "hot"
 	ego = st.checkbox("Full graph",value=False)
 	color = st.checkbox("Color",value = True)
 	algo0 = "Large-scale structure"
