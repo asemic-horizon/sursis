@@ -30,7 +30,7 @@ def calculate_potential(file="data.json"):
     G = graph(center = None, file = file)
     potential = phys.graph_potential(G)
     w = (potential - potential.min())/(potential.max() - potential.min())
-
+    w = 2*w - 1
     d = read_data(file)
     d["potential"] = dict(zip(list(G.nodes()),list(w)))
     write_data(d,file)

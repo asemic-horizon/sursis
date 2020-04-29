@@ -7,6 +7,7 @@ import db
 import ui_modules as ui
 import viz, physical
 
+cmap = "PuOr_r"
 db.calculate_potential()
 node_mode = "Add/delete nodes"
 conn_mode = "Add/delete connections"
@@ -73,7 +74,7 @@ elif op_mode == merge_mode:
 			ui.confirm()
 
 elif op_mode == view_mode:
-	cmap = "coolwarm"
+
 	ego = st.checkbox("Full graph",value=False)
 	color = st.checkbox("Color",value = True)
 	algo0 = "Large-scale structure"
@@ -83,13 +84,12 @@ elif op_mode == view_mode:
 	if ego:
 		center = None
 		radius = None
-		alpha = 0.5
 	else:
 		fields = db.list_nodes()
 		u = fields.index("jazz")
 		center = st.selectbox("Choose nodes",fields,index = u)
 		radius = st.number_input("Radius",value=1)
-		alpha = 1
+
 
 	G = db.graph(center = center, radius = radius)
 	pot = db.read_potential(G)
