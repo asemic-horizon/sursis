@@ -75,6 +75,11 @@ elif op_mode == merge_mode:
 elif op_mode == view_mode:
 
 	ego = st.checkbox("Full graph",value=False)
+	color = st.checkbox("Color",value = True)
+	algo0 = "Large-scale structure"
+	algo1 = "Readability"
+	algo = st.radio("Prioritize",[algo0,algo1])
+
 	if ego:
 		center = None
 		radius = None
@@ -85,10 +90,6 @@ elif op_mode == view_mode:
 		center = st.selectbox("Choose nodes",fields,index = u)
 		radius = st.number_input("Radius",value=1)
 		alpha = 1
-	color = st.checkbox("Color",value = True)
-	algo0 = "Large-scale structure"
-	algo1 = "Readability"
-	algo = st.radio("Prioritize",[algo0,algo1])
 
 	G = db.graph(center = center, radius = radius)
 	pot = db.read_potential(G)
