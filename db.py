@@ -29,8 +29,7 @@ def str_pair(u,v):
 def calculate_potential(file="data.json"):
     G = graph(center = None, file = file)
     potential = phys.graph_potential(G)
-    w = (potential - potential.min())/(potential.max() - potential.min())
-    w = 2*w - 1
+    w = phys.rescale(potential)
     d = read_data(file)
     d["potential"] = dict(zip(list(G.nodes()),list(w)))
     write_data(d,file)

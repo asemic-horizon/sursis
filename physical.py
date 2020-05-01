@@ -20,3 +20,6 @@ def graph_potential(graph : nx.Graph):
 #	density = np.vectorize(lambda x: 0 if x==0 else 1/x)
 	return potential(graph, metric)
 
+def rescale(y : np.ndarray):
+	t = (y - y.mean())/y.std()
+	return t/3
