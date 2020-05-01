@@ -11,6 +11,11 @@ def separator():
 def confirm():
 	st.write(f"Operation confirmed at {ctime()}.")
 
+def known_field_input(tag="Node", default="jazz"):
+	nodes = db.list_nodes()
+	field_input = st.selectbox(tag,nodes,index=nodes.index(default))
+	return field_input
+
 def representative(fields):
 	u, v = choice(range(len(fields)),2)
 	return int(u), int(v)
@@ -34,3 +39,4 @@ def graph_stats(G):
 	]
 	for msg in messages:
 		st.write(f"* {msg}")
+

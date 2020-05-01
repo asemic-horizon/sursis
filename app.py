@@ -35,12 +35,8 @@ if op_mode == node_mode:
 			st.write("(Node not found.)")
 elif op_mode == conn_mode:
 	nodes = db.list_nodes()
-	state = db.state()
-	#u,v = state["last_add"], state["blast_add"]
-	u = "jazz"
-	v = "atomic blonde"
-	node_1 = st.selectbox("Source",nodes,index=nodes.index(u))
-	node_2 = st.selectbox("Target",nodes,index=nodes.index(v))
+	node_1 = ui.known_field_input("Source","jazz")
+	node_2 = ui.known_field_input("Target","espionage")
 	add_button = st.button("Connect")
 	del_button = st.button("Disconnect")
 	if node_1 and node_2 and add_button: 
