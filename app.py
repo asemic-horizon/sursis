@@ -19,20 +19,27 @@ view_mode = "Visualization"
 
 st.write("## `sursis`")
 
-op_mode = st.sidebar.radio(label="Operation mode",options=[view_mode,node_mode,conn_mode, dyad_mode, triad_mode, nonn_mode, merge_mode])
+op_mode = st.sidebar.radio(label="Operation mode",options=[view_mode,node_mode,conn_mode, dyad_mode, nonn_mode, merge_mode])
 
 if op_mode == node_mode:
-	node = st.text_input('Enter node name')
+	node = st.text_input('Enter new node name')
 	add_button, del_button = ui.add_del()
 	if node and add_button: 
-		db.write_node(node)
-		ui.confirm()
+		ui.confirm(db.write(node))
 	if node and del_button:
-		found = db.del_node(node)
-		if found:
-			ui.confirm()
-		if not found:
-			st.write("(Node not found.)")
+		ui.if_confirm(db.del_node(node))
+elif op_mode == dyad_mode:
+	node_1 = st.text_input('Enter new node 1 name')
+	node_2 = st.text_input('Enter new node 2 name')
+	add_button, del_button = ui.add_del()
+	if node_1 and node_2 and add_button:
+		db.write_node(node_1)
+		db.write_node(node_2)
+		db.write_edge(node_1, node_2)
+	if node_1 and node_2 and del_button:
+		db.del_edge(node_1,node_2)
+		db.del_node(node_1)
+		db.del_node(node_2)
 elif op_mode == conn_mode:
 	nodes = db.list_nodes()
 	node_1 = ui.known_field_input("Source","jazz")

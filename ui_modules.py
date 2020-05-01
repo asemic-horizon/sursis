@@ -11,6 +11,12 @@ def separator():
 def confirm():
 	st.write(f"Operation confirmed at {ctime()}.")
 
+def if_confirm(pred,err="(Not found)"):
+	if pred:
+		confirm()
+	else:
+		st.write(err)
+
 def known_field_input(tag="Node", default="jazz"):
 	nodes = db.list_nodes()
 	field_input = st.selectbox(tag,nodes,index=nodes.index(default))
