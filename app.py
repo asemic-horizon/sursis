@@ -25,9 +25,11 @@ if op_mode == node_mode:
 	node = st.text_input('Enter new node name')
 	add_button, del_button = ui.add_del()
 	if node and add_button: 
-		ui.if_confirm(db.write_node(node),"Name already exists")
+		db.write_node(node)
+		ui.confirm()
 	if node and del_button:
-		ui.if_confirm(db.del_node(node))
+		db.del_node(node)
+		ui.confirm()
 elif op_mode == dyad_mode:
 	node_1 = st.text_input('Enter new node 1 name')
 	node_2 = st.text_input('Enter new node 2 name')
