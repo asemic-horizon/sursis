@@ -1,0 +1,6 @@
+env
+env/*
+*.json
+*.bz2
+*.tar.bz
+
