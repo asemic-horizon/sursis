@@ -24,6 +24,6 @@ def draw_color(G, pot, pos_fun=nx.spring_layout, cmap="gnuplot"):
 	colorvals = smap.to_rgba(pot)
 	nx.draw(G,pos=pos,with_labels=True, node_color = colorvals, node_size = node_size,font_size=font_size,width=0.2,alpha=alpha)
 	cbar = mpl.pyplot.colorbar(smap,ticks=[-1,0,1],orientation='horizontal',label="Potential field")
-	cbar.ax.set_xticklabels(["              Repulsive","Neutral", "Attractive                "])
+	cbar.ax.set_xticklabels(["               Repulsive","Neutral", "Attractive                "])
 	st.pyplot()
 
