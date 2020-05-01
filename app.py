@@ -44,6 +44,24 @@ elif op_mode == dyad_mode:
 		db.del_node(node_1)
 		db.del_node(node_2)
 		ui.confirm()
+elif op_mode = triad_mode:
+	parent = st.text_input('Enter head node name')
+	left = st.text_input('Enter left child name')
+	right = st.text_input('Enter right child name')
+	add_button, del_button = ui.add_del()
+	if parent and left and right and add_button:
+		db.write_node(parent)
+		db.write_node(left)
+		db.write_node(right)
+		db.write_edge(parent,left)
+		db.write_edge(parent,right)
+	if parent and left and right and del_button:
+		db.del_node(parent)
+		db.del_node(left)
+		db.del_node(right)
+		db.del_edge(parent,left)
+		db.del_edge(parent,right)
+
 elif op_mode == conn_mode:
 	nodes = db.list_nodes()
 	node_1 = ui.known_field_input("Source","jazz")
