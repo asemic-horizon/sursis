@@ -9,24 +9,24 @@ import viz, physical
 
 cmap = "PuOr_r"
 db.calculate_potential()
-node_mode = "Add/delete nodes"
-conn_mode = "Add/delete connections"
-nonn_mode = "Connect new node to existing"
+node_mode = "Nodes"
+conn_mode = "Connections"
+nonn_mode = "Trailing"
+dyad_mode = "Dyad"
+triad_mode = "Triad"
 merge_mode = "Merge"
 view_mode = "Visualization"
 
 st.write("## `sursis`")
 
-op_mode = st.sidebar.radio(label="Operation mode",options=[view_mode,node_mode,conn_mode, nonn_mode, merge_mode])
+op_mode = st.sidebar.radio(label="Operation mode",options=[view_mode,node_mode,conn_mode, dyad_mode, triad_mode, nonn_mode, merge_mode])
 
 if op_mode == node_mode:
 	node = st.text_input('Enter node name')
-	add_button = st.button("Add node")
-	del_button = st.button("Delete node")
+	add_button, del_button = ui.add_del()
 	if node and add_button: 
 		db.write_node(node)
 		ui.confirm()
-		nodes = db.list_edges()
 	if node and del_button:
 		found = db.del_node(node)
 		if found:
@@ -37,8 +37,7 @@ elif op_mode == conn_mode:
 	nodes = db.list_nodes()
 	node_1 = ui.known_field_input("Source","jazz")
 	node_2 = ui.known_field_input("Target","espionage")
-	add_button = st.button("Connect")
-	del_button = st.button("Disconnect")
+	add_button, del_button = ui.add_del()
 	if node_1 and node_2 and add_button: 
 		db.write_edge(node_1,node_2)
 		ui.confirm()
