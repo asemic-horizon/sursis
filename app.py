@@ -36,10 +36,12 @@ elif op_mode == dyad_mode:
 		db.write_node(node_1)
 		db.write_node(node_2)
 		db.write_edge(node_1, node_2)
+		ui.confirm()
 	if node_1 and node_2 and del_button:
 		db.del_edge(node_1,node_2)
 		db.del_node(node_1)
 		db.del_node(node_2)
+		ui.confirm()
 elif op_mode == conn_mode:
 	nodes = db.list_nodes()
 	node_1 = ui.known_field_input("Source","jazz")
