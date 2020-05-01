@@ -16,7 +16,7 @@ def known_field_input(tag="Node", default="jazz"):
 	field_input = st.selectbox(tag,nodes,index=nodes.index(default))
 	return field_input
 
-def add_rem(tag1="Add",tag2="Delete"):
+def add_del(tag1="Add",tag2="Delete"):
 	add = st.button(tag1)
 	rem = st.button(tag2)
 	return add, rem
