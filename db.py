@@ -84,11 +84,11 @@ def edge_exists_(conn, node_1, node_2):
     return len(res1)>0 and len(res2)>0
 
 
-def write_edge(conn,edge):
-    if edge_exists(conn,edge):
+def write_edge(conn,node_1,node_2):
+    if edge_exists(conn,node_1,node_2):
         return True
     else:
-        insert_edge(conn,edge)
+        insert_edge(conn,node_1,node_2)
         return False
 
 
@@ -109,6 +109,21 @@ def delete_node(conn, node):
     except:
         logging.error(f"Couldn't {node}.")
 
+
+def del_node(conn,node):
+    if node_exists(conn,node):
+        return True
+    else:
+        delete_node(conn,node)
+        return False
+
+
+def del_edge(conn,node_1,node_2):
+    if edge_exists(conn,node_1,node_2):
+        return True
+    else:
+        delete_edge(conn,node_1,node_2)
+        return False
 
 
 def convert_json(conn, json_file):
