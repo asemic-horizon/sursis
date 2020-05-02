@@ -11,7 +11,7 @@ import physical as phys
 
 
 
-def create_connection(file="data.sqlite"):
+def nx(file="data.sqlite"):
     try:
         conn = sqlite3.connect(file)
         return conn
@@ -47,6 +47,17 @@ def run_sql(conn,sql,*args):
 def insert_node(conn,node):
     return run_sql(conn,"INSERT INTO nodes (name) VALUES (?)",node).lastrowid
 
+def node_exists(conn, node):
+    res = run_sql(conn,"SELECT id FROM nodes WHERE name = ? LIMIT 1",node).fetchall()
+    return len(res)>0
+
+def write_node(conn,node):
+    if node_exists(conn,node):
+        return True
+    else:
+        insert_node(conn,node)
+        return False
+
 def get_node_id(conn,node):
     try:
         return run_sql(conn,"SELECT id FROM nodes WHERE name = ? LIMIT 1",node).fetchall()[0][0]
@@ -65,6 +76,21 @@ def insert_edge(conn, node_1, node_2):
         return run_sql(conn,"INSERT INTO edges (left,right) VALUES (?,?)",id_1,id_2).lastrowid
     except:
         logging.error(f"Couldn't create edge {node_1}-{node_2}")
+
+def edge_exists_(conn, node_1, node_2):
+    id_1, id_2 = get_node_id(conn,node_1),get_node_id(conn,node_2)
+    res1 = run_sql(conn,"SELECT id FROM edges WHERE left = ? and right = ? ", id_1, id_2)
+    res2 = run_sql(conn,"SELECT id FROM edges WHERE left = ? and right = ? ", id_2, id_1)
+    return len(res1)>0 and len(res2)>0
+
+
+def write_edge(conn,edge):
+    if edge_exists(conn,edge):
+        return True
+    else:
+        insert_edge(conn,edge)
+        return False
+
 
 def delete_edge(conn, node_1, node_2):
     try:
