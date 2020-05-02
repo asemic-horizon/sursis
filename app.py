@@ -66,7 +66,7 @@ elif op_mode == triad_mode:
 			db.del_node(conn, right)
 			db.del_edge(conn, parent,left)
 			db.del_edge(conn, parent,right)
-		if add_button or del_button: ui.conn_update(conn)
+
 elif op_mode == conn_mode:
 	with nc() as conn:
 		node_1 = ui.known_field_input(conn,"Source","jazz")
