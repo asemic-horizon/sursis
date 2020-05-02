@@ -79,8 +79,8 @@ def insert_edge(conn, node_1, node_2):
 
 def edge_exists(conn, node_1, node_2):
     id_1, id_2 = get_node_id(conn,node_1),get_node_id(conn,node_2)
-    res1 = run_sql(conn,"SELECT id FROM edges WHERE left = ? and right = ? ", id_1, id_2)
-    res2 = run_sql(conn,"SELECT id FROM edges WHERE left = ? and right = ? ", id_2, id_1)
+    res1 = run_sql(conn,"SELECT id FROM edges WHERE left = ? and right = ? ", id_1, id_2).fetchall()
+    res2 = run_sql(conn,"SELECT id FROM edges WHERE left = ? and right = ? ", id_2, id_1).fetchall()
     return len(res1)>0 and len(res2)>0
 
 
@@ -140,7 +140,7 @@ def update_mass(conn, node, mass):
     return run_sql(conn,"UPDATE nodes SET mass = ? WHERE name = ? LIMIT 1",mass, node)
 
 def update_energy(conn, node, mass):
-    return run_sql(conn,"UPDATE nodes SET mass = ? WHERE name = ? LIMIT 1",mass, node)
+    return run_sql(conn,"UPDATE nodes SET energy = ? WHERE name = ? LIMIT 1",mass, node)
 
 def list_nodes(conn):
     return [n[0] for n in run_sql(conn,"SELECT name FROM nodes").fetchall()]
