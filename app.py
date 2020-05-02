@@ -67,9 +67,8 @@ elif op_mode == triad_mode:
 		db.del_edge(conn, parent,right)
 	if add_button or del_button: ui.conn_update(conn)
 elif op_mode == conn_mode:
-	nodes = db.list_nodes(conn)
-	node_1 = ui.known_field_input("Source","jazz")
-	node_2 = ui.known_field_input("Target","espionage")
+	node_1 = ui.known_field_input(conn,"Source","jazz")
+	node_2 = ui.known_field_input(conn,"Target","espionage")
 	add_button, del_button = ui.add_del()
 	if node_1 and node_2 and add_button: 
 		db.write_edge(conn, node_1,node_2)

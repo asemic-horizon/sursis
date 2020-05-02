@@ -21,8 +21,8 @@ def if_confirm(pred,err="(Not found)"):
 	else:
 		st.write(err)
 
-def known_field_input(tag="Node", default="jazz"):
-	nodes = db.list_nodes()
+def known_field_input(conn,tag="Node", default="jazz"):
+	nodes = db.list_nodes(conn)
 	field_input = st.selectbox(tag,nodes,index=nodes.index(default))
 	return field_input
 
