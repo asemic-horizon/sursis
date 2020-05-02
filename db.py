@@ -1,140 +1,201 @@
-import os, json
-import networkx as nx 
-import shutil
-from time import ctime, sleep
+import logging
+logging.basicConfig(filename="app.log")
+
+import os, json, sqlite3
 from numpy import unique, array
+from time import ctime
+import networkx as nx 
+
 import physical as phys
 
-def read_data(file="data.json"):
-    sleep(0.2)
-    if os.path.exists(file):
-        with open(file,"r") as f:
-            d = json.load(f)
-        if "nodes" not in d: d["nodes"]=list()
-        if "edges" not in d: d["edges"]=list()
-        #if "potential" not in d: d['potential'] = calculate_potential()
-        if "state" not in d: d["state"]=dict()
+
+
+
+def nc(file="data.sqlite"):
+    try:
+        conn = sqlite3.connect(file)
+        return conn
+    except sqlite3.Error as e:
+        logging.error(e)
+
+
+def initialize(conn):
+    sql_nodes_table =\
+    """CREATE TABLE IF NOT EXISTS nodes (
+            id integer PRIMARY KEY,
+            name text NOT NULL,
+            mass real,
+            energy real);"""
+    sql_edges_table =\
+    """CREATE TABLE IF NOT EXISTS edges (
+            id integer PRIMARY KEY,
+            left integer NOT NULL,
+            right integer NOT NULL);"""
+    try:
+        c = conn.cursor()
+        c.execute(sql_nodes_table)
+        c.execute(sql_edges_table)
+    except sqlite3.Error as e:
+        logging.error(e)
+
+def run_sql(conn,sql,*args):
+    cur = conn.cursor()
+    cur.execute(sql,(*args,))
+    return cur
+
+
+def insert_node(conn,node):
+    return run_sql(conn,"INSERT INTO nodes (name) VALUES (?)",node).lastrowid
+
+def node_exists(conn, node):
+    res = run_sql(conn,"SELECT id FROM nodes WHERE name = ? LIMIT 1",node).fetchall()
+    return len(res)>0
+
+def write_node(conn,node):
+    if node_exists(conn,node):
+        return True
     else:
-        d = {"nodes":[], "edges":[],state:{}}
-    return d
+        insert_node(conn,node)
+        return False
 
-def write_data(d,file="data.json"):
-    with open(file,"w") as f:
-        json.dump(d,f)
-    shutil.copyfile(file,ctime()+".json")
-    sleep(0.2)
-def str_pair(u,v):
-    return f'{u.lower()};{v.lower()}'
+def get_node_id(conn,node):
+    try:
+        return run_sql(conn,"SELECT id FROM nodes WHERE name = ? LIMIT 1",node).fetchall()[0][0]
+    except:    
+        logging.error("Error fetching id for node " + node)
 
-def calculate_potential(file="data.json"):
-    G = graph(center = None, file = file)
-    potential = phys.graph_potential(G)
-    w = phys.rescale(potential)
-    d = read_data(file)
-    d["potential"] = dict(zip(list(G.nodes()),list(w)))
-    write_data(d,file)
+def get_node_name(conn,id_1):
+    try:
+        return run_sql(conn,"SELECT id FROM nodes WHERE id = ? LIMIT 1",id_1).fetchall()[0][0]
+    except:    
+        logging.error("Error fetching id for node " + node)
 
-def read_potential(subgraph,file="data.json"):
-    d = read_data(file)
-    nodes = list(subgraph.nodes())
-    return array([d["potential"][node] for node in nodes])
+def insert_edge(conn, node_1, node_2):
+    try:
+        id_1, id_2 = get_node_id(conn,node_1),get_node_id(conn,node_2)
+        return run_sql(conn,"INSERT INTO edges (left,right) VALUES (?,?)",id_1,id_2).lastrowid
+    except:
+        logging.error(f"Couldn't create edge {node_1}-{node_2}")
 
-def graph(center = None, radius = None, file="data.json"):
-    d = read_data(file)
-    d['last_query'] = center
-    write_data(d,file)
+def edge_exists(conn, node_1, node_2):
+    id_1, id_2 = get_node_id(conn,node_1),get_node_id(conn,node_2)
+    res1 = run_sql(conn,"SELECT id FROM edges WHERE left = ? and right = ? ", id_1, id_2).fetchall()
+    res2 = run_sql(conn,"SELECT id FROM edges WHERE left = ? and right = ? ", id_2, id_1).fetchall()
+    return len(res1)>0 and len(res2)>0
+
+
+def write_edge(conn,node_1,node_2):
+    if edge_exists(conn,node_1,node_2):
+        return True
+    else:
+        insert_edge(conn,node_1,node_2)
+        return False
+
+
+def delete_edge(conn, node_1, node_2):
+    try:
+        id_1, id_2 = get_node_id(conn,node_1),get_node_id(conn,node_2)
+        _ =  run_sql(conn,"DELETE FROM edges WHERE left = ? and right = ?",id_1,id_2)
+        _ =  run_sql(conn,"DELETE FROM edges WHERE left = ? and right = ?",id_2,id_1)
+    except:
+        logging.error(f"Couldn't get nodes {node_1}-{node_2}")
+
+def delete_node(conn, node):
+    try:
+        id_1 = get_node_id(conn,node)
+        _ =  run_sql(conn,"DELETE FROM edges WHERE left = ? ",id_1)
+        _ =  run_sql(conn,"DELETE FROM edges WHERE right = ?",id_1)
+        _ =  run_sql(conn,"DELETE FROM nodes WHERE id = ?", id_1)
+    except:
+        logging.error(f"Couldn't {node}.")
+
+
+def del_node(conn,node):
+    if node_exists(conn,node):
+        return True
+    else:
+        delete_node(conn,node)
+        return False
+
+
+def del_edge(conn,node_1,node_2):
+    if edge_exists(conn,node_1,node_2):
+        return True
+    else:
+        delete_edge(conn,node_1,node_2)
+        return False
+
+
+def convert_json(conn, json_file):
+    with open(json_file,"r") as f: d = json.load(f)
+    for node in d["nodes"]:
+        insert_node(conn,node)
+    for edge in d["edges"]:
+        u, v = edge.split(";")
+        try:
+            insert_edge(conn,u,v)
+        except:
+            logging.error(f"Conversion error in edge {node_1}-{node_2}")
+def update_mass(conn, node, mass):
+    return run_sql(conn,"UPDATE nodes SET mass = ? WHERE name = ? LIMIT 1",mass, node)
+
+def update_energy(conn, node, mass):
+    return run_sql(conn,"UPDATE nodes SET energy = ? WHERE name = ? LIMIT 1",mass, node)
+
+def list_nodes(conn):
+    return [n[0] for n in run_sql(conn,"SELECT name FROM nodes").fetchall()]
+
+
+
+def get_energy(conn,node):
+    return run_sql(conn,"SELECT energy FROM nodes WHERE name = ?", node).fetchall()[0][0]
+
+def list_edges(conn):
+    query = """SELECT n1.name, n2.name FROM edges 
+                LEFT JOIN nodes AS n1 ON n1.id = edges.left 
+                LEFT JOIN nodes AS n2 ON n2.id = edges.right;"""
+    return run_sql(conn,query).fetchall()
+
+
+def graph(conn, center = None, radius = None):
+    nodes = list_nodes(conn)
+    edges = list_edges(conn)
+
     G = nx.Graph()
-    for node in list_nodes(file):
+    for node in nodes:
         G.add_node(node)
-    for u,v in list_edges(file):
+    for u,v in edges:
         if u in G.nodes() and v in G.nodes():
             G.add_edge(u,v)
     if center and radius:
         G = nx.ego_graph(G,n=center, radius=radius)
     return G
 
-def list_nodes(file="data.json"):
-    d = read_data(file)
-    return list(unique(d['nodes']))
 
-def list_edges(file="data.json"):
-    d = read_data(file)
-    return [v.split(";") for v in set(d['edges'])]
+def calculate_energy(conn):
+    G = graph(conn, center = None)
+    potential = phys.graph_potential(G)
+    w = phys.rescale(potential)
+    values = zip(G.nodes(),w)
+    for node, energy in values:
+        update_energy(conn,node,energy)
+
+def read_energy(conn,subgraph):
+    nodes = list(subgraph.nodes())
+    return array([get_energy(conn,n) for n in nodes])
 
 def query_connections(node,file="data.json"):
-    nodes = list_nodes(file)
     edges = list_edges(file)
-    d = read_data(file)
-    d["state"]["last_query"] = node
-    write_data(d,file)
     connected = [(u,v) for u,v in edges if\
                     (u==node) or (v==node)]
     return connected
 
-def del_node(node,file="data.json"):
-    d = read_data(file)
-    found = True
-    while found:
-        if node in d['nodes']:
-            u = d['nodes']
-            u.remove(node.lower())
-            d['nodes'] = u
-            # remove edges
-            candidates = query_connections(node)
-            for u,v in candidates: 
-                del_edge(u,v)
-            found = True
-        else:
-            found = False
-    write_data(d,file)
-    return found
-
 def merge_nodes(node1,node2,new_name = None, file="data.json"):
     if new_name == None:
         new_name = f"{node1}/{node2}"
-    write_node(new_name)
+    insert_node(new_name)
     new_edges = query_connections(node1)\
               + query_connections(node2)
-    del_node(node1); del_node(node2)
+    delete_node(node1); delete_node(node2)
     for u,v in new_edges:
-        write_edge(u,v)
-
-def del_edge(u,v,file="data.json"):
-    d = read_data(file)
-    found = False
-    for edge in [str_pair(u,v),str_pair(v,u)]:
-        if edge in d['edges']:
-            edges_ = d['edges']
-            edges_.remove(edge)
-            d['edges'] = edges_
-            found = found or True
-        else:
-            found = found or False
-        write_data(d,file)
-        return found
-
-def write_edge(u,v,file="data.json"):
-    d = read_data(file)
-    if (v,u) and (u,v) not in list_edges():
-        d['edges'].append(str_pair(u,v))
-    write_data(d,file)
-
-def write_node(node,file="data.json"):
-    d = read_data(file)
-    if node not in d['nodes']:
-        d['nodes'].append(node.lower())
-        calculate_potential(file)
-        write_data(d,file)
-        return True
-    return False
-
-def state(file="data.json"):
-    d = read_data(file)
-    if "state" in d and "last_add" in d["state"]:
-        return d["state"]
-    else:
-        first_node = list_nodes()[0]
-        d["state"]["last_add"] = first_node
-        d["state"]["blast_add"] = first_node
-        d["state"]["last_query"] = first_node
-        write_data(d,file)
+        insert_edge(u,v)
