@@ -11,10 +11,6 @@ def separator():
 def confirm():
 	st.write(f"Operation confirmed at {ctime()}.")
 
-def conn_update(conn):
-	conn.update()
-	st.write(f"Database updated confirmed at {ctime()}")
-
 def if_confirm(pred,err="(Not found)"):
 	if pred:
 		confirm()
