@@ -11,7 +11,7 @@ import physical as phys
 
 
 
-def nx(file="data.sqlite"):
+def nc(file="data.sqlite"):
     try:
         conn = sqlite3.connect(file)
         return conn
@@ -77,7 +77,7 @@ def insert_edge(conn, node_1, node_2):
     except:
         logging.error(f"Couldn't create edge {node_1}-{node_2}")
 
-def edge_exists_(conn, node_1, node_2):
+def edge_exists(conn, node_1, node_2):
     id_1, id_2 = get_node_id(conn,node_1),get_node_id(conn,node_2)
     res1 = run_sql(conn,"SELECT id FROM edges WHERE left = ? and right = ? ", id_1, id_2)
     res2 = run_sql(conn,"SELECT id FROM edges WHERE left = ? and right = ? ", id_2, id_1)
