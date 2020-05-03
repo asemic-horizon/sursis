@@ -52,6 +52,7 @@ def node_exists(conn, node):
     return len(res)>0
 
 def write_node(conn,node):
+    node = node.lower()
     if node_exists(conn,node):
         return True
     else:
