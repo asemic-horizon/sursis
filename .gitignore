@@ -3,4 +3,6 @@ env/*
 *.json
 *.bz2
 *.tar.bz
-
+*.pyc
+*.sqlite
+app.log
