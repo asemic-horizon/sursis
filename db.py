@@ -33,10 +33,16 @@ def initialize(conn):
             right integer NOT NULL,
             mass real,
             energy real);"""
+    sql_named_edges_view=\
+    """CREATE VIEW named_edges as 
+        SELECT n1.name,n2.name FROM edges 
+            LEFT JOIN nodes AS n1 ON n1.id = edges.left 
+            LEFT JOIN nodes AS n2 ON n2.id = edges.right;"""
     try:
         c = conn.cursor()
         c.execute(sql_nodes_table)
         c.execute(sql_edges_table)
+        c.execute(sql_named_edges_view)
     except sqlite3.Error as e:
         logging.error(e)
 
@@ -144,9 +150,7 @@ def list_nodes(conn):
     return [n[0] for n in run_sql(conn,"SELECT name FROM nodes").fetchall()]
 
 def list_edges(conn):
-    query = """SELECT n1.name, n2.name FROM edges 
-                LEFT JOIN nodes AS n1 ON n1.id = edges.left 
-                LEFT JOIN nodes AS n2 ON n2.id = edges.right;"""
+    query = """SELECT * FROM named_edges"""
     return run_sql(conn,query).fetchall()
 
 
