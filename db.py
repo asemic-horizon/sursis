@@ -6,7 +6,7 @@ from numpy import unique, array
 from time import ctime
 import networkx as nx 
 
-import physical as phys
+import physics as phys
 
 
 
@@ -30,7 +30,9 @@ def initialize(conn):
     """CREATE TABLE IF NOT EXISTS edges (
             id integer PRIMARY KEY,
             left integer NOT NULL,
-            right integer NOT NULL);"""
+            right integer NOT NULL,
+            mass real,
+            energy real);"""
     try:
         c = conn.cursor()
         c.execute(sql_nodes_table)
@@ -137,19 +139,9 @@ def convert_json(conn, json_file):
             insert_edge(conn,u,v)
         except:
             logging.error(f"Conversion error in edge {node_1}-{node_2}")
-def update_mass(conn, node, mass):
-    return run_sql(conn,"UPDATE nodes SET mass = ? WHERE name = ? LIMIT 1",mass, node)
-
-def update_energy(conn, node, mass):
-    return run_sql(conn,"UPDATE nodes SET energy = ? WHERE name = ? LIMIT 1",mass, node)
 
 def list_nodes(conn):
     return [n[0] for n in run_sql(conn,"SELECT name FROM nodes").fetchall()]
-
-
-
-def get_energy(conn,node):
-    return run_sql(conn,"SELECT energy FROM nodes WHERE name = ?", node).fetchall()[0][0]
 
 def list_edges(conn):
     query = """SELECT n1.name, n2.name FROM edges 
@@ -172,18 +164,9 @@ def graph(conn, center = None, radius = None):
         G = nx.ego_graph(G,n=center, radius=radius)
     return G
 
-
-def calculate_energy(conn):
-    G = graph(conn, center = None)
-    potential = phys.graph_potential(G)
-    w = phys.rescale(potential)
-    values = zip(G.nodes(),w)
-    for node, energy in values:
-        update_energy(conn,node,energy)
-
-def read_energy(conn,subgraph):
-    nodes = list(subgraph.nodes())
-    return array([get_energy(conn,n) for n in nodes])
+def read_edge_energy(conn,subgraph):
+    edges = list(subgraph.edges())
+    return array([get_edge_energy(conn,n) for n in edges])
 
 def query_connections(conn,node):
     edges = list_edges(conn)
@@ -197,6 +180,6 @@ def merge_nodes(conn,node1,node2,new_name = None, file="data.json"):
     write_node(conn,new_name)
     new_edges = query_connections(conn,node1)\
               + query_connections(conn,node2)
-    del_node(conn,node1); del_node(conn,node2)
+    del_ndeleteode(conn,node1); del_node(conn,node2)
     for u,v in new_edges:
         write_edge(conn,u,v)
