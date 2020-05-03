@@ -191,7 +191,7 @@ def query_connections(conn,node):
                     (u==node) or (v==node)]
     return connected
 
-def merge_nodes(node1,node2,new_name = None, file="data.json"):
+def merge_nodes(conn,node1,node2,new_name = None, file="data.json"):
     if new_name == None:
         new_name = f"{node1}/{node2}"
     write_node(conn,new_name)
