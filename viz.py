@@ -8,14 +8,14 @@ import physical as phys
 
 def draw_bw(G, pos_fun=nx.spring_layout):
 	pos = pos_fun(G)
-	font_size = 11 if G.number_of_nodes()<50 else 9
+	font_size = 10 if G.number_of_nodes()<10 else 6
 	alpha = 1 if G.number_of_nodes()<150 else 0.855
 	nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=font_size,width=0.2,alpha=alpha)
 	st.pyplot()
 
 def draw_color(G, pot, pos_fun=nx.spring_layout, cmap="gnuplot"):
 	pos = pos_fun(G)
-	font_size = 11 if G.number_of_nodes()<50 else 9
+	font_size = 10 if G.number_of_nodes()<10 else 6
 	alpha = 0.9
 	node_size = 45
 	scheme = mpl.pyplot.get_cmap(cmap)
