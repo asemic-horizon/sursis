@@ -29,11 +29,11 @@ if op_mode == node_mode:
 		add_button, del_button = ui.add_del()
 		if node and add_button: 
 			found = db.write_node(conn,node)
-			conn.update()
+			conn.commit()
 			ui.if_confirm(found,"Name already exists")
 		if node and del_button:
 			found = db.del_node(conn,node)
-			conn.update()
+			conn.commit()
 			ui.if_confirm(found)	
 elif op_mode == dyad_mode:
 	with nc() as conn:
@@ -44,12 +44,12 @@ elif op_mode == dyad_mode:
 			db.write_node(conn,node_1)
 			db.write_node(conn,node_2)
 			db.write_edge(conn,node_1, node_2)
-			conn.update(); ui.confirm()
+			conn.commit(); ui.confirm()
 		if node_1 and node_2 and del_button:
 			db.del_edge(conn,node_1,node_2)
 			db.del_node(conn,node_1)
 			db.del_node(conn,node_2)
-			conn.update(); ui.confirm()
+			conn.commit(); ui.confirm()
 elif op_mode == triad_mode:
 	with nc() as conn:
 		parent = st.text_input('Enter head node name')
@@ -62,14 +62,14 @@ elif op_mode == triad_mode:
 			db.write_node(conn,right)
 			db.write_edge(conn,parent,left)
 			db.write_edge(conn,parent,right)
-			conn.update(); ui.confirm()
+			conn.commit(); ui.confirm()
 		if parent and left and right and del_button:
 			db.del_node(conn, parent)
 			db.del_node(conn, left)
 			db.del_node(conn, right)
 			db.del_edge(conn, parent,left)
 			db.del_edge(conn, parent,right)
-			conn.update(); ui.confirm()
+			conn.commit(); ui.confirm()
 elif op_mode == conn_mode:
 	with nc() as conn:
 		node_1 = ui.known_field_input(conn,"Source","jazz")
@@ -77,13 +77,13 @@ elif op_mode == conn_mode:
 		add_button, del_button = ui.add_del()
 		if node_1 and node_2 and add_button: 
 			db.write_edge(conn, node_1,node_2)
-			conn.update(); ui.confirm()
+			conn.commit(); ui.confirm()
 		if node_1 and node_2 and del_button:
 			found = True
 			while found:
 				found = db.del_edge(conn,node_1, node_2)
 			st.write("(Edge deleted.)")
-			conn.update(); ui.confirm()
+			conn.commit(); ui.confirm()
 elif op_mode == nonn_mode:
 	with nc() as conn:
 		nodes = db.list_nodes(conn)
@@ -94,7 +94,7 @@ elif op_mode == nonn_mode:
 		if node_1 and node_2 and nonn_button:
 			db.write_node(conn,node_2)
 			db.write_edge(conn,node_1,node_2)
-			conn.update(); ui.confirm()
+			conn.commit(); ui.confirm()
 
 elif op_mode == merge_mode:
 	with nc() as conn:
@@ -111,7 +111,7 @@ elif op_mode == merge_mode:
 			merge_button = st.button("Merge")
 			if merge_button:
 				db.merge_nodes(conn,node_1,node_2, new_node)
-				conn.update(); ui.confirm()
+				conn.commit(); ui.confirm()
 
 
 elif op_mode == view_mode:
