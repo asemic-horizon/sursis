@@ -40,6 +40,7 @@ elif op_mode == merge_mode:
 
 elif op_mode == view_mode:
 	with nc() as conn:
+		chem.update_physics(conn)
 		ego = st.checkbox("Full graph",value=False)
 		color = st.checkbox("Color",value = True)
 		algo0 = "Large-scale structure"
