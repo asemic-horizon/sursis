@@ -22,4 +22,4 @@ def graph_potential(graph : nx.Graph):
 
 def rescale(y : np.ndarray):
 	t = (y - y.mean())/y.std()
-	return t/3
+	return t/4
