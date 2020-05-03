@@ -1,6 +1,8 @@
 import db
 import physics as phys 
 from networkx import line_graph as dual
+from numpy import array
+import logging
 
 def update_physics(conn):
     G = db.graph(conn, center = None)
@@ -17,24 +19,26 @@ def update_physics(conn):
     # EDGES
     H = dual(G); del G
     mass, energy = phys.mass(H), phys.energy(H)
-    values = [(u,v,m,p) for (u,v),m, p in zip(H.edges(),mass,energy)]
+    values = [(u,v,m,p) for (u,v),m, p in zip(H.nodes(),mass,energy)]
+
     for u, v,  mass, energy in values:
-        id_1, id_2 = get_node_id(u),get_node_id(v)
+        logging.info(f"Write edge {u},{v}")
+        id_1, id_2 = db.get_node_id(conn,u), db.get_node_id(conn,v)
         db.run_sql(conn,\
-            "UPDATE nodes SET mass = ? WHERE left  = ? and right = ?", mass, id_1, id_2).lastrowid
+            "UPDATE edges SET mass = ? WHERE left  = ? and right = ?", mass, id_1, id_2).lastrowid
         db.run_sql(conn,\
-            "UPDATE nodes SET mass = ? WHERE left  = ? and right = ?", mass, id_2, id_1).lastrowid
+            "UPDATE edges SET mass = ? WHERE left  = ? and right = ?", mass, id_2, id_1).lastrowid
         db.run_sql(conn,\
-            "UPDATE nodes SET energy = ? WHERE left  = ? and right = ?", energy, id_1, id_2).lastrowid
+            "UPDATE edges SET energy = ? WHERE left  = ? and right = ?", energy, id_1, id_2).lastrowid
         db.run_sql(conn,\
-            "UPDATE nodes SET energy = ? WHERE left  = ? and right = ?", energy, id_2, id_1).lastrowid
+            "UPDATE edges SET energy = ? WHERE left  = ? and right = ?", energy, id_2, id_1).lastrowid
 
 
 def read_node_prop(conn,subgraph,prop="energy"):
     nodes = list(subgraph.nodes())
     res = [db.run_sql(conn,\
         f"SELECT {prop} FROM nodes WHERE name = ?", n).fetchall()[0][0] for n in nodes]
-    return array([get_node_energy(conn,n) for n in nodes])
+    return res
 
 def read_edge_prop(conn,subgraph,prop="energy"):
     edges = list(subgraph.edges())

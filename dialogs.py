@@ -47,7 +47,7 @@ def node_merge(conn):
 			conn.update(); ui.confirm()
 	return None
 
-def trail_node_entry(conn)
+def trail_node_entry(conn):
 	nodes = db.list_nodes(conn)
 	node_1 = st.selectbox("Existing",nodes,index=nodes.index("jazz"))
 	node_2 = st.text_input('New')
@@ -72,7 +72,8 @@ def dyad_entry(conn):
 		db.del_edge(conn,node_1,node_2)
 		db.del_node(conn,node_1)
 		db.del_node(conn,node_2)
-		conn.update(); ui.confirm()		parent = st.text_input('Enter head node name')
+		conn.update(); ui.confirm()
+		parent = st.text_input('Enter head node name')
 		left = st.text_input('Enter left child name')
 		right = st.text_input('Enter right child name')
 		add_button, del_button = ui.add_del()

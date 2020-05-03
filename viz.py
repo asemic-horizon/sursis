@@ -2,9 +2,10 @@ import streamlit as st
 import matplotlib.cm as cm
 import matplotlib as mpl
 import matplotlib.colors as colors
-import networkx as nx 
-import numpy as np 
-import physical as phys
+import networkx as nx
+import numpy as np
+import physics as phys
+import graph_physics as chem
 
 def draw_bw(G, pos_fun=nx.spring_layout):
 	pos = pos_fun(G)
@@ -28,8 +29,9 @@ def draw_color(G, pot, pos_fun=nx.spring_layout, cmap="gnuplot"):
 	st.pyplot()
 
 
-def draw(G, is_color, pot, pos_fun=nx.sprint_layout,cmap="gnuplot"):
-	if color:
-		viz.draw_color(G,pot = pot, pos_fun, cmap = cmap)	
-	else:
-		viz.draw_bw(G, pos_fun)
+def draw(G, conn, is_color, prop, pos_fun=nx.spring_layout,cmap="gnuplot"):
+        pot = chem.read_node_prop(conn,G,prop)
+        if is_color:
+            draw_color(G,pot = pot, pos_fun = pos_fun, cmap = cmap)
+        else:
+            draw_bw(G, pos_fun)

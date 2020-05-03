@@ -35,9 +35,7 @@ elif op_mode == edge_mode:
 elif op_mode == trail_mode:
 	with nc() as conn: dlg.trail_node_entry(conn)
 elif op_mode == merge_mode:
-	with nc() as conn:
-
-
+	with nc() as conn: dlg.node_merge(conn)
 elif op_mode == view_mode:
 	with nc() as conn:
 		chem.update_physics(conn)
@@ -56,15 +54,15 @@ elif op_mode == view_mode:
 			center = st.selectbox("Choose nodes",fields,index = u)
 			radius = st.number_input("Radius",value=1)
 
-
-		
 		G = db.graph(conn,center = center, radius = radius)
 
 		viz.draw(
-			G = G,
-			pot = chem_read_node_prop(conn, G, "energy"),
-			pos = nx.spring_layout if algo==algo0 else\
-				  nx.kamada_kawai_layout)
+			G = G, conn=conn,
+                        is_color = color,
+			prop="energy",
+			pos_fun = nx.spring_layout if algo==algo0 else\
+				  nx.kamada_kawai_layout,
+                        cmap = cmap)
 
 		ui.separator()
 		ui.graph_stats(G)
@@ -77,10 +75,10 @@ elif op_mode == view_mode:
 		else:
 		    st.write("#### Minimum tree")
 		pos = nx.spring_layout(H)
-		viz.draw(G,color, nx.spring_layout)
+		viz.draw(G,conn=conn, is_color = color, pos_fun = nx.spring_layout, prop="mass")
 
 		if not same:
 		    st.write("#### Maximum tree")
 		    pos = nx.spring_layout(J)
-		    viz.draw(J,color,  nx.spring_layout)
+		    viz.draw(J,conn = conn, is_color = color,  pos_fun = nx.spring_layout, cmap = cmap, prop="mass")
 		st.pyplot()
