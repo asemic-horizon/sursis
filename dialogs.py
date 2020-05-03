@@ -7,11 +7,11 @@ def node_entry(conn):
 	add_button, del_button = ui.add_del()
 	if node and add_button: 
 		found = db.write_node(conn,node)
-		conn.update()
+		conn.commit()
 		ui.if_confirm(found,"Name already exists")
 	if node and del_button:
 		found = db.del_node(conn,node)
-		conn.update()
+		conn.commit()
 		ui.if_confirm(found)	
 	return None 
 
@@ -21,13 +21,13 @@ def edge_entry(conn):
 	add_button, del_button = ui.add_del()
 	if node_1 and node_2 and add_button: 
 		db.write_edge(conn, node_1,node_2)
-		conn.update(); ui.confirm()
+		conn.commit(); ui.confirm()
 	if node_1 and node_2 and del_button:
 		found = True
 		while found:
 			found = db.del_edge(conn,node_1, node_2)
 		st.write("(Edge deleted.)")
-		conn.update(); ui.confirm()
+		conn.commit(); ui.confirm()
 	return None
 
 def node_merge(conn):
@@ -44,7 +44,7 @@ def node_merge(conn):
 		merge_button = st.button("Merge")
 		if merge_button:
 			db.merge_nodes(conn,node_1,node_2, new_node)
-			conn.update(); ui.confirm()
+			conn.commit(); ui.confirm()
 	return None
 
 def trail_node_entry(conn)
@@ -56,7 +56,7 @@ def trail_node_entry(conn)
 	if node_1 and node_2 and nonn_button:
 		db.write_node(conn,node_2)
 		db.write_edge(conn,node_1,node_2)
-		conn.update(); ui.confirm()
+		conn.commit(); ui.confirm()
 	return None
 
 def dyad_entry(conn):
@@ -67,12 +67,12 @@ def dyad_entry(conn):
 		db.write_node(conn,node_1)
 		db.write_node(conn,node_2)
 		db.write_edge(conn,node_1, node_2)
-		conn.update(); ui.confirm()
+		conn.commit(); ui.confirm()
 	if node_1 and node_2 and del_button:
 		db.del_edge(conn,node_1,node_2)
 		db.del_node(conn,node_1)
 		db.del_node(conn,node_2)
-		conn.update(); ui.confirm()		parent = st.text_input('Enter head node name')
+		conn.commit(); ui.confirm()		parent = st.text_input('Enter head node name')
 		left = st.text_input('Enter left child name')
 		right = st.text_input('Enter right child name')
 		add_button, del_button = ui.add_del()
@@ -82,14 +82,14 @@ def dyad_entry(conn):
 			db.write_node(conn,right)
 			db.write_edge(conn,parent,left)
 			db.write_edge(conn,parent,right)
-			conn.update(); ui.confirm()
+			conn.commit(); ui.confirm()
 		if parent and left and right and del_button:
 			db.del_node(conn, parent)
 			db.del_node(conn, left)
 			db.del_node(conn, right)
 			db.del_edge(conn, parent,left)
 			db.del_edge(conn, parent,right)
-			conn.update(); ui.confirm()
+			conn.commit(); ui.confirm()
 	return None
 
 def triad_entry(conn):
@@ -103,12 +103,12 @@ def triad_entry(conn):
 		db.write_node(conn,right)
 		db.write_edge(conn,parent,left)
 		db.write_edge(conn,parent,right)
-		conn.update(); ui.confirm()
+		conn.commit(); ui.confirm()
 	if parent and left and right and del_button:
 		db.del_node(conn, parent)
 		db.del_node(conn, left)
 		db.del_node(conn, right)
 		db.del_edge(conn, parent,left)
 		db.del_edge(conn, parent,right)
-		conn.update(); ui.confirm()
+		conn.commit(); ui.confirm()
 	return None
