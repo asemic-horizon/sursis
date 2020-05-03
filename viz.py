@@ -27,3 +27,9 @@ def draw_color(G, pot, pos_fun=nx.spring_layout, cmap="gnuplot"):
 	cbar.ax.set_xticklabels(["               Repulsive","Neutral", "Attractive                "])
 	st.pyplot()
 
+
+def draw(G, is_color, pot, pos_fun=nx.sprint_layout,cmap="gnuplot"):
+	if color:
+		viz.draw_color(G,pot = pot, pos_fun, cmap = cmap)	
+	else:
+		viz.draw_bw(G, pos_fun)

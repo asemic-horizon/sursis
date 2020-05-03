@@ -58,11 +58,12 @@ elif op_mode == view_mode:
 
 		
 		G = db.graph(conn,center = center, radius = radius)
-		pot = db.read_energy(conn,G)
-		if color:
-			viz.draw_color(G,pot = pot, pos_fun = nx.spring_layout if algo==algo0 else nx.kamada_kawai_layout, cmap = cmap)	
-		else:
-			viz.draw_bw(G, pos_fun = nx.spring_layout if algo==algo0 else nx.kamada_kawai_layout)
+
+		viz.draw(
+			G = G,
+			pot = chem_read_node_prop(conn, G, "energy"),
+			pos = nx.spring_layout if algo==algo0 else\
+				  nx.kamada_kawai_layout)
 
 		ui.separator()
 		ui.graph_stats(G)
@@ -75,10 +76,10 @@ elif op_mode == view_mode:
 		else:
 		    st.write("#### Minimum tree")
 		pos = nx.spring_layout(H)
-		viz.draw_bw(G,nx.spring_layout)
+		viz.draw(G,color, nx.spring_layout)
 
 		if not same:
 		    st.write("#### Maximum tree")
 		    pos = nx.spring_layout(J)
-		    viz.draw_bw(J, nx.spring_layout)
+		    viz.draw(J,color,  nx.spring_layout)
 		st.pyplot()
