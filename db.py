@@ -112,11 +112,11 @@ def delete_node(conn, node):
 
 
 def del_node(conn,node):
-    if node_exists(conn,node):
-        return True
+    if not node_exists(conn,node):
+        return False
     else:
         delete_node(conn,node)
-        return False
+        return True
 
 
 def del_edge(conn,node_1,node_2):
