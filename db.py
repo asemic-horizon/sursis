@@ -164,9 +164,6 @@ def graph(conn, center = None, radius = None):
         G = nx.ego_graph(G,n=center, radius=radius)
     return G
 
-def read_edge_energy(conn,subgraph):
-    edges = list(subgraph.edges())
-    return array([get_edge_energy(conn,n) for n in edges])
 
 def query_connections(conn,node):
     edges = list_edges(conn)
@@ -180,6 +177,6 @@ def merge_nodes(conn,node1,node2,new_name = None, file="data.json"):
     write_node(conn,new_name)
     new_edges = query_connections(conn,node1)\
               + query_connections(conn,node2)
-    del_ndeleteode(conn,node1); del_node(conn,node2)
+    del_noe(conn,node1); del_node(conn,node2)
     for u,v in new_edges:
         write_edge(conn,u,v)
