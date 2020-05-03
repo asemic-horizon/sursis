@@ -185,8 +185,8 @@ def read_energy(conn,subgraph):
     nodes = list(subgraph.nodes())
     return array([get_energy(conn,n) for n in nodes])
 
-def query_connections(node,file="data.json"):
-    edges = list_edges(file)
+def query_connections(conn,node):
+    edges = list_edges(conn)
     connected = [(u,v) for u,v in edges if\
                     (u==node) or (v==node)]
     return connected
