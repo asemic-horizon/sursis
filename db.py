@@ -194,9 +194,9 @@ def query_connections(node,file="data.json"):
 def merge_nodes(node1,node2,new_name = None, file="data.json"):
     if new_name == None:
         new_name = f"{node1}/{node2}"
-    insert_node(new_name)
+    write_node(conn,new_name)
     new_edges = query_connections(node1)\
               + query_connections(node2)
-    delete_node(node1); delete_node(node2)
+    del_node(node1); del_node(node2)
     for u,v in new_edges:
-        insert_edge(u,v)
+        write_edge(conn,u,v)
