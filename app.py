@@ -60,13 +60,14 @@ elif op_mode == triad_mode:
 			db.write_node(conn,right)
 			db.write_edge(conn,parent,left)
 			db.write_edge(conn,parent,right)
+			ui.confirm()
 		if parent and left and right and del_button:
 			db.del_node(conn, parent)
 			db.del_node(conn, left)
 			db.del_node(conn, right)
 			db.del_edge(conn, parent,left)
 			db.del_edge(conn, parent,right)
-
+			ui.confirm()
 elif op_mode == conn_mode:
 	with nc() as conn:
 		node_1 = ui.known_field_input(conn,"Source","jazz")
