@@ -51,7 +51,7 @@ def run_sql(conn,sql,*args):
     cur.execute(sql,(*args,))
     return cur
 
-
+# insert and delete functions do db work
 def insert_node(conn,node):
     return run_sql(conn,"INSERT INTO nodes (name) VALUES (?)",node).lastrowid
 
@@ -59,26 +59,23 @@ def node_exists(conn, node):
     res = run_sql(conn,"SELECT id FROM nodes WHERE name = ? LIMIT 1",node).fetchall()
     return len(res)>0
 
-def write_node(conn,node):
-    node = node.lower()
-    if node_exists(conn,node):
-        return True
-    else:
-        insert_node(conn,node)
-        return False
+# edges are written in one direction, but are assumed to be undirected
+# therefore must check both ways
 
+def edge_exists(conn, node_1, node_2):
+    query = "SELECT id FROM named_edges WHERE node_1 = ? and node_2 = ? "
+    res1 = run_sql(conn,query, node_1, node_2).fetchall()
+    res2 = run_sql(conn,query, node_2, node_1).fetchall()
+    return len(res1)>0 and len(res2)>0
+
+# This helper is necessary for inserts given as node names
 def get_node_id(conn,node):
     try:
         return run_sql(conn,"SELECT id FROM nodes WHERE name = ? LIMIT 1",node).fetchall()[0][0]
     except:    
         logging.error("Error fetching id for node " + node)
 
-def get_node_name(conn,id_1):
-    try:
-        return run_sql(conn,"SELECT id FROM nodes WHERE id = ? LIMIT 1",id_1).fetchall()[0][0]
-    except:    
-        logging.error("Error fetching id for node " + node)
-
+# edges are written in one direction, but are assumed to be undirected
 def insert_edge(conn, node_1, node_2):
     try:
         id_1, id_2 = get_node_id(conn,node_1),get_node_id(conn,node_2)
@@ -86,47 +83,47 @@ def insert_edge(conn, node_1, node_2):
     except:
         logging.error(f"Couldn't create edge {node_1}-{node_2}")
 
-def edge_exists(conn, node_1, node_2):
-    id_1, id_2 = get_node_id(conn,node_1),get_node_id(conn,node_2)
-    res1 = run_sql(conn,"SELECT id FROM edges WHERE left = ? and right = ? ", id_1, id_2).fetchall()
-    res2 = run_sql(conn,"SELECT id FROM edges WHERE left = ? and right = ? ", id_2, id_1).fetchall()
-    return len(res1)>0 and len(res2)>0
-
-
-def write_edge(conn,node_1,node_2):
-    if edge_exists(conn,node_1,node_2):
-        return True
-    else:
-        insert_edge(conn,node_1,node_2)
-        return False
-
+# edges are written in one direction, but are assumed to be undirected
+# therefore must check both ways
 
 def delete_edge(conn, node_1, node_2):
+    query = "DELETE FROM edges WHERE left = ? and right = ?"
     try:
         id_1, id_2 = get_node_id(conn,node_1),get_node_id(conn,node_2)
-        _ =  run_sql(conn,"DELETE FROM edges WHERE left = ? and right = ?",id_1,id_2)
-        _ =  run_sql(conn,"DELETE FROM edges WHERE left = ? and right = ?",id_2,id_1)
+        run_sql(conn,query,id_1,id_2)
+        run_sql(conn,query,id_2,id_1)
     except:
         logging.error(f"Couldn't get nodes {node_1}-{node_2}")
 
 def delete_node(conn, node):
     try:
         id_1 = get_node_id(conn,node)
-        _ =  run_sql(conn,"DELETE FROM edges WHERE left = ? ",id_1)
-        _ =  run_sql(conn,"DELETE FROM edges WHERE right = ?",id_1)
-        _ =  run_sql(conn,"DELETE FROM nodes WHERE id = ?", id_1)
+        # first delete connected edges.
+        run_sql(conn,"DELETE FROM edges WHERE left = ? ",id_1)
+        run_sql(conn,"DELETE FROM edges WHERE right = ?",id_1)
+        run_sql(conn,"DELETE FROM nodes WHERE id = ?", id_1)
     except:
         logging.error(f"Couldn't {node}.")
 
-
+# write and del functions are called by the app an return a boolean
+def write_node(conn,node):
+    node = node.lower()
+    if node_exists(conn,node):
+        return True
+    else:
+        insert_node(conn,node)
+def write_edge(conn,node_1,node_2):
+    if edge_exists(conn,node_1,node_2):
+        return True
+    else:
+        insert_edge(conn,node_1,node_2)
+        return False
 def del_node(conn,node):
     if not node_exists(conn,node):
         return False
     else:
         delete_node(conn,node)
         return True
-
-
 def del_edge(conn,node_1,node_2):
     if edge_exists(conn,node_1,node_2):
         return True
@@ -134,7 +131,33 @@ def del_edge(conn,node_1,node_2):
         delete_edge(conn,node_1,node_2)
         return False
 
+# meant to be called directly from the app too.
+def list_nodes(conn):
+    return [n[0] for n in run_sql(conn,"SELECT name FROM nodes").fetchall()]
 
+# not currently used,  just for completeness
+def list_edges(conn):
+    query = """SELECT * FROM named_edges"""
+    return run_sql(conn,query).fetchall()
+
+def query_connections(conn,node):
+    query = """SELECT node_1, node_2 FROM named_edges 
+                WHERE node_1 = ? OR node_2 = ?"""
+    connected = run_sql(conn,query).fetchall()
+    return connected
+
+def merge_nodes(conn,node1,node2,new_name = None):
+    if new_name == None:
+        new_name = f"{node1}/{node2}"
+    write_node(conn,new_name)
+    new_edges = query_connections(conn,node1)\
+              + query_connections(conn,node2)
+    for u,v in new_edges:
+        write_edge(conn,u,v)
+    del_node(conn,node1); del_node(conn,node2)
+
+
+## convertion from OOOLD json format. 
 def convert_json(conn, json_file):
     with open(json_file,"r") as f: d = json.load(f)
     for node in d["nodes"]:
@@ -146,41 +169,6 @@ def convert_json(conn, json_file):
         except:
             logging.error(f"Conversion error in edge {node_1}-{node_2}")
 
-def list_nodes(conn):
-    return [n[0] for n in run_sql(conn,"SELECT name FROM nodes").fetchall()]
-
-def list_edges(conn):
-    query = """SELECT * FROM named_edges"""
-    return run_sql(conn,query).fetchall()
 
 
-def graph(conn, center = None, radius = None):
-    nodes = list_nodes(conn)
-    edges = list_edges(conn)
 
-    G = nx.Graph()
-    for node in nodes:
-        G.add_node(node)
-    for u,v in edges:
-        if u in G.nodes() and v in G.nodes():
-            G.add_edge(u,v)
-    if center and radius:
-        G = nx.ego_graph(G,n=center, radius=radius)
-    return G
-
-
-def query_connections(conn,node):
-    edges = list_edges(conn)
-    connected = [(u,v) for u,v in edges if\
-                    (u==node) or (v==node)]
-    return connected
-
-def merge_nodes(conn,node1,node2,new_name = None, file="data.json"):
-    if new_name == None:
-        new_name = f"{node1}/{node2}"
-    write_node(conn,new_name)
-    new_edges = query_connections(conn,node1)\
-              + query_connections(conn,node2)
-    del_noe(conn,node1); del_node(conn,node2)
-    for u,v in new_edges:
-        write_edge(conn,u,v)
