@@ -143,7 +143,7 @@ def list_edges(conn):
 def query_connections(conn,node):
     query = """SELECT node_1, node_2 FROM named_edges 
                 WHERE node_1 = ? OR node_2 = ?"""
-    connected = run_sql(conn,query).fetchall()
+    connected = run_sql(conn,query, node, node).fetchall()
     return connected
 
 def merge_nodes(conn,node1,node2,new_name = None):
