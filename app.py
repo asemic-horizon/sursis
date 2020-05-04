@@ -43,7 +43,7 @@ elif op_mode == view_mode:
 		color = st.checkbox("Color",value = True)
 		algo0 = "Large-scale structure"
 		algo1 = "Readability"
-		algo = st.radio("Prioritize",[algo0,algo1],value=algo1)
+		algo = st.radio("Prioritize",[algo1,algo0])
 
 		if ego:
 			center = None
