@@ -22,7 +22,6 @@ def update_physics(conn):
     values = [(u,v,m,p) for (u,v),m, p in zip(H.nodes(),mass,energy)]
 
     for u, v,  mass, energy in values:
-        logging.info(f"Write edge {u},{v}")
         id_1, id_2 = db.get_node_id(conn,u), db.get_node_id(conn,v)
         db.run_sql(conn,\
             "UPDATE edges SET mass = ? WHERE left  = ? and right = ?", mass, id_1, id_2).lastrowid
