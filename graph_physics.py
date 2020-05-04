@@ -4,16 +4,20 @@ from networkx import line_graph as dual
 from numpy import array
 import logging
 
-def graph(conn, center = None, radius = None):
-    nodes = list_nodes(conn)
-    edges = list_edges(conn)
+def get_physics(conn, table, prop="energy"):
+    query = f"SELECT name, {prop} FROM {table}"
+    return run_sql(conn,query,node).fetchall()
+
+def graph(conn, center = None, radius = None, prop = "energy"):
+    nodes = get_physics(conn, "nodes", prop)
+    edges = get_physics(conn, "edges", prop)
 
     G = nx.Graph()
-    for node in nodes:
-        G.add_node(node)
-    for u,v in edges:
+    for node, prop in nodes:
+        G.add_node(node, weight=prop)
+    for u,v, prop in edges:
         if u in G.nodes() and v in G.nodes():
-            G.add_edge(u,v)
+            G.add_edge(u,v,weight=prop)
     if center and radius:
         G = nx.ego_graph(G,n=center, radius=radius)
     return G
