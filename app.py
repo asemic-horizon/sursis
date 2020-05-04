@@ -54,7 +54,7 @@ elif op_mode == view_mode:
 			center = st.selectbox("Choose nodes",fields,index = u)
 			radius = st.number_input("Radius",value=1)
 
-		G = db.graph(conn,center = center, radius = radius)
+		G = chem.graph(conn,center = center, radius = radius)
 
 		viz.draw(
 			G = G, conn=conn,

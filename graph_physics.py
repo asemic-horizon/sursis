@@ -4,8 +4,23 @@ from networkx import line_graph as dual
 from numpy import array
 import logging
 
+def graph(conn, center = None, radius = None):
+    nodes = list_nodes(conn)
+    edges = list_edges(conn)
+
+    G = nx.Graph()
+    for node in nodes:
+        G.add_node(node)
+    for u,v in edges:
+        if u in G.nodes() and v in G.nodes():
+            G.add_edge(u,v)
+    if center and radius:
+        G = nx.ego_graph(G,n=center, radius=radius)
+    return G
+
+
 def update_physics(conn):
-    G = db.graph(conn, center = None)
+    G = graph(conn, center = None)
 
     # NODES
     mass, energy = phys.mass(G), phys.energy(G)
