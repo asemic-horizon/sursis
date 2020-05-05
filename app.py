@@ -60,7 +60,7 @@ elif op_mode == view_mode:
 			G = G, conn=conn,
                         is_color = color,
 			prop="energy",
-			pos_fun = nx.spiral_layout if algo==algo0 else\
+			pos_fun = nx.spring_layout if algo==algo0 else\
 				  nx.kamada_kawai_layout,
                         cmap = cmap)
 
@@ -75,10 +75,10 @@ elif op_mode == view_mode:
 		else:
 		    st.write("#### Minimum tree")
 		pos = nx.spring_layout(H)
-		viz.draw(G,conn=conn, is_color = color, pos_fun = nx.spring_layout, prop="mass")
+		viz.draw(G,conn=conn, is_color = color, pos_fun = nx.planar_layout, prop="mass")
 
 		if not same:
 		    st.write("#### Maximum tree")
-		    pos = nx.spring_layout(J)
+		    pos = nx.planar_layout(J)
 		    viz.draw(J,conn = conn, is_color = color,  pos_fun = nx.spring_layout, cmap = cmap, prop="mass")
 		st.pyplot()
