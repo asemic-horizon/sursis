@@ -68,7 +68,7 @@ elif op_mode == view_mode:
 		ui.graph_stats(G)
 
 		H = nx.minimum_spanning_tree(G)
-		J = nx.maximum_spanning_tree(H)
+		J = nx.maximum_spanning_tree(G)
 		same = H.edges()==J.edges()
 		if same:
 		    st.write("#### Spanning tree")
