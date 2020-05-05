@@ -18,6 +18,10 @@ To run,
 
     streamlit run app.py
 
-## Usage
+## Usage demo
 
-![demo](demo.gif)
+![demo](https://i.imgur.com/IysQtMs.gif)
+
+The coloring of nodes is giving by the solution to a Poisson equation Lx = w, where w are the observed "weights" (currently, the betweenness centrality of nodes). In this way we expect to capture an idea of the balance of forces in the graph structures.
+
+Edges are also weighted in the exact same way, calculating the inverse Laplacian of the dual graph. It is expected that the layout algorithms take these weights into account, but I don't have much control over that right now.
