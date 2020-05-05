@@ -60,7 +60,7 @@ elif op_mode == view_mode:
 			G = G, conn=conn,
                         is_color = color,
 			prop="energy",
-			pos_fun = nx.spectral_layout if algo==algo0 else\
+			pos_fun = nx.spiral_layout if algo==algo0 else\
 				  nx.kamada_kawai_layout,
                         cmap = cmap)
 
