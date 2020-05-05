@@ -1,4 +1,4 @@
-# Sursis - network notebook for personal uses
+# Sursis - [personal] <- [notebook] -> [network]
 
 Sursis is a simple web app built on top of [Streamlit](https://streamlit.io). In a way, it abuses the goals of Streamlit, which are closer to Jupyter notebooks, but is very simply written and does the trick for me.
 
