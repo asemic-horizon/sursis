@@ -20,7 +20,7 @@ To run,
 
 ## Usage demo
 
-![demo](https://i.imgur.com/IysQtMs.mp4)
+!()[https://i.imgur.com/IysQtMs.gif]
 
 The coloring of nodes is giving by the solution to a Poisson equation Lx = w, where w are the observed "weights" (currently, the betweenness centrality of nodes). In this way we expect to capture an idea of the balance of forces in the graph structures.
 
