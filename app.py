@@ -78,6 +78,5 @@ elif op_mode == view_mode:
 
 		if not same:
 		    st.write("#### Maximum tree")
-		    pos = nx.planar_layout(J)
-		    viz.draw(J,conn = conn, is_color = color,  pos_fun = nx.spring_layout, cmap = cmap, prop="mass")
+		    viz.draw(J,conn = conn, is_color = color,  pos_fun = nx.planar_layout, cmap = cmap, prop="mass")
 		st.pyplot()
