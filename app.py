@@ -25,16 +25,21 @@ st.write("## `sursis`")
 op_mode = st.sidebar.radio(label="Operation mode",options=[view_mode,node_mode,edge_mode, dyad_mode, triad_mode, trail_mode, merge_mode])
 
 if op_mode == node_mode:
+	st.write("### Add/remove nodes")
 	with nc() as conn: dlg.node_entry(conn)
 elif op_mode == dyad_mode:
+	st.write("### Add two nodes and connect them")
 	with nc() as conn: dlg.dyad_entry(conn)
 elif op_mode == triad_mode:
+	st.write("### Add a parent node and two children")
 	with nc() as conn: dlg.triad_entry(conn)
 elif op_mode == edge_mode:
+	st.write("### Add/remove connections")
 	with nc() as conn: dlg.edge_entry(conn)
 elif op_mode == trail_mode:
 	with nc() as conn: dlg.trail_node_entry(conn)
 elif op_mode == merge_mode:
+	st.write("### Add new node and connect to existing")
 	with nc() as conn: dlg.node_merge(conn)
 elif op_mode == view_mode:
 	with nc() as conn:
