@@ -74,8 +74,7 @@ elif op_mode == view_mode:
 		    st.write("#### Spanning tree")
 		else:
 		    st.write("#### Minimum tree")
-		pos = nx.spring_layout(H)
-		viz.draw(G,conn=conn, is_color = color, pos_fun = nx.planar_layout, prop="mass")
+		viz.draw(H,conn=conn, is_color = color, pos_fun = nx.planar_layout, prop="mass")
 
 		if not same:
 		    st.write("#### Maximum tree")
