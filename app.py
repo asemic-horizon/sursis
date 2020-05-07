@@ -56,7 +56,7 @@ elif op_mode == view_mode:
 			radius = None
 		else:
 			fields = db.list_nodes(conn)
-			u = fields.index("jazz")
+			u = db.count_nodes()-1
 			center = st.selectbox("Choose nodes",fields,index = u)
 			radius = st.number_input("Radius",value=1)
 

@@ -16,8 +16,8 @@ def node_entry(conn):
 	return None 
 
 def edge_entry(conn):
-	node_1 = ui.known_field_input(conn,"Source","jazz")
-	node_2 = ui.known_field_input(conn,"Target","espionage")
+	node_1 = ui.known_field_input(conn,"Source",offset=0)
+	node_2 = ui.known_field_input(conn,"Target",offset=1)
 	add_button, del_button = ui.add_del()
 	if node_1 and node_2 and add_button: 
 		db.write_edge(conn, node_1,node_2)
@@ -49,7 +49,7 @@ def node_merge(conn):
 
 def trail_node_entry(conn):
 	nodes = db.list_nodes(conn)
-	node_1 = st.selectbox("Existing",nodes,index=nodes.index("jazz"))
+	node_1 = st.selectbox("Existing",nodes,offset=0)
 	node_2 = st.text_input('New')
 
 	nonn_button = st.button("Add and connect")

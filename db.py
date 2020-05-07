@@ -59,6 +59,10 @@ def node_exists(conn, node):
     res = run_sql(conn,"SELECT id FROM nodes WHERE name = ? LIMIT 1",node).fetchall()
     return len(res)>0
 
+def count_nodes(conn):
+    return run_sql(conn,"select (count (name)) from nodes;").fetchall[0][0]
+
+
 # edges are written in one direction, but are assumed to be undirected
 # therefore must check both ways
 

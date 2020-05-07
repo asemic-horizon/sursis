@@ -6,3 +6,5 @@ env/*
 *.pyc
 *.sqlite
 app.log
+*.pyc
+*.old.py

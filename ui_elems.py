@@ -17,9 +17,15 @@ def if_confirm(pred,err="(Not found)"):
 	else:
 		st.write(err)
 
-def known_field_input(conn,tag="Node", default="jazz"):
+def known_field_input(conn,tag="Node", default=None, offset = None):
+	if default:
+		index = nodes.index(default)
+	elif offset:
+		index = db.count_nodes - (offset + 1)
+	else:
+		index = db.count_nodes() - 1
 	nodes = db.list_nodes(conn)
-	field_input = st.selectbox(tag,nodes,index=nodes.index(default))
+	field_input = st.selectbox(tag,nodes,index=index)
 	return field_input
 
 def add_del(tag1="Add",tag2="Delete"):
