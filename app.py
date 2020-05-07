@@ -46,9 +46,10 @@ elif op_mode == view_mode:
 		chem.update_physics(conn)
 		ego = st.checkbox("Full graph",value=False)
 		color = st.checkbox("Color",value = True)
-		algo0 = "Large-scale structure"
-		algo1 = "Readability"
-		algo = st.radio("Prioritize",[algo1,algo0])
+		algo0 = "Spectral"
+		algo1 = "Force-directed"
+
+		algo = st.radio("Plot",[algo1,algo0])
 
 		if ego:
 			center = None
@@ -60,12 +61,13 @@ elif op_mode == view_mode:
 			radius = st.number_input("Radius",value=1)
 
 		G = chem.graph(conn,center = center, radius = radius)
-
+		spectral = lambda *args: nx.spectral_layout(scale=10,*args)
 		viz.draw(
 			G = G, conn=conn,
                         is_color = color,
+                        labels = center is not None,
 			prop="energy",
-			pos_fun = nx.spring_layout if algo==algo0 else\
+			pos_fun = spectral if algo==algo0 else\
 				  nx.kamada_kawai_layout,
                         cmap = cmap)
 
@@ -79,9 +81,9 @@ elif op_mode == view_mode:
 		    st.write("#### Spanning tree")
 		else:
 		    st.write("#### Minimum tree")
-		viz.draw(H,conn=conn, is_color = color, pos_fun = nx.kamada_kawai_layout, prop="mass")
+		viz.draw(H,conn=conn, labels = center is not None, is_color = color, pos_fun = nx.kamada_kawai_layout, prop="energy")
 
 		if not same:
 		    st.write("#### Maximum tree")
-		    viz.draw(J,conn = conn, is_color = color,  pos_fun = nx.kamada_kawai_layout, cmap = cmap, prop="mass")
+		    viz.draw(J,conn = conn, labels = center is not None, is_color = color,  pos_fun = nx.kamada_kawai_layout, cmap = cmap, prop="energy")
 		st.pyplot()
