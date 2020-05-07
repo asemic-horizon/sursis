@@ -10,8 +10,8 @@ import ui_elems as ui
 import dialogs as dlg
 from db import nc
 
-cmap = "PuOr_r"
-
+#cmap = "PuOr_r"
+cmap = "bwr"
 node_mode = "Nodes"
 edge_mode = "Connections"
 trail_mode = "Trailing"
