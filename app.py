@@ -24,29 +24,6 @@ st.write("## `sursis`")
 
 op_mode = st.radio(label="Operation mode",options=[view_mode,node_mode,edge_mode, dyad_mode, triad_mode, trail_mode, merge_mode])
 
-if op_mode == node_mod
-#
-import db, viz
-import physics as phys
-import graph_physics as chem
-import ui_elems as ui
-import dialogs as dlg
-from db import nc
-
-cmap = "PuOr_r"
-
-node_mode = "Nodes"
-edge_mode = "Connections"
-trail_mode = "Trailing"
-dyad_mode = "Dyad"
-triad_mode = "Triad"
-merge_mode = "Merge"
-view_mode = "Visualization"
-
-st.write("## `sursis`")
-
-op_mode = st.radio(label="Operation mode",options=[view_mode,node_mode,edge_mode, dyad_mode, triad_mode, trail_mode, merge_mode])
-
 if op_mode == node_mode:
 	st.write("### Add/remove nodes")
 	with nc() as conn: dlg.node_entry(conn)
