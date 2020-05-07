@@ -11,7 +11,8 @@ import dialogs as dlg
 from db import nc
 
 #cmap = "PuOr_r"
-cmap = "bwr"
+cmap = "terrain_r"
+
 node_mode = "Nodes"
 edge_mode = "Connections"
 trail_mode = "Trailing"
