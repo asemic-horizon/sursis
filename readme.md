@@ -21,11 +21,20 @@ Edges are also weighted in the exact same way, calculating the inverse Laplacian
 
 ## Installing
 
-Clone the repository,
+Clone the repository and create an environment
 
+    python3 -m venv env
+    source env/bin/activate
     pip install -r requirements.txt
+
+If you don't have a preexisting notebook, run 
+
+     python initialize_script.py
+
+Note that for the time being the notebook is always stored as `data.sqlite`.
 
 To run,
 
     streamlit run app.py
 
+You *will* get an error in the default visualization screen with an empty notebook/graph. Just add some nodes and then connections.
