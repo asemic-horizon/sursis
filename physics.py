@@ -5,7 +5,7 @@ from joblib import Memory
 
 memory = Memory("./cache")
 
-@memory.cache
+#@memory.cache
 def mass(graph):
 	metric = nx.betweenness_centrality(graph)
 	metric = np.array(list(dict(metric).values()))
