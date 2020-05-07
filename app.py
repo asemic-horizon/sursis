@@ -82,7 +82,7 @@ elif op_mode == view_mode:
 		    st.write("#### Spanning tree")
 		else:
 		    st.write("#### Minimum tree")
-		viz.draw(H,conn=conn, labels = center is not None, is_color = color, pos_fun = nx.kamada_kawai_layout, prop="energy")
+		viz.draw(H,conn=conn, labels = center is not None, is_color = color, pos_fun = nx.kamada_kawai_layout, cmap = cmap, prop="energy")
 
 		if not same:
 		    st.write("#### Maximum tree")
