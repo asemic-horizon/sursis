@@ -21,9 +21,9 @@ def known_field_input(conn,tag="Node", default=None, offset = None):
 	if default:
 		index = nodes.index(default)
 	elif offset:
-		index = db.count_nodes - (offset + 1)
+		index = db.count_nodes(conn) - (offset + 1)
 	else:
-		index = db.count_nodes() - 1
+		index = db.count_nodes(conn) - 1
 	nodes = db.list_nodes(conn)
 	field_input = st.selectbox(tag,nodes,index=index)
 	return field_input
