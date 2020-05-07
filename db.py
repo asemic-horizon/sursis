@@ -35,7 +35,7 @@ def initialize(conn):
             energy real);"""
     sql_named_edges_view=\
     """CREATE VIEW named_edges as 
-        SELECT edges.id, n1.name,n2.name, edges.mass, edges.energy FROM edges 
+        SELECT edges.id, n1.name as node_1,n2.name as node_2, edges.mass, edges.energy FROM edges 
             LEFT JOIN nodes AS n1 ON n1.id = edges.left 
             LEFT JOIN nodes AS n2 ON n2.id = edges.right;"""
     try:
