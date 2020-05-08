@@ -2,3 +2,4 @@ streamlit
 networkx
 matplotlib
 scipy
+graph-tools
