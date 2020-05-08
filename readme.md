@@ -18,61 +18,61 @@ The app presents you with a number of choices.
 
 Let us look at them a little.
 
-![demo](ui viz luxury 1.png)
+<img src="ui viz luxury 1.png">
 
 Visualization lets you look at a node's immediate neighbors, in turn their neighbors and so on. We'll return to that.
 
-![demo](ui nodes.png)
+<img src="ui nodes.png">
 
 "Nodes" lets you add new nodes to your notebook. Shocking, no?
 
-![demo](ui connections.png)
+<img src="ui connections.png">
 
 "Connections" lets you add edges between nodes, i.e. connect them.
 
-![demo](ui nodelist.png)
+<img src="ui nodelist.png">
 
 Each prompt that requires you to select an already-existing node opens up a select-box. You can type to get partial results and confirm.
 
-![demo](ui dyad.png)
+<img src="ui dyad.png">
 With "Dyad" you can add two nodes at once and connect them. This can be done with the previous functions alone, but this is more convenient when writing stuff down quickly.
 
-![demo](ui triad.png)
+<img src="ui triad.png">
 Likewise "Triad" lets you add a "tree" or "fork"-like pattern with one new node that connects to other two nodes. This again is a convenience function. 
 
-![demo](ui trailing.png)
+<img src="ui trailing.png">
 
 "Trailing" lets you add a new node and connect it to an existing node.
 
-![demo](ui merge.png)
+<img src="ui merge.png">
 
 "Merge" lets you merge two nodes and all their connections/edges. This is also useful to rename nodes.
 
 ## Visualization
 
-![demo](ui viz classical 1.png)
+<img src="ui viz classical 1.png">
 
 You can start from any node and look at its neighborhood, 
 
-![demo](ui viz classical 2.png)
+<img src="ui viz classical 2.png">
 
 and then the neighborhood of its neighbors,
 
-![demo](ui viz classical 3.png)
+<img src="ui viz classical 3.png">
 
 and then the neighbors of their neighors of their neighbors.
 
 By scrolling down you can also see the minimum spanning tree, which cuts out some edges to provide a graph without cycles.
 
-![demo](ui viz luxury mintree.png)
+<img src="ui viz luxury mintree.png">
 
 For kicks, you can also see the full graph
 
-![demo](ui full graph.png)
+<img src="ui full graph.png">
 
 as well as its minimum spanning tree:
 
-![demo](ui viz full mintree.png)
+<img src="ui viz full mintree.png">
 
 
 ## The coloring of nodes
