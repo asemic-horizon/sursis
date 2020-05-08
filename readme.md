@@ -12,7 +12,7 @@ Sursis runs locally. My personal suggestion is to set it up on a cheap VPS/Digit
 ## Input modes
 
 The app presents you with a number of choices. 
-![demo](demo_pics/ui main.png)
+![demo]("demo_pics/ui main.png")
 
 Let us look at them a little.
 
