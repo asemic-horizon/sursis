@@ -33,8 +33,8 @@ def edge_entry(conn):
 def node_merge(conn):
 	nodes = db.list_nodes(conn)
 	u,v = 1,3
-	node_1 = st.selectbox("Source 1",nodes,index=u)
-	node_2 = st.selectbox("Source 2",nodes,index=v)
+	node_1 = ui.known_field_input(conn,"Source 1",offset=0)
+	node_2 = ui.known_field_input(conn,"Source 2",offset=1)
 	if node_1 in nodes and node_2 in nodes:
 		if node_1 == node_2:
 			defval = node_1
@@ -49,7 +49,7 @@ def node_merge(conn):
 
 def trail_node_entry(conn):
 	nodes = db.list_nodes(conn)
-	node_1 = st.selectbox("Existing",nodes,offset=0)
+	node_1 = ui.known_field_input(conn,"Existing",offset=0)
 	node_2 = st.text_input('New')
 
 	nonn_button = st.button("Add and connect")
