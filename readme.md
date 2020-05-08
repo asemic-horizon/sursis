@@ -1,23 +1,87 @@
-# Sursis - [personal] <- [notebook] -> [network]
+# `Sursis` - [personal] <- [notebook] -> [network]
 
-Sursis is a simple web app built on top of [Streamlit](https://streamlit.io). In a way, it abuses the goals of Streamlit, which are closer to Jupyter notebooks, but is very simply written and does the trick for me.
+`Sursis` is a web app built on top of [Streamlit](https://streamlit.io) (somewhat abusively). 
 
-The concept is that you have a single undirected, unweighted graph to connect across many domains. Not unlike a written personal notes.txt or outline, but not sequential and able to reach back and connect separate "moments".
+Its basic purpose is to have a personal notebook or journal to jot down ideas, movies or records you have recently enjoyed or pieces of information related to personal projects. 
 
-
-Sursis runs locally; or preferrably on a cheap VPS/Digital Ocean-type VM so you'll be able to use it on your phone. 
-
+The particular conceit of `Sursis` is that this journal is not written sequentially, but as a network/graph. (It's been recently compared to mind-mapping, but without exception every such tool seems to expect you to figure out a tree-like outline. `Sursis` is much, much more general if that's the comparison to be made).
 
 
-## Usage demo
+Sursis runs locally. My personal suggestion is to set it up on a cheap VPS/Digital Ocean-type VM so you'll be able to use it on your phone. I've been having great fun with it from day zero and polishing it a little more each day.
 
-![](https://imgur.com/a/dB9Xb5l.gif)
+## Input modes
 
-*(An animation should be opening above. Sometimes github doesn't load it and I don't know why. If you see nothing, please [click here](https://imgur.com/a/dB9Xb5l).)*
+The app presents you with a number of choices. 
+![](ui main.png)
 
-The coloring of nodes is giving by the solution to a Poisson equation Lx = w, where w are the observed "weights" (currently, the betweenness centrality of nodes). In this way we expect to capture an idea of the balance of forces in the graph structures.
+Let us look at them a little.
 
-Edges are also weighted in the exact same way, calculating the inverse Laplacian of the dual graph. It is expected that the layout algorithms take these weights into account, but I don't have much control over that right now.
+![](ui viz luxury 1.png)
+
+Visualization lets you look at a node's immediate neighbors, in turn their neighbors and so on. We'll return to that.
+
+![](ui nodes.png)
+
+"Nodes" lets you add new nodes to your notebook. Shocking, no?
+
+![](ui connections.png)
+
+"Connections" lets you add edges between nodes, i.e. connect them.
+
+![](ui nodelist.png)
+
+Each prompt that requires you to select an already-existing node opens up a select-box. You can type to get partial results and confirm.
+
+![](ui dyad.png)
+With "Dyad" you can add two nodes at once and connect them. This can be done with the previous functions alone, but this is more convenient when writing stuff down quickly.
+
+![](ui triad.png)
+Likewise "Triad" lets you add a "tree" or "fork"-like pattern with one new node that connects to other two nodes. This again is a convenience function. 
+
+![](ui trailing.png)
+
+"Trailing" lets you add a new node and connect it to an existing node.
+
+![](ui merge.png)
+
+"Merge" lets you merge two nodes and all their connections/edges. This is also useful to rename nodes.
+
+## Visualization
+
+![](ui viz classical 1.png)
+
+You can start from any node and look at its neighborhood, 
+
+![](ui viz classical 2.png)
+
+and then the neighborhood of its neighbors,
+
+![](ui viz classical 3.png)
+
+and then the neighbors of their neighors of their neighbors.
+
+By scrolling down you can also see the minimum spanning tree, which cuts out some edges to provide a graph without cycles.
+
+![](ui viz luxury mintree.png)
+
+For kicks, you can also see the full graph
+
+![](ui full graph.png)
+
+as well as its minimum spanning tree:
+
+![](ui viz full mintree.png)
+
+
+## The coloring of nodes
+
+The coloring of nodes is giving by a regularized least-squares solution to a Poisson equation 
+
+    Lx = w, 
+
+ where `w` are the observed "weights" (currently, the betweenness centrality of nodes). This, of course, is Gauss's gravity equation in natural units. In this way we expect to capture an idea of the balance of forces in the graph structures --  much beyond the 2D graph layouts that are really optimized for visualization, not insight.
+
+Edges are also given values in a very similar way, but using the dual graph (whose nodes are the edges of the primal graph). Layout algorithms are supposed to take these values into account by making higher-valued edges visually longer. I'm not so sure about that.
 
 ## Installing
 
