@@ -12,65 +12,65 @@ Sursis runs locally. My personal suggestion is to set it up on a cheap VPS/Digit
 ## Input modes
 
 The app presents you with a number of choices. 
-![demo]("demo_pics/ui main.png")
+![demo](ui main.png)
 
 Let us look at them a little.
 
-![demo](demo_pics/ui viz luxury 1.png)
+![demo](ui viz luxury 1.png)
 
 Visualization lets you look at a node's immediate neighbors, in turn their neighbors and so on. We'll return to that.
 
-![demo](demo_pics/ui nodes.png)
+![demo](ui nodes.png)
 
 "Nodes" lets you add new nodes to your notebook. Shocking, no?
 
-![demo](demo_pics/ui connections.png)
+![demo](ui connections.png)
 
 "Connections" lets you add edges between nodes, i.e. connect them.
 
-![demo](demo_pics/ui nodelist.png)
+![demo](ui nodelist.png)
 
 Each prompt that requires you to select an already-existing node opens up a select-box. You can type to get partial results and confirm.
 
-![demo](demo_pics/ui dyad.png)
+![demo](ui dyad.png)
 With "Dyad" you can add two nodes at once and connect them. This can be done with the previous functions alone, but this is more convenient when writing stuff down quickly.
 
-![demo](demo_pics/ui triad.png)
+![demo](ui triad.png)
 Likewise "Triad" lets you add a "tree" or "fork"-like pattern with one new node that connects to other two nodes. This again is a convenience function. 
 
-![demo](demo_pics/ui trailing.png)
+![demo](ui trailing.png)
 
 "Trailing" lets you add a new node and connect it to an existing node.
 
-![demo](demo_pics/ui merge.png)
+![demo](ui merge.png)
 
 "Merge" lets you merge two nodes and all their connections/edges. This is also useful to rename nodes.
 
 ## Visualization
 
-![demo](demo_pics/ui viz classical 1.png)
+![demo](ui viz classical 1.png)
 
 You can start from any node and look at its neighborhood, 
 
-![demo](demo_pics/ui viz classical 2.png)
+![demo](ui viz classical 2.png)
 
 and then the neighborhood of its neighbors,
 
-![demo](demo_pics/ui viz classical 3.png)
+![demo](ui viz classical 3.png)
 
 and then the neighbors of their neighors of their neighbors.
 
 By scrolling down you can also see the minimum spanning tree, which cuts out some edges to provide a graph without cycles.
 
-![demo](demo_pics/ui viz luxury mintree.png)
+![demo](ui viz luxury mintree.png)
 
 For kicks, you can also see the full graph
 
-![demo](demo_pics/ui full graph.png)
+![demo](ui full graph.png)
 
 as well as its minimum spanning tree:
 
-![demo](demo_pics/ui viz full mintree.png)
+![demo](ui viz full mintree.png)
 
 
 ## The coloring of nodes
