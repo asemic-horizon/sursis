@@ -7,7 +7,7 @@ memory = Memory("./cache")
 
 #@memory.cache
 def mass(graph):
-	metric = nx.degree_centrality(graph)
+	metric = nx.betweenness_centrality(graph)
 	metric = np.array(list(dict(metric).values()))
 	return metric
 

@@ -45,6 +45,7 @@ def mass(graph):
 
 def energy(graph):
 	m = sorted(phys.energy(graph))
+	m = np.array(m)
 	density = gaussian_kde(m)
 	plt.plot(m,density(m))
 	plt.grid(True)
