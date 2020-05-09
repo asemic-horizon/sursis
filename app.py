@@ -26,7 +26,7 @@ stats_mode = "Stats"
 st.write("## `sursis`")
 
 op_mode = st.radio(label="Operation mode",\
-	options=[view_mode,node_mode,edge_mode, dyad_mode, triad_mode, trail_mode, merge_mode, stats_mode])
+	options=[stats_mode,view_mode,node_mode,edge_mode, dyad_mode, triad_mode, trail_mode, merge_mode])
 
 if op_mode == node_mode:
 	st.write("### Add/remove nodes")

@@ -7,6 +7,7 @@ def plot_degree_distribution(graph):
 	degreeCount = collections.Counter(degree_sequence)
 	deg, cnt = zip(*degreeCount.items())
 	plt.scatter(deg,cnt)
+	plt.set_yaxis('log')
 	st.pyplot()
 def stats_view(graph):
 
