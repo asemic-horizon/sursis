@@ -79,7 +79,7 @@ elif op_mode == view_mode:
 				  nx.kamada_kawai_layout,
                         cmap = cmap)
 
-		if not ego:
+		if ego:
 			S = [G.subgraph(c).copy() for c in connected_components(G)]
 			for s in S:				
 				viz.draw(
