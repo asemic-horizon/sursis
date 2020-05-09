@@ -6,6 +6,7 @@ import layout
 import db, viz
 import physics as phys
 import graph_physics as chem
+import graph_stats
 import ui_elems as ui
 import dialogs as dlg
 from db import nc
@@ -20,6 +21,7 @@ dyad_mode = "Dyad"
 triad_mode = "Triad"
 merge_mode = "Merge"
 view_mode = "Visualization"
+stats_mode = "Stats"
 
 st.write("## `sursis`")
 
@@ -38,10 +40,14 @@ elif op_mode == edge_mode:
 	st.write("### Add/remove connections")
 	with nc() as conn: dlg.edge_entry(conn)
 elif op_mode == trail_mode:
+	st.write("### Add new node and connect to existing")
 	with nc() as conn: dlg.trail_node_entry(conn)
 elif op_mode == merge_mode:
-	st.write("### Add new node and connect to existing")
+	st.write("### Merge nodes")
 	with nc() as conn: dlg.node_merge(conn)
+elif op_mode == stats_mode:
+	with nc() as conn: graph = chem.graph(conn)
+	graph_stats.stats_view(graph)
 elif op_mode == view_mode:
 	with nc() as conn:
 		chem.update_physics(conn)
