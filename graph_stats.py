@@ -42,7 +42,7 @@ def mass(graph):
 	plt.grid(True)
 	plt.title("Mass")
 	st.pyplot()
-	st.write(f"* Modal mass:{mode(m)}")
+	st.write(f"* Modal mass:{np.max(m):e}")
 	st.write(f"* Mean mass {np.mean(m):e}")
 
 def energy(graph):
