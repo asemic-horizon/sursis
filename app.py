@@ -80,7 +80,7 @@ elif op_mode == view_mode:
                         cmap = cmap)
 
 		if ego:
-			S = [G.subgraph(c).copy() for c in connected_components(G)]
+			S = [G.subgraph(c).copy() for c in nx.connected_components(G)]
 			for s in S:				
 				viz.draw(
 					G = s, conn=conn,
