@@ -15,7 +15,9 @@ def plot_degree_distribution(graph):
 	popt, _ = curve_fit(f=power_law,xdata=deg,ydata=cnt)
 	k, slope = tuple(popt)
 	plt.scatter(deg,cnt)
-	plt.plot(deg,power_law(deg,k,slope),linewidth=1,c='k',linestyle='dotted")	#plt.yscale('log')
+	plt.plot(deg,power_law(deg,k,slope),\
+		linewidth=1,c='k',linestyle='dotted')
+		#plt.yscale('log')
 	plt.grid(True)
 	plt.title("Degree distribution")
 	st.pyplot()
