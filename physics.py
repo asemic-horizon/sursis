@@ -32,4 +32,4 @@ def energy(graph : nx.Graph):
 def rescale(y : np.ndarray):
 	y = y - y.mean()
 	#t = (y - y.min())/(y.max()-y.min())
-	return 4*y
+	return 3*y
