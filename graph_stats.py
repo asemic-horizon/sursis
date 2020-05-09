@@ -29,6 +29,7 @@ def eigenvalues(graph):
 	eigvals = np.linalg.eigvals(L)
 	plt.scatter(np.arange(len(eigvals)),eigvals)
 	plt.grid(True)
+	plt.yscale("log")
 	st.pyplot()
 
 def stats_view(graph):
