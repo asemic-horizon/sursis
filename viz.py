@@ -17,10 +17,10 @@ def draw_bw(G, pos_fun=nx.spring_layout):
 def draw_color(G, pot, labels, pos_fun=nx.spring_layout, cmap="gnuplot"):
         pos = pos_fun(G)
         font_size = 14 if G.number_of_nodes()<10 else 9
-        alpha = 0.9
-        node_size = 45
+        alpha = 0.8
+        node_size = 50
         scheme = mpl.pyplot.get_cmap(cmap)
-        out_tick = 0.95
+        out_tick = 1
 
         cnorm = colors.Normalize(vmin=-out_tick, vmax = out_tick)
         smap = cm.ScalarMappable(norm=cnorm, cmap=scheme)
