@@ -56,7 +56,7 @@ def energy(graph):
 	st.write(f"* % attractive {100*len(m[m>0])/len(m):2.1f}%")
 def phase(graph):
 	plt.plot(phys.mass(graph),phys.energy(graph))
-	plt.xtitle("Mass");plt.ytitle("Energy")
+	plt.xlabel("Mass");plt.ylabel("Energy")
 	st.pyplot()
 
 def stats_view(graph):
