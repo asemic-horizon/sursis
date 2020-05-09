@@ -41,15 +41,15 @@ def mass(graph):
 	plt.plot(m,density(m))
 	plt.xscale("log");plt.grid(True)
 	plt.title("Mass")
-	st.write(f"* Mean mass {np.mean(m):e}")
 	st.pyplot()
+	st.write(f"* Mean mass {np.mean(m):e}")
 
 def energy(graph):
 	m = sorted(phys.energy(graph))
 	m = np.array(m)
 	density = gaussian_kde(m)
 	plt.plot(m,density(m))
-	plt.grid(True)
+	plt.grid(True);plt.title("Energy")
 	st.pyplot()
 	st.write(f"* Mean energy {np.mean(m):e}")
 	st.write(f"* % attractive {100*len(m[m>0])/len(m):2.1f}%")
