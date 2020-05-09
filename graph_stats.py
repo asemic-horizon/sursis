@@ -22,13 +22,16 @@ def plot_degree_distribution(graph):
 	plt.title("Degree distribution")
 	st.pyplot()
 	st.write(\
-f"Approximation: k={k:2.1f}, slope={slope:2.1f}")
+f"* Approximation: k={k:2.1f}, slope={slope:2.1f}")
 
 def eigenvalues(graph):
 	L = nx.laplacian_matrix(graph).todense()
 	eigvals = np.linalg.eigvals(L)
 	plt.scatter(np.arange(len(eigvals)),eigvals)
 	plt.grid(True)
+	plt.title("Laplacian eigenvalues")
+	st.write(f"* Spectral gap: {eigvals[0]-eigvals[1]:2.1f}")
+	st.write(f"* Smallest nonzero eigenvalue: {np.min(eigvals[eigvals>0]):2.1f}")
 	st.pyplot()
 
 def stats_view(graph):
