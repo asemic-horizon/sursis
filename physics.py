@@ -23,7 +23,7 @@ def penrose_potential(graph : nx.Graph,mass : np.ndarray):
 def potential(graph: nx.Graph, mass : np.ndarray):
 	rho = mass.reshape(-1,1)
 	L = nx.laplacian_matrix(graph)
-	sol = scipy.sparse.linalg.lsmr(L, rho,damp=0.5)
+	sol = scipy.sparse.linalg.lsmr(L, rho,damp=0.1)
 	return sol[0]
 
 def energy(graph : nx.Graph):
