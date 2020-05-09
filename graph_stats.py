@@ -30,9 +30,9 @@ def eigenvalues(graph):
 	plt.scatter(np.arange(len(eigvals)),eigvals)
 	plt.grid(True)
 	plt.title("Laplacian eigenvalues")
+	st.pyplot()
 	st.write(f"* Spectral gap: {eigvals[0]-eigvals[1]:2.1f}")
 	st.write(f"* Smallest nonzero eigenvalue: {np.min(eigvals[eigvals>0]):e}")
-	st.pyplot()
 
 def stats_view(graph):
 
