@@ -39,16 +39,18 @@ def mass(graph):
 	m = sorted(phys.mass(graph))
 	density = gaussian_kde(m)
 	plt.plot(m,density(m))
-	plt.xscale("log")
+	plt.xscale("log");plt.grid(True)
+	plt.title("Mass")
 	st.pyplot()
 
 def energy(graph):
 	m = sorted(phys.energy(graph))
 	density = gaussian_kde(m)
 	plt.plot(m,density(m))
+	plt.grid(True)
 	st.pyplot()
-
-
+	st.write(f"Mean energy {np.mean(m):2.1f}")
+	st.write(f"% attractive {100*len(m[m>0])/len(m):2.1f}%")
 def stats_view(graph):
 
 	plot_degree_distribution(graph)
