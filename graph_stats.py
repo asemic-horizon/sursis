@@ -39,7 +39,7 @@ def mass(graph):
 	m = sorted(phys.mass(graph))
 	density = gaussian_kde(m)
 	plt.plot(m,density(m))
-	plt.xscale("log");plt.grid(True)
+	plt.grid(True)
 	plt.title("Mass")
 	st.pyplot()
 	st.write(f"* Mean mass {np.mean(m):e}")
