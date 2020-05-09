@@ -41,8 +41,8 @@ def mass(graph):
 	plt.plot(m,density(m))
 	plt.grid(True)
 	plt.title("Mass")
+	plt.xscale("log")
 	st.pyplot()
-	st.write(f"* Modal mass:{np.max(density(m)):e}")
 	st.write(f"* Mean mass {np.mean(m):e}")
 
 def energy(graph):
@@ -56,6 +56,7 @@ def energy(graph):
 	st.write(f"* % attractive {100*len(m[m>0])/len(m):2.1f}%")
 def phase(graph):
 	plt.scatter(phys.mass(graph),phys.energy(graph))
+	plt.xscale("log")
 	plt.xlabel("Mass");plt.ylabel("Energy")
 	st.pyplot()
 
