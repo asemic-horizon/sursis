@@ -79,7 +79,18 @@ elif op_mode == view_mode:
 				  nx.kamada_kawai_layout,
                         cmap = cmap)
 
-		ui.separator()
+		if not ego:
+			S = [G.subgraph(c).copy() for c in connected_components(G)]
+			for s in S:				
+				viz.draw(
+					G = s, conn=conn,
+		                        is_color = color,
+		                        labels = True,
+					prop="energy",
+					pos_fun = spectral if algo==algo0 else\
+						  nx.kamada_kawai_layout,
+		                        cmap = cmap)
+			ui.separator()
 		ui.graph_stats(G)
 
 		H = nx.minimum_spanning_tree(G)
