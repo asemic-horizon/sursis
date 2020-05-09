@@ -6,7 +6,7 @@ import numpy as np
 from scipy.optimize import curve_fit
 
 def power_law(x,k,slope):
-	return np.exp(k + slope*np.log(x))
+	return np.exp(np.log(k) + slope*np.log(x))
 
 def plot_degree_distribution(graph):
 	degree_sequence = sorted([d for n, d in graph.degree()], reverse=True)  # degree sequence
