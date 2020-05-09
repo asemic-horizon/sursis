@@ -30,6 +30,6 @@ def energy(graph : nx.Graph):
 	return rescale(potential(graph,mass(graph)))
 
 def rescale(y : np.ndarray):
-	return t
+	return y
 	#t = (y - y.mean())/y.std()
 	#return t/3
