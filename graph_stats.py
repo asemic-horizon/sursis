@@ -21,7 +21,7 @@ def plot_degree_distribution(graph):
 	plt.title("Degree distribution")
 	st.pyplot()
 	st.write(\
-f"Approximation: counts=${k:2.1f}\\times$ degree$^\\{{slope:2.1f}\\}$")
+f"Approximation: k={k:2.1f}, slope={slope:2.1f}")
 def stats_view(graph):
 
 	plot_degree_distribution(graph)
