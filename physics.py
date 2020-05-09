@@ -7,7 +7,7 @@ memory = Memory("./cache")
 
 #@memory.cache
 def mass(graph):
-	metric = nx.betweenness_centrality(graph)
+	metric = nx.degree_centrality(graph)
 	metric = np.array(list(dict(metric).values()))
 	return metric
 
@@ -30,6 +30,5 @@ def energy(graph : nx.Graph):
 	return rescale(potential(graph,mass(graph)))
 
 def rescale(y : np.ndarray):
-	return y
-	#t = (y - y.mean())/y.std()
-	#return t/3
+	t = (y - y.mean())/y.std()
+	return t/3
