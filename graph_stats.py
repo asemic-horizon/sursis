@@ -3,8 +3,9 @@ import matplotlib.pyplot as plt
 import networkx as nx 
 import collections
 import numpy as np
+import physics as phys
 from scipy.optimize import curve_fit
-
+from scipy.stats import gaussian_kde
 def power_law(x,k,slope):
 	return np.exp(np.log(k) + slope*np.log(x))
 
@@ -34,7 +35,22 @@ def eigenvalues(graph):
 	st.write(f"* Spectral gap: {eigvals[0]-eigvals[1]:2.1f}")
 	st.write(f"* Smallest nonzero eigenvalue: {np.min(eigvals[eigvals>0]):e}")
 
+def mass(graph):
+	m = phys.mass(graph)
+	density = gaussian_kde(m)
+	plt.plot(m,density(m))
+	st.pyplot()
+
+def energy(graph):
+	m = phys.energy(graph)
+	density = gaussian_kde(m)
+	plt.plot(m,density(m))
+	st.pyplot()
+
+
 def stats_view(graph):
 
 	plot_degree_distribution(graph)
 	eigenvalues(graph)
+	mass(graph)
+	energy(graph)
