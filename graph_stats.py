@@ -1,4 +1,5 @@
 import streamlit as st
+import matplotlib.pyplot as plt
 import networkx as nx 
 import collections
 def plot_degree_distribution(graph):
