@@ -25,7 +25,7 @@ def plot_degree_distribution(graph):
 f"Approximation: k={k:2.1f}, slope={slope:2.1f}")
 
 def eigenvalues(graph):
-	L = nx.laplacian_matrix(graph)
+	L = nx.laplacian_matrix(graph).todense()
 	eigvals = np.linalg.eigvals(L)
 	plt.plot(eigvals)
 	st.pyplot()
