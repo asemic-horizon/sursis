@@ -36,13 +36,13 @@ def eigenvalues(graph):
 	st.write(f"* Smallest nonzero eigenvalue: {np.min(eigvals[eigvals>0]):e}")
 
 def mass(graph):
-	m = phys.mass(graph)
+	m = sorted(phys.mass(graph))
 	density = gaussian_kde(m)
 	plt.plot(m,density(m))
 	st.pyplot()
 
 def energy(graph):
-	m = phys.energy(graph)
+	m = sorted(phys.energy(graph))
 	density = gaussian_kde(m)
 	plt.plot(m,density(m))
 	st.pyplot()
