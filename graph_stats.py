@@ -27,7 +27,7 @@ f"Approximation: k={k:2.1f}, slope={slope:2.1f}")
 def eigenvalues(graph):
 	L = nx.laplacian_matrix(graph).todense()
 	eigvals = np.linalg.eigvals(L)
-	plt.scatter(np.arange(len(eigvals),eigvals))
+	plt.scatter(np.arange(len(eigvals)),eigvals)
 	plt.grid(True)
 	st.pyplot()
 
