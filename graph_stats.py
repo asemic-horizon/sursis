@@ -12,7 +12,8 @@ def plot_degree_distribution(graph):
 	degree_sequence = sorted([d for n, d in graph.degree()], reverse=True)  # degree sequence
 	degreeCount = collections.Counter(degree_sequence)
 	deg, cnt = zip(*degreeCount.items())
-	popt, _ = curve_fit(power_law,deg,cnt)
+	st.write(deg,cnt)
+	popt, _ = curve_fit(f=power_law,xdata=deg,ydata=cnt)
 	k, slope = tuple(popt)
 	plt.scatter(deg,cnt)
 	plt.plot(power_law,deg,k,slope)
