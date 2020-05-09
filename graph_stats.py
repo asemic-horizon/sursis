@@ -5,7 +5,7 @@ import collections
 import numpy as np
 import physics as phys
 from scipy.optimize import curve_fit
-from scipy.stats import gaussian_kde
+from scipy.stats import gaussian_kde,mode
 def power_law(x,k,slope):
 	return np.exp(np.log(k) + slope*np.log(x))
 
@@ -42,6 +42,7 @@ def mass(graph):
 	plt.grid(True)
 	plt.title("Mass")
 	st.pyplot()
+	st.write(f"* Modal mass:{mode(m):e}")
 	st.write(f"* Mean mass {np.mean(m):e}")
 
 def energy(graph):
