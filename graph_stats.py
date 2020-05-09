@@ -23,6 +23,14 @@ def plot_degree_distribution(graph):
 	st.pyplot()
 	st.write(\
 f"Approximation: k={k:2.1f}, slope={slope:2.1f}")
+
+def eigenvalues(graph):
+	L = nx.laplacian_matrix(graph)
+	eigvals = np.linalg.eigvals(L)
+	plt.plot(eigvals)
+	st.pyplot()
+
 def stats_view(graph):
 
 	plot_degree_distribution(graph)
+	eigenvalues(graph)
