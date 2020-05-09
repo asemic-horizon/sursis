@@ -54,9 +54,15 @@ def energy(graph):
 	st.pyplot()
 	st.write(f"* Mean energy {np.mean(m):e}")
 	st.write(f"* % attractive {100*len(m[m>0])/len(m):2.1f}%")
+def phase(graph):
+	plt.plot(phys.mass(graph),phys.energy(graph))
+	plt.xtitle("Mass");plt.ytitle("Energy")
+	st.pyplot()
+
 def stats_view(graph):
 
 	plot_degree_distribution(graph)
 	eigenvalues(graph)
 	mass(graph)
 	energy(graph)
+	phase(graph)
