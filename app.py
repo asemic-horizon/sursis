@@ -6,6 +6,7 @@ import layout
 import db, viz
 import physics as phys
 import graph_physics as chem
+import graph_stats
 import ui_elems as ui
 import dialogs as dlg
 from db import nc
@@ -20,10 +21,12 @@ dyad_mode = "Dyad"
 triad_mode = "Triad"
 merge_mode = "Merge"
 view_mode = "Visualization"
+stats_mode = "Stats"
 
 st.write("## `sursis`")
 
-op_mode = st.radio(label="Operation mode",options=[view_mode,node_mode,edge_mode, dyad_mode, triad_mode, trail_mode, merge_mode])
+op_mode = st.radio(label="Operation mode",\
+	options=[stats_mode,view_mode,node_mode,edge_mode, dyad_mode, triad_mode, trail_mode, merge_mode])
 
 if op_mode == node_mode:
 	st.write("### Add/remove nodes")
@@ -38,10 +41,14 @@ elif op_mode == edge_mode:
 	st.write("### Add/remove connections")
 	with nc() as conn: dlg.edge_entry(conn)
 elif op_mode == trail_mode:
+	st.write("### Add new node and connect to existing")
 	with nc() as conn: dlg.trail_node_entry(conn)
 elif op_mode == merge_mode:
-	st.write("### Add new node and connect to existing")
+	st.write("### Merge nodes")
 	with nc() as conn: dlg.node_merge(conn)
+elif op_mode == stats_mode:
+	with nc() as conn: graph = chem.graph(conn)
+	graph_stats.stats_view(graph)
 elif op_mode == view_mode:
 	with nc() as conn:
 		chem.update_physics(conn)
@@ -59,7 +66,7 @@ elif op_mode == view_mode:
 			fields = db.list_nodes(conn)
 			u = db.count_nodes(conn)-1
 			center = st.selectbox("Choose nodes",fields,index = u)
-			radius = st.number_input("Radius",value=1)
+			radius = st.number_input("Radius",value=5)
 
 		G = chem.graph(conn,center = center, radius = radius)
 		spectral = lambda *args: nx.spectral_layout(scale=10,*args)
@@ -72,7 +79,18 @@ elif op_mode == view_mode:
 				  nx.kamada_kawai_layout,
                         cmap = cmap)
 
-		ui.separator()
+		if ego:
+			S = [G.subgraph(c).copy() for c in nx.connected_components(G)]
+			for s in S:				
+				viz.draw(
+					G = s, conn=conn,
+		                        is_color = color,
+		                        labels = True,
+					prop="energy",
+					pos_fun = spectral if algo==algo0 else\
+						  nx.kamada_kawai_layout,
+		                        cmap = cmap)
+			ui.separator()
 		ui.graph_stats(G)
 
 		H = nx.minimum_spanning_tree(G)
