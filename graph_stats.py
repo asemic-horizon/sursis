@@ -6,17 +6,17 @@ import numpy as np
 import physics as phys
 from scipy.optimize import curve_fit
 from scipy.stats import gaussian_kde,mode
-def power_law(x,k,slope,d):
-	return np.exp(np.log(k) + slope*np.log(x-d))
+def power_law(x,k,slope):
+	return np.exp(np.log(k) + slope*np.log(x))
 
 def plot_degree_distribution(graph):
 	degree_sequence = sorted([d for n, d in graph.degree()], reverse=True)  # degree sequence
 	degreeCount = collections.Counter(degree_sequence)
 	deg, cnt = zip(*degreeCount.items())
 	popt, _ = curve_fit(f=power_law,xdata=deg,ydata=cnt)
-	k, slope, d = tuple(popt)
+	k, slope = tuple(popt)
 	plt.scatter(deg,cnt)
-	plt.plot(deg,power_law(deg,k,slope,d),\
+	plt.plot(deg,power_law(deg,k,slope),\
 		linewidth=1,c='k',linestyle='dotted')
 		#plt.yscale('log')
 	plt.grid(True)
