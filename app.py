@@ -66,7 +66,7 @@ elif op_mode == view_mode:
 			fields = db.list_nodes(conn)
 			u = db.count_nodes(conn)-1
 			center = st.selectbox("Choose nodes",fields,index = u)
-			radius = st.number_input("Radius",value=1)
+			radius = st.number_input("Radius",value=5)
 
 		G = chem.graph(conn,center = center, radius = radius)
 		spectral = lambda *args: nx.spectral_layout(scale=10,*args)
