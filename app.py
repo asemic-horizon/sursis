@@ -68,7 +68,7 @@ elif op_mode == view_mode:
 			center = st.selectbox("Choose nodes",fields,index = u)
 			radius = st.number_input("Radius",value=5)
 		G = chem.graph(conn,center,radius)
-		graph_stats.graph_plot(conn,center,radius)
+		graph_stats.graph_plot(G, conn,center,radius)
 
 	mintree = st.checkbox("Minimum tree", value = True)
 	if mintree:

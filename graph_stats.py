@@ -75,7 +75,7 @@ def stats_view(graph):
 	energy(graph)
 	phase(graph)
 
-def graph_plot(G, conn, center, radius, ancillary=[]):
+def graph_plot(G, conn, center, radius):
 	full_graph = center is None
 
 	viz.draw(G,conn,labels = not full_graph, cmap=cmap)
