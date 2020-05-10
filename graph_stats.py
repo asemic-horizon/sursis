@@ -99,7 +99,7 @@ def maxtree(G,conn):
 		J = nx.maximum_spanning_tree(G)
 		st.write("#### Maximum tree")
 		viz.draw(J, conn, cmap = cmap)
-		st.pyplot
+		st.pyplot()
 
 def view_energy(G,conn):
 	ui.separator()
