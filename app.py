@@ -58,9 +58,10 @@ elif op_mode == stats_mode:
 elif op_mode == view_mode:
 	ui.separator()
 	full_graph = st.checkbox("Full graph",value=False)
-	center, radius = None
 	with nc() as conn: 
 		chem.update_physics(conn)
+		if full_graph:
+			center, radius = None
 		if not full_graph:
 			fields = db.list_nodes(conn)
 			u = db.count_nodes(conn)-1
