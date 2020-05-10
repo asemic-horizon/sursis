@@ -38,7 +38,7 @@ def eigenvalues(graph):
 	plt.title("Laplacian eigenvalues")
 	st.pyplot()
 	st.write(f"* Spectral gap: {eigvals[0]-eigvals[1]:2.1f}")
-	st.write(f"* Smallest nonzero eigenvalue: {np.min(eigvals[eigvals>0]):e}")
+	st.write(f"* Smallest nonzero eigenvalue: {np.min(eigvals[eigvals>1e-10]):e}")
 
 def mass(graph):
 	m = sorted(phys.mass(graph))
