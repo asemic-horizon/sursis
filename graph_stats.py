@@ -88,7 +88,7 @@ def graph_plot(G, conn, center, radius):
 			viz.draw(subgraph, conn, cmap = cmap)
 			ui.separator()
 	u = nx.algorithms.community.label_propagation.label_propagation_communities(G)
-	thresh = 20 if full_graph else 5
+	thresh = 12 if full_graph else 5
 	S = [G.subgraph(c).copy() for c in u if len(c)>thresh]
 	st.write("### Communities")
 	for subgraph in S:
