@@ -14,9 +14,9 @@ def plot_degree_distribution(graph):
 	degreeCount = collections.Counter(degree_sequence)
 	deg, cnt = zip(*degreeCount.items())
 	popt, _ = curve_fit(f=power_law,xdata=deg,ydata=cnt)
-	k, slope = tuple(popt)
+	k, slope= tuple(popt)
 	plt.scatter(deg,cnt)
-	plt.plot(deg,power_law(deg,k,slope),\
+	plt.plot(deg,power_law(np.min(deg,2),k,slope),\
 		linewidth=1,c='k',linestyle='dotted')
 		#plt.yscale('log')
 	plt.grid(True)
