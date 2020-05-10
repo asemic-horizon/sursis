@@ -88,11 +88,11 @@ def graph_plot(G, conn, center, radius):
 			viz.draw(subgraph, conn, cmap = cmap)
 			ui.separator()
 		u = nx.algorithms.community.label_propagation.label_propagation_communities(G)
-		S = [G.subgraph(c).copy() for c in u if len(c)>7]
-		st.write("### Communities")
-		for subgraph in S:
-			viz.draw(subgraph, conn, cmap = cmap)
-			ui.separator()
+	S = [G.subgraph(c).copy() for c in u if len(c)>7]
+	st.write("### Communities")
+	for subgraph in S:
+		viz.draw(subgraph, conn, cmap = cmap)
+		ui.separator()
 
 def mintree(G,conn):
 		H = nx.minimum_spanning_tree(G)
