@@ -7,6 +7,7 @@ import physics as phys
 from scipy.optimize import curve_fit
 from scipy.stats import gaussian_kde,mode
 import ui_elems as ui
+import viz
 
 cmap = "terrain_r"
 
