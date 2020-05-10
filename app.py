@@ -12,7 +12,7 @@ import dialogs as dlg
 from db import nc
 
 #cmap = "PuOr_r"
-cmap = "terrain_r"
+
 
 node_mode = "Nodes"
 edge_mode = "Connections"
@@ -21,88 +21,66 @@ dyad_mode = "Dyad"
 triad_mode = "Triad"
 merge_mode = "Merge"
 view_mode = "Visualization"
-stats_mode = "Stats"
+stats_mode = "Advanced stats"
 
 st.write("## `sursis`")
 
 op_mode = st.radio(label="Operation mode",\
-	options=[stats_mode,view_mode,node_mode,edge_mode, dyad_mode, triad_mode, trail_mode, merge_mode])
+	options=[view_mode,node_mode,edge_mode, dyad_mode, triad_mode, trail_mode, merge_modestats_mode,])
 
 if op_mode == node_mode:
+	ui.separator()
 	st.write("### Add/remove nodes")
 	with nc() as conn: dlg.node_entry(conn)
 elif op_mode == dyad_mode:
+	ui.separator()
 	st.write("### Add two nodes and connect them")
 	with nc() as conn: dlg.dyad_entry(conn)
 elif op_mode == triad_mode:
+	ui.separator()
 	st.write("### Add a parent node and two children")
 	with nc() as conn: dlg.triad_entry(conn)
 elif op_mode == edge_mode:
+	ui.separator()
 	st.write("### Add/remove connections")
 	with nc() as conn: dlg.edge_entry(conn)
 elif op_mode == trail_mode:
+	ui.separator()
 	st.write("### Add new node and connect to existing")
 	with nc() as conn: dlg.trail_node_entry(conn)
 elif op_mode == merge_mode:
+	ui.separator()
 	st.write("### Merge nodes")
 	with nc() as conn: dlg.node_merge(conn)
 elif op_mode == stats_mode:
 	with nc() as conn: graph = chem.graph(conn)
 	graph_stats.stats_view(graph)
 elif op_mode == view_mode:
-	with nc() as conn:
+	ui.separator()
+	full_graph = st.checkbox("Full graph",value=False)
+	center, radius = None
+	with nc() as conn: 
 		chem.update_physics(conn)
-		ego = st.checkbox("Full graph",value=False)
-		color = st.checkbox("Color",value = True)
-		algo0 = "Spectral"
-		algo1 = "Force-directed"
-
-		algo = st.radio("Plot",[algo1,algo0])
-
-		if ego:
-			center = None
-			radius = None
-		else:
+		if not full_graph:
 			fields = db.list_nodes(conn)
 			u = db.count_nodes(conn)-1
 			center = st.selectbox("Choose nodes",fields,index = u)
 			radius = st.number_input("Radius",value=5)
+		G = chem.graph(G, conn,center,radius)
+		graph_stats.graph_plot(conn,center,radius)
 
-		G = chem.graph(conn,center = center, radius = radius)
-		spectral = lambda *args: nx.spectral_layout(scale=10,*args)
-		viz.draw(
-			G = G, conn=conn,
-                        is_color = color,
-                        labels = center is not None,
-			prop="energy",
-			pos_fun = spectral if algo==algo0 else\
-				  nx.kamada_kawai_layout,
-                        cmap = cmap)
+	mintree = st.checkbox("Minimum tree", value = True)
+	if mintree:
+		with nc() as conn: graph_stats.mintree(G,conn)
 
-		if ego:
-			S = [G.subgraph(c).copy() for c in nx.connected_components(G)]
-			for s in S:				
-				viz.draw(
-					G = s, conn=conn,
-		                        is_color = color,
-		                        labels = True,
-					prop="energy",
-					pos_fun = spectral if algo==algo0 else\
-						  nx.kamada_kawai_layout,
-		                        cmap = cmap)
-			ui.separator()
-		ui.graph_stats(G)
+	maxtree = st.checkbox("Minimum tree", value = False)
+	if maxtree:
+		with nc() as conn: graph_stats.maxtree(G,conn)
 
-		H = nx.minimum_spanning_tree(G)
-		J = nx.maximum_spanning_tree(G)
-		same = H.edges()==J.edges()
-		if same:
-		    st.write("#### Spanning tree")
-		else:
-		    st.write("#### Minimum tree")
-		viz.draw(H,conn=conn, labels = center is not None, is_color = color, pos_fun = nx.kamada_kawai_layout, cmap = cmap, prop="energy")
+	energy_density = st.checkbox("Energy density", value = True)
+	if energy_density:
+		with nc() as conn: graph_stats.view_energy(G,conn)
 
-		if not same:
-		    st.write("#### Maximum tree")
-		    viz.draw(J,conn = conn, labels = center is not None, is_color = color,  pos_fun = nx.kamada_kawai_layout, cmap = cmap, prop="energy")
-		st.pyplot()
+	spectrum = st.checkbox("Spectrum",value="False")
+	if spectrum:
+		with nc() as conn: graph_stats.view_spectrum(G,conn)
