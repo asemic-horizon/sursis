@@ -74,7 +74,7 @@ elif op_mode == view_mode:
 	if mintree:
 		with nc() as conn: graph_stats.mintree(G,conn)
 
-	maxtree = st.checkbox("Minimum tree", value = False)
+	maxtree = st.checkbox("Maximum tree", value = False)
 	if maxtree:
 		with nc() as conn: graph_stats.maxtree(G,conn)
 
