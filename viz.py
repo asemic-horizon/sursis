@@ -16,7 +16,7 @@ def draw_bw(G, pos_fun=nx.spring_layout):
 
 def draw_color(G, pot, labels, pos_fun=nx.spring_layout, cmap="gnuplot"):
         pos = pos_fun(G)
-        font_size = 14 if G.number_of_nodes()<10 else 9
+        font_size = 11 if G.number_of_nodes()<10 else 9
         alpha = 0.8
         node_size = 50
         scheme = mpl.pyplot.get_cmap(cmap)
