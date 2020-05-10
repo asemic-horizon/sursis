@@ -110,3 +110,11 @@ def view_spectrum(G,conn):
 	ui.separator()
 	st.write("### Laplacian spectrum")
 	eigenvalues(G)
+
+
+def view_degrees(G,conn):
+	ui.separator()
+	st.write("### Degree distribution")
+	plot_degree_distribution(G)
+
+	

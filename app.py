@@ -82,6 +82,10 @@ elif op_mode == view_mode:
 	if energy_density:
 		with nc() as conn: graph_stats.view_energy(G,conn)
 
-	spectrum = st.checkbox("Spectrum",value="False")
+	dd = st.checkbox("Degree distribution", value = False)
+	if dd:
+		with nc() as conn: graph_stats.view_degrees(G,conn)
+
+	spectrum = st.checkbox("Spectrum",value=False)
 	if spectrum:
 		with nc() as conn: graph_stats.view_spectrum(G,conn)
