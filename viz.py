@@ -31,10 +31,6 @@ def draw_color(G, pot, labels, pos_fun=nx.spring_layout, cmap="gnuplot"):
         st.pyplot()
 
 
-def draw(G, conn, is_color, labels, prop, pos_fun=nx.spring_layout,cmap="PuOr_r"):
-        pot = chem.read_node_prop(conn,G,prop)
-        pot = phys.rescale(np.array(pot))
-        if is_color:
-            draw_color(G,pot = pot, labels = labels, pos_fun = pos_fun, cmap = cmap)
-        else:
-            draw_bw(G, pos_fun)
+def draw(G, conn, labels = True, cmap = "terrain_r", pos_fun=nx.kamada_kawai_layout):
+        pot = chem.read_node_prop(conn,G,"energy")
+        draw_color(G,pot = pot, labels = labels, pos_fun = pos_fun, cmap = cmap)
