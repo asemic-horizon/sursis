@@ -32,5 +32,7 @@ def draw_color(G, pot, labels, pos_fun=nx.spring_layout, cmap="gnuplot"):
 
 
 def draw(G, conn, labels = True, cmap = "terrain_r", pos_fun=nx.kamada_kawai_layout):
-        pot = chem.read_node_prop(conn,G,"energy")
-        draw_color(G,pot = pot, labels = labels, pos_fun = pos_fun, cmap = cmap)
+        mass = chem.read_node_prop(conn,G,"mass")
+        energy = chem.read_node_prop(conn,G,"energy")
+        grav = np.array(mass)*np.array(energy)
+        draw_color(G,pot = grav, labels = labels, pos_fun = pos_fun, cmap = cmap)
