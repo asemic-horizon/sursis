@@ -79,7 +79,7 @@ def stats_view(graph):
 
 def graph_plot(G, conn, center, radius):
 	full_graph = center is None
-	st.write(f"Net gravity:{phys.net_gravity(G):2.4f}")
+	st.write(f"Net gravity: {phys.net_gravity(G):2.4f}")
 	viz.draw(G,conn,labels = not full_graph, cmap=cmap)
 	if full_graph:
 		ui.separator()
