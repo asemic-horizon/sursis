@@ -9,7 +9,7 @@ from scipy.stats import gaussian_kde,mode
 import ui_elems as ui
 import viz
 
-cmap = "terrain_r"
+cmap = "RdYlBu_r"
 
 def power_law(x,k,slope):
 	return np.exp(np.log(k) + slope*np.log(x))
