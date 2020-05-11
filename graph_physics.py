@@ -88,6 +88,6 @@ def total_energy(conn, table = "nodes"):
 
 def gravity_partition(G, conn):
     expanding = db.list_nodes(conn, "(mass * energy) >0")
-    collapsing = db.list_nodes(conn, "(mass * energy < 0")
+    collapsing = db.list_nodes(conn, "(mass * energy) < 0")
     return G.subgraph(expanding), G.subgraph(collapsing)    
 #end
