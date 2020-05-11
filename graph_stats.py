@@ -59,8 +59,8 @@ def energy(graph):
 	plt.title("Gravity")
 	plt.grid(True);
 	st.pyplot()
-	st.write(f"* Mean energy {np.mean(m):e}")
-	st.write(f"* % attractive {100*len(m[m>0])/len(m):2.1f}%")
+	st.write(f"* Mean energy {np.mean(e):e}")
+	st.write(f"* % attractive {100*len(e[e>0])/len(e):2.1f}%")
 
 def phase(graph):
 	plt.scatter(phys.mass(graph),phys.energy(graph))
