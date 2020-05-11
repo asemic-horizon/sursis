@@ -3,6 +3,7 @@ import physics as phys
 from networkx import line_graph as dual
 import networkx as nx
 import numpy as np
+from scipy.stats import norm
 from numpy import array
 import logging
 
@@ -21,7 +22,7 @@ def graph(conn, center = None, radius = None, prop = "energy"):
         if u in G.nodes() and v in G.nodes():
             if prop: prop = float(prop)
             else: prop = 0
-            w = np.exp(-prop*prop)
+            w = norm.cdf(prop)
             G.add_edge(u,v,weight=w if w>0 else 0)
     if center and radius:
         G = nx.ego_graph(G,n=center, radius=radius)
