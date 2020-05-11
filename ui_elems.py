@@ -18,13 +18,13 @@ def if_confirm(pred,err="(Not found)"):
 		st.write(err)
 
 def known_field_input(conn,tag="Node", default=None, offset = None):
+	nodes = reversed(db.list_nodes(conn))
 	if default:
 		index = nodes.index(default)
 	elif offset:
-		index = db.count_nodes(conn) - (offset + 1)
+		index = 2
 	else:
-		index = db.count_nodes(conn) - 1
-	nodes = db.list_nodes(conn)
+		index = 1
 	field_input = st.selectbox(tag,nodes,index=index)
 	return field_input
 
