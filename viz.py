@@ -14,11 +14,10 @@ def draw_bw(G, pos_fun=nx.spring_layout):
         nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=font_size,width=0.2,alpha=alpha)
         st.pyplot()
 
-def draw_color(G, pot, window, labels, pos_fun=nx.spring_layout, cmap="gnuplot"):
+def draw_color(G, pot, window, labels, node_size = 50, pos_fun=nx.spring_layout, cmap="gnuplot"):
         pos = pos_fun(G)
         font_size = 11 if G.number_of_nodes()<10 else 9
         alpha = 0.8
-        node_size = 50
         scheme = mpl.pyplot.get_cmap(cmap)
         
 
@@ -33,6 +32,9 @@ def draw_color(G, pot, window, labels, pos_fun=nx.spring_layout, cmap="gnuplot")
 
 def draw(G, conn, labels = True, cmap = "terrain_r", pos_fun=nx.kamada_kawai_layout):
         energy = np.array(chem.read_node_prop(conn,G,"energy"))
+        mass = np.array(chem.read_node_prop(conn,G,"mass"))
+        minm, maxm, avgm, medm = chem.prop_bounds(conn,prop="mass")
+        multiplier = -60/np.log10(medm)
         minv, maxv, avgv, medv = chem.prop_bounds(conn)
         window = [minv if -minv > maxv else -maxv, medv, maxv if -maxv > minv else -minv]
-        draw_color(G,pot = energy, window = window, labels = labels, pos_fun = pos_fun, cmap = cmap)
+        draw_color(G,pot = energy, node_size = multiplier*mass, window = window, labels = labels, pos_fun = pos_fun, cmap = cmap)
