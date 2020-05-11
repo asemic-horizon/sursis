@@ -22,7 +22,7 @@ def draw_color(G, pot, window, labels, pos_fun=nx.spring_layout, cmap="gnuplot")
         scheme = mpl.pyplot.get_cmap(cmap)
         
 
-        cnorm = colors.Normalize(vmin=-out_tick, vmax = out_tick)
+        cnorm = colors.Normalize(vmin=window[0], vmax = window[2])
         smap = cm.ScalarMappable(norm=cnorm, cmap=scheme)
         colorvals = smap.to_rgba(pot)
         nx.draw(G,pos=pos,with_labels=labels, node_color = colorvals, node_size = node_size,font_size=font_size,width=0.2,alpha=alpha)
