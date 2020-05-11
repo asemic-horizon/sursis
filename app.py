@@ -63,8 +63,8 @@ elif op_mode == view_mode:
 		if full_graph:
 			center, radius = None, None
 		if not full_graph:
-			fields = db.list_nodes(conn)
-			u = db.count_nodes(conn)-1
+			fields = reversed(db.list_nodes(conn))
+			u = 1
 			center = st.selectbox("Choose nodes",fields,index = u)
 			radius = st.number_input("Radius",value=5)
 		G = chem.graph(conn,center,radius)
