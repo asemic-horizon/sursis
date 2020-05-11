@@ -57,7 +57,7 @@ def energy(graph):
 	grav = sorted(np.array(e))
 	density = gaussian_kde(grav)
 	plt.plot(grav,density(grav))
-	plt.title("Gravity")
+	plt.title("Potential energy")
 	plt.grid(True);
 	st.pyplot()
 	st.write(f"* Mean energy {np.mean(e):e}")
@@ -80,7 +80,7 @@ def stats_view(graph):
 
 def graph_plot(G, conn, center, radius):
 	full_graph = center is None
-	st.write(f"Net subgraph/full graph gravity: **{phys.net_gravity(G):2.3f}**/{chem.total_energy(conn):2.3f}")
+	st.write(f"Net subgraph/full graph outwards momentum: **{-phys.net_gravity(G):2.3f}**/{-chem.total_energy(conn):2.3f}")
 	viz.draw(G,conn,labels = not full_graph, cmap=cmap)
 	if full_graph:
 		ui.separator()
