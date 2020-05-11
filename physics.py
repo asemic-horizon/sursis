@@ -30,7 +30,7 @@ def energy(graph : nx.Graph):
 	return rescale(potential(graph,mass(graph)))
 
 def gravity(graph : nx.Graph):
-	return mass(graph) * potential(graph)
+	return 4*3.14i*mass(graph) * potential(graph)
 
 def rescale(y : np.ndarray):
 	#y = y - y.mean()
