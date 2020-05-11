@@ -86,4 +86,8 @@ def total_energy(conn, table = "nodes"):
     return db.run_sql(conn,\
         f"SELECT SUM((mass * energy)) from {table}").fetchone()[0]
 
+def gravity_partition(G, conn):
+    expanding = db.list_nodes(conn, "(mass * energy) >0")
+    collapsing = db.list_nodes(conn, "(mass * energy < 0")
+    return G.subgraph(expanding), G.subgraph(collapsing)    
 #end

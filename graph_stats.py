@@ -91,10 +91,18 @@ def stats_view(graph):
 	energy(graph)
 	phase(graph)
 
-def graph_plot(G, conn, center, radius):
+def graph_plot(G, conn, center, radius, communities = False):
 	full_graph = center is None
 	st.write(f"Net subgraph/full graph outwards momentum: **{-phys.net_gravity(G):2.3f}**/{-chem.total_energy(conn):2.3f}")
 	viz.draw(G,conn,labels = not full_graph, cmap=cmap)
+
+	out, coll = chem.gravity_partition(G,conn)
+	ui.separator()
+	st.write("### Expanding")
+	viz.draw(out,conn,cmap=cmap)
+	st.write("### Expanding")
+	viz.draw(coll,conn,cmap=cmap)
+
 	if full_graph:
 		ui.separator()
 		st.write("### Components")
@@ -102,7 +110,7 @@ def graph_plot(G, conn, center, radius):
 		for subgraph in S:
 			viz.draw(subgraph, conn, cmap = cmap)
 			ui.separator()
-	if len(G.nodes())>90:
+	if communities:
 		u = nx.algorithms.community.label_propagation.label_propagation_communities(G)
 		thresh = 4 if full_graph else 4
 		S = [G.subgraph(c).copy() for c in u if len(c)>thresh]

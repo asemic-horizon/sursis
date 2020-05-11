@@ -58,6 +58,7 @@ elif op_mode == stats_mode:
 elif op_mode == view_mode:
 	ui.separator()
 	full_graph = st.checkbox("Full graph",value=False)
+	communities = st.checkbox("Communities", value = False)
 	with nc() as conn: 
 		chem.update_physics(conn)
 		if full_graph:
@@ -68,7 +69,7 @@ elif op_mode == view_mode:
 			center = st.selectbox("Choose nodes",fields,index = u)
 			radius = st.number_input("Radius",value=5)
 		G = chem.graph(conn,center,radius)
-		graph_stats.graph_plot(G, conn,center,radius)
+		graph_stats.graph_plot(G, conn,center,radius, communities)
 
 	mintree = st.checkbox("Minimum tree", value = False)
 	if mintree:
