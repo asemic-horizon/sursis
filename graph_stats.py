@@ -4,6 +4,7 @@ import networkx as nx
 import collections
 import numpy as np
 import physics as phys
+import graph_physics as chem
 from scipy.optimize import curve_fit
 from scipy.stats import gaussian_kde,mode
 import ui_elems as ui
