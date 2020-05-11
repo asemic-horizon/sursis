@@ -81,3 +81,6 @@ def prop_bounds(conn,prop="energy",table="nodes"):
         """).fetchone()[0]
     max_val = db.run_sql(conn,f"select MAX({prop}) FROM {table}").fetchone()[0]
     return min_val, max_val, avg_val, med_val
+
+def total_energy(conn, table = "nodes"):
+    return db.run_sql(conn,f"SELECT SUM((mass * energy)) from {table}".fetchone[0])
