@@ -51,9 +51,9 @@ def mass(graph):
 	st.write(f"* Mean mass {np.mean(m):e}")
 
 def energy(graph):
-	m = phys.mass(graph)
+	#m = phys.mass(graph)
 	e = phys.energy(graph)
-	grav = sorted(4*3.14*np.array(m)*np.array(e))
+	grav = sorted(3.14*np.array(e))
 	density = gaussian_kde(grav)
 	plt.plot(grav,density(grav))
 	plt.title("Gravity")
