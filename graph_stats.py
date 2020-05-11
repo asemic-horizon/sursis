@@ -53,7 +53,7 @@ def mass(graph):
 def energy(graph):
 	#m = phys.mass(graph)
 	e = phys.energy(graph)
-	grav = sorted(3.14*np.array(e))
+	grav = sorted(np.array(e))
 	density = gaussian_kde(grav)
 	plt.plot(grav,density(grav))
 	plt.title("Gravity")
