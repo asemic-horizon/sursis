@@ -35,4 +35,4 @@ def draw(G, conn, labels = True, cmap = "terrain_r", pos_fun=nx.kamada_kawai_lay
         #mass = chem.read_node_prop(conn,G,"mass")
         energy = 3.14*np.array(chem.read_node_prop(conn,G,"energy"))
         #grav = 4*3.14*np.array(mass)*np.array(energy)
-        draw_color(G,pot = grav, labels = labels, pos_fun = pos_fun, cmap = cmap)
+        draw_color(G,pot = energy, labels = labels, pos_fun = pos_fun, cmap = cmap)
