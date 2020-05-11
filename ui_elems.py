@@ -18,7 +18,7 @@ def if_confirm(pred,err="(Not found)"):
 		st.write(err)
 
 def known_field_input(conn,tag="Node", default=None, offset = None):
-	nodes = reversed(db.list_nodes(conn))
+	nodes = list(reversed(db.list_nodes(conn)))
 	if default:
 		index = nodes.index(default)
 	elif offset:
