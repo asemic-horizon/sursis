@@ -100,7 +100,7 @@ def graph_plot(G, conn, center, radius, communities = False):
 	ui.separator()
 	st.write("### Expanding")
 	viz.draw(out,conn,cmap=cmap)
-	st.write("### Expanding")
+	st.write("### Collapsing")
 	viz.draw(coll,conn,cmap=cmap)
 
 	if full_graph:
