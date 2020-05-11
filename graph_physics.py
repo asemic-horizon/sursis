@@ -21,7 +21,7 @@ def graph(conn, center = None, radius = None, prop = "energy"):
         if u in G.nodes() and v in G.nodes():
             if prop: prop = float(prop)
             else: prop = 0
-            w = np.exp(-0.5*prop*prop)
+            w = np.exp(-prop*prop)
             G.add_edge(u,v,weight=w if w>0 else 0)
     if center and radius:
         G = nx.ego_graph(G,n=center, radius=radius)

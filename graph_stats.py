@@ -88,13 +88,14 @@ def graph_plot(G, conn, center, radius):
 		for subgraph in S:
 			viz.draw(subgraph, conn, cmap = cmap)
 			ui.separator()
-	u = nx.algorithms.community.label_propagation.label_propagation_communities(G)
-	thresh = 4 if full_graph else 4
-	S = [G.subgraph(c).copy() for c in u if len(c)>thresh]
-	st.write("### Communities")
-	for subgraph in S:
-		viz.draw(subgraph, conn, cmap = cmap)
-		ui.separator()
+	if len(G.nodes())>30:
+		u = nx.algorithms.community.label_propagation.label_propagation_communities(G)
+		thresh = 4 if full_graph else 4
+		S = [G.subgraph(c).copy() for c in u if len(c)>thresh]
+		st.write("### Communities")
+		for subgraph in S:
+			viz.draw(subgraph, conn, cmap = cmap)
+			ui.separator()
 
 def mintree(G,conn):
 		H = nx.minimum_spanning_tree(G)
