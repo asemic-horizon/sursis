@@ -51,11 +51,12 @@ def mass(graph):
 	st.write(f"* Mean mass {np.mean(m):e}")
 
 def energy(graph):
-	m = sorted(phys.energy(graph))
-	m = np.array(m)
-	density = gaussian_kde(m)
-	plt.plot(m,density(m))
-	plt.title("Energy")
+	m = phys.mass(graph)
+	e = phys.energy(graph)
+	grav = sorted(np.array(m)*np.array(e))
+	density = gaussian_kde(grav)
+	plt.plot(grav,density(grav))
+	plt.title("Gravity")
 	plt.grid(True);
 	st.pyplot()
 	st.write(f"* Mean energy {np.mean(m):e}")
