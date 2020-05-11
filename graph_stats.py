@@ -72,8 +72,8 @@ def gravity(graph):
 	plt.title("Gravity momentum")
 	plt.grid(True);
 	st.pyplot()
-	st.write(f"* Mean energy {np.mean(e):e}")
-	st.write(f"* % collapsing {100*len(e[e>0])/len(e):2.1f}%")
+	st.write(f"* Mean gravity {np.mean(grav):e}")
+	st.write(f"* % collapsing {100*len(grav[grav>0])/len(grav):2.1f}%")
 
 
 def phase(graph):
