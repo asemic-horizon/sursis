@@ -27,15 +27,13 @@ def potential(graph: nx.Graph, mass : np.ndarray):
 	return sol[0]
 
 def energy(graph : nx.Graph):
-	return rescale(potential(graph,mass(graph)))
+	return potential(graph,mass(graph))
 
 def gravity(graph : nx.Graph):
-	return mass(graph) * potential(graph)
+	return mass(graph) * energy(graph)
 
 def net_gravity(graph : nx.Graph):
 	return np.sum(gravity(graph))
 
 def rescale(y : np.ndarray):
-	#y = y - y.mean()
-	#t = (y - y.min())/(y.max()-y.min())
-	return y/0.3
+	return y

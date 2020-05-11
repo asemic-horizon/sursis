@@ -69,3 +69,16 @@ def read_edge_prop(conn,subgraph,prop="energy"):
     res = [db.run_sql(conn,\
         "SELECT energy FROM edges WHERE left = ? AND right = ?", u,v).fetchall()[0][0] for u,v in edges]
     return array([get_edge_energy(conn,u,v) for u,v in edges])
+
+def prop_bounds(conn,prop="energy",table="nodes"):
+    min_val = db.run_sql(f"select MIN({prop} from {table}").fetchone()[0]
+    avg_val =
+    # select energy from nodes order by energy limit 1 offset (select count(*) from nodes)/2;
+    med_val = db.run_sql(\
+        f"""SELECT {prop} from {table} ORDER BY {prop} LIMIT 1
+            OFFSET
+                (SELECT COUNT(*) FROM {table}/2)
+
+        """).fetchone()[0]
+    max_val = db.run_sql(f"select MAX({prop} from {table}").fetchone()[0]
+    return min_val, max_val, avg_val, med_val
