@@ -80,11 +80,13 @@ elif op_mode == view_mode:
 
 	energy_density = st.checkbox("Energy density", value = True)
 	if energy_density:
-		with nc() as conn: graph_stats.view_energy(G,conn)
+		with nc() as conn: 
+			graph_stats.view_energy(G,conn)
 
 	dd = st.checkbox("Degree distribution", value = False)
 	if dd:
-		with nc() as conn: graph_stats.view_degrees(G,conn)
+		with nc() as conn: 
+			graph_stats.view_gravity(G,conn)
 
 	spectrum = st.checkbox("Spectrum",value=False)
 	if spectrum:

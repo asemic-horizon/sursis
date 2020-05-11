@@ -129,7 +129,7 @@ def view_energy(G,conn):
 	st.write("### Energy density")
 	energy(G)
 
-def view_energy(G,conn):
+def view_gravity(G,conn):
 	ui.separator()
 	st.write("### Momentum")
 	gravity(G)
