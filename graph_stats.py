@@ -63,6 +63,19 @@ def energy(graph):
 	st.write(f"* Mean energy {np.mean(e):e}")
 	st.write(f"* % attractive {100*len(e[e>0])/len(e):2.1f}%")
 
+def gravity(graph):
+	m = phys.mass(graph)
+	e = phys.energy(graph)
+	grav = sorted(np.array(e)*np.array(m))
+	density = gaussian_kde(grav)
+	plt.plot(grav,density(grav))
+	plt.title("Gravity momentum")
+	plt.grid(True);
+	st.pyplot()
+	st.write(f"* Mean energy {np.mean(e):e}")
+	st.write(f"* % collapsing {100*len(e[e>0])/len(e):2.1f}%")
+
+
 def phase(graph):
 	plt.scatter(phys.mass(graph),phys.energy(graph))
 	plt.xscale("log")
@@ -115,6 +128,12 @@ def view_energy(G,conn):
 	ui.separator()
 	st.write("### Energy density")
 	energy(G)
+
+def view_energy(G,conn):
+	ui.separator()
+	st.write("### Momentum")
+	gravity(G)
+
 
 def view_spectrum(G,conn):
 	ui.separator()
