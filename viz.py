@@ -33,7 +33,7 @@ def draw_color(G, pot, window, labels, pos_fun=nx.spring_layout, cmap="gnuplot")
 
 def draw(G, conn, labels = True, cmap = "terrain_r", pos_fun=nx.kamada_kawai_layout):
         energy = np.array(chem.read_node_prop(conn,G,"energy"))
-        minv, maxv, avgv, medv = chem.prop_bounds()
+        minv, maxv, avgv, medv = chem.prop_bounds(conn)
         stretch = np.max(np.abs(minv),np.abs(maxv))
         window = [-stretch, medv, stretch]
         draw_color(G,pot = energy, window = window, labels = labels, pos_fun = pos_fun, cmap = cmap)
