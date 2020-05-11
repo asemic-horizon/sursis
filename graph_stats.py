@@ -66,7 +66,7 @@ def energy(graph):
 def gravity(graph):
 	m = phys.mass(graph)
 	e = phys.energy(graph)
-	grav = sorted(np.array(e)*np.array(m))
+	grav = np.array(sorted(np.array(e)*np.array(m)))
 	density = gaussian_kde(grav)
 	plt.plot(grav,density(grav))
 	plt.title("Gravity momentum")
