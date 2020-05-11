@@ -76,7 +76,7 @@ def prop_bounds(conn,prop="energy",table="nodes"):
     med_val = db.run_sql(conn,\
         f"""SELECT {prop} FROM {table} ORDER BY {prop} LIMIT 1
             OFFSET
-                (SELECT COUNT(*) FROM {table}/2)
+                (SELECT COUNT(*) FROM {table})/2
 
         """).fetchone()[0]
     max_val = db.run_sql(conn,f"select MAX({prop}) FROM {table}").fetchone()[0]
