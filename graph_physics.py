@@ -21,7 +21,7 @@ def graph(conn, center = None, radius = None, prop = "energy"):
     for u,v, energy, mass in edges:
         if u in G.nodes() and v in G.nodes():
             if energy and mass:
-                w = 1 - norm.cdf(-float(energy)*float(mass))
+                w = 1 - norm.cdf(float(energy)*float(mass))
             else:
                 w = 0.5
             G.add_edge(u,v,weight=w if w>0 else 0)
