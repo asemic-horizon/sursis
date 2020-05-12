@@ -91,6 +91,9 @@ def stats_view(graph):
 	energy(graph)
 	phase(graph)
 
+def sufficient(graph):
+	return G.number_of_nodes(graph) > 5
+
 def graph_plot(G, conn, center, radius, communities = False):
 	full_graph = center is None
 	st.write(f"Net subgraph/full graph outwards momentum: **{-phys.net_gravity(G):2.3f}**/{-chem.total_energy(conn):2.3f}")
@@ -98,7 +101,8 @@ def graph_plot(G, conn, center, radius, communities = False):
 
 	out, coll = chem.gravity_partition(G,conn)
 	ui.separator()
-	if G.number_of_nodes()>5:
+
+	if sufficient(graph):
 		st.write("### Collapsing")
 		viz.draw(out,conn,cmap=cmap)
 		st.write("### Expanding")
@@ -111,7 +115,8 @@ def graph_plot(G, conn, center, radius, communities = False):
 		for subgraph in S:
 			viz.draw(subgraph, conn, cmap = cmap)
 			ui.separator()
-	if communities:
+
+	if sufficient(graph) and communities:
 		u = nx.algorithms.community.label_propagation.label_propagation_communities(G)
 		thresh = 4 if full_graph else 4
 		S = [G.subgraph(c).copy() for c in u if len(c)>thresh]
@@ -121,6 +126,7 @@ def graph_plot(G, conn, center, radius, communities = False):
 			ui.separator()
 
 def mintree(G,conn):
+	if sufficient(G):
 		H = nx.minimum_spanning_tree(G)
 		ui.separator()
 		st.write("#### Minimum tree")
@@ -128,31 +134,36 @@ def mintree(G,conn):
 		st.pyplot()
 
 def maxtree(G,conn):
+	if sufficient(G):
 		J = nx.maximum_spanning_tree(G)
 		st.write("#### Maximum tree")
 		viz.draw(J, conn, cmap = cmap)
 		st.pyplot()
 
 def view_energy(G,conn):
-	ui.separator()
-	st.write("### Energy density")
-	energy(G)
+	if sufficient(G):
+		ui.separator()
+		st.write("### Energy density")
+		energy(G)
 
 def view_gravity(G,conn):
-	ui.separator()
-	st.write("### Momentum")
-	gravity(G)
+	if sufficient(G):
+		ui.separator()
+		st.write("### Momentum")
+		gravity(G)
 
 
 def view_spectrum(G,conn):
-	ui.separator()
-	st.write("### Laplacian spectrum")
-	eigenvalues(G)
+	if sufficient(G):	
+		ui.separator()
+		st.write("### Laplacian spectrum")
+		eigenvalues(G)
 
 
 def view_degrees(G,conn):
-	ui.separator()
-	st.write("### Degree distribution")
-	plot_degree_distribution(G)
+	if sufficient(G):
+		ui.separator()
+		st.write("### Degree distribution")
+		plot_degree_distribution(G)
 
 	
