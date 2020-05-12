@@ -8,3 +8,7 @@ env/*
 app.log
 *.pyc
 *.old.py
+edges.txt
+nodes.txt
+named_edges.txt
+cache/*
