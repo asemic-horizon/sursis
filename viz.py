@@ -37,5 +37,5 @@ def draw(G, conn, labels = True, cmap = "terrain_r", pos_fun=nx.kamada_kawai_lay
         multiplier = -1400/np.log10(medm)
         node_size = 30+multiplier*mass
         minv, maxv, avgv, medv = chem.prop_bounds(conn)
-        window = [minv if -minv > maxv else -maxv, medv, maxv if -maxv > minv else -minv]
+        window = [minv if -minv > maxv else -maxv, 0, maxv if -maxv > minv else -minv]
         draw_color(G,pot = energy, node_size = node_size, window = window, labels = labels, pos_fun = pos_fun, cmap = cmap)
