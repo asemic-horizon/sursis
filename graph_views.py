@@ -132,14 +132,14 @@ def mintree(G,conn):
 		H = nx.minimum_spanning_tree(G)
 		ui.separator()
 		st.write("#### Minimum tree")
-		viz.draw(H, conn, cmap = cmap, pos_fun = lambda G: nx.spring_layout(G, k=0.1))
+		viz.draw(H, conn, cmap = cmap, pos_fun = nx.spectral_layout)
 		st.pyplot()
 
 def maxtree(G,conn):
 	if sufficient(G):
 		J = nx.maximum_spanning_tree(G)
 		st.write("#### Maximum tree")
-		viz.draw(J, conn, cmap = cmap, pos_fun = lambda G: nx.spring_layout(G, k=0.1))
+		viz.draw(J, conn, cmap = cmap, pos_fun = nx.spectral_layout)
 		st.pyplot()
 
 def view_energy(G,conn):
