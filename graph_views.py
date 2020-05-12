@@ -94,11 +94,9 @@ def stats_view(graph):
 def sufficient(graph):
 	return graph.number_of_nodes() > 5
 
-def graph_plot(G, conn, center, radius, communities = False, circular = False):
-	if circular:
-		pos_fun = nx.shell_layout
-	else:
-		pos_fun = lambda G: nx.spring_layout(G, k=0.1)#nx.kamada_kawai_layout
+def graph_plot(G, conn, center, radius, communities = False):
+
+	pos_fun = lambda G: nx.spring_layout(G, k=0.1)#nx.kamada_kawai_layout
 	full_graph = center is None
 	st.write(f"Expansion force **{-phys.net_gravity(G):2.3f}** (subgraph)/{-chem.total_energy(conn):2.3f} (full graph)")
 	viz.draw(G,conn,labels = not full_graph, cmap=cmap,pos_fun = pos_fun)
