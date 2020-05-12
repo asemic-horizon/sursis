@@ -22,7 +22,7 @@ def fit_power_distribution(deg,cnt):
 
 def plot_degree_distribution(graph):
 	deg, cnt = stats.degree_distribution(graph)
-	k, slope = fit_power_distribution(graph)
+	k, slope = fit_power_distribution(deg,cnt)
 
 	plt.scatter(deg,cnt)
 	plt.plot(deg,power_law(deg,k,slope), linewidth=1,c='k',linestyle='dotted')
