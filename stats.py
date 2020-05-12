@@ -13,5 +13,5 @@ def degree_distribution(graph):
 
 def spectrum(graph):
 	L = nx.laplacian_matrix(graph)
-	eigvals = scipy.linalg.eigh(L.toarray(),return_eigenvectors = False)
+	eigvals = scipy.linalg.eigh(L.toarray())
 	return eigvals
