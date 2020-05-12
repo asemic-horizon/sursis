@@ -92,7 +92,7 @@ def stats_view(graph):
 	phase(graph)
 
 def sufficient(graph):
-	return G.number_of_nodes(graph) > 5
+	return G.number_of_nodes() > 5
 
 def graph_plot(G, conn, center, radius, communities = False):
 	full_graph = center is None
