@@ -22,7 +22,7 @@ def graph(conn, center = None, radius = None, prop = "energy"):
         if u in G.nodes() and v in G.nodes():
             if prop: prop = float(prop)
             else: prop = 0
-            w = np.exp(-0.5*prop*prop)
+            w = norm.cdf(-prop)
             G.add_edge(u,v,weight=w if w>0 else 0)
     if center and radius:
         G = nx.ego_graph(G,n=center, radius=radius)
@@ -69,3 +69,25 @@ def read_edge_prop(conn,subgraph,prop="energy"):
     res = [db.run_sql(conn,\
         "SELECT energy FROM edges WHERE left = ? AND right = ?", u,v).fetchall()[0][0] for u,v in edges]
     return array([get_edge_energy(conn,u,v) for u,v in edges])
+
+def prop_bounds(conn,prop="energy",table="nodes"):
+    min_val = db.run_sql(conn,f"select MIN({prop}) FROM {table}").fetchone()[0]
+    avg_val = db.run_sql(conn,f"select AVG({prop}) FROM {table}").fetchone()[0]
+    med_val = db.run_sql(conn,\
+        f"""SELECT {prop} FROM {table} ORDER BY {prop} LIMIT 1
+            OFFSET
+                (SELECT COUNT(*) FROM {table})/2
+
+        """).fetchone()[0]
+    max_val = db.run_sql(conn,f"select MAX({prop}) FROM {table}").fetchone()[0]
+    return min_val, max_val, avg_val, med_val
+
+def total_energy(conn, table = "nodes"):
+    return db.run_sql(conn,\
+        f"SELECT SUM((mass * energy)) from {table}").fetchone()[0]
+
+def gravity_partition(G, conn):
+    expanding = db.list_nodes(conn, "(mass * energy) >0")
+    collapsing = db.list_nodes(conn, "(mass * energy) < 0")
+    return G.subgraph(expanding), G.subgraph(collapsing)    
+#end
