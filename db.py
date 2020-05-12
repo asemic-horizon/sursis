@@ -136,8 +136,10 @@ def del_edge(conn,node_1,node_2):
         return False
 
 # meant to be called directly from the app too.
-def list_nodes(conn):
-    return [n[0] for n in run_sql(conn,"SELECT name FROM nodes").fetchall()]
+def list_nodes(conn, where=None):
+    query = "SELECT name FROM nodes"
+    if where: query += " WHERE " + where
+    return [n[0] for n in run_sql(conn,query).fetchall()]
 
 # not currently used,  just for completeness
 def list_edges(conn):
