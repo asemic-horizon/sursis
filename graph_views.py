@@ -102,7 +102,7 @@ def graph_plot(G, conn, center, radius, communities = False):
 	out, coll = chem.gravity_partition(G,conn)
 	ui.separator()
 
-	if sufficient(graph):
+	if sufficient(G):
 		st.write("### Collapsing")
 		viz.draw(out,conn,cmap=cmap)
 		st.write("### Expanding")
@@ -116,7 +116,7 @@ def graph_plot(G, conn, center, radius, communities = False):
 			viz.draw(subgraph, conn, cmap = cmap)
 			ui.separator()
 
-	if sufficient(graph) and communities:
+	if sufficient(G) and communities:
 		u = nx.algorithms.community.label_propagation.label_propagation_communities(G)
 		thresh = 4 if full_graph else 4
 		S = [G.subgraph(c).copy() for c in u if len(c)>thresh]
