@@ -58,33 +58,37 @@ elif op_mode == stats_mode:
 elif op_mode == view_mode:
 	ui.separator()
 	full_graph = st.checkbox("Full graph",value=False)
+	communities = st.checkbox("Communities", value = False)
 	with nc() as conn: 
 		chem.update_physics(conn)
 		if full_graph:
 			center, radius = None, None
 		if not full_graph:
-			fields = db.list_nodes(conn)
-			u = db.count_nodes(conn)-1
+			fields = list(reversed(db.list_nodes(conn)))
+			u = 1
 			center = st.selectbox("Choose nodes",fields,index = u)
 			radius = st.number_input("Radius",value=5)
 		G = chem.graph(conn,center,radius)
-		graph_stats.graph_plot(G, conn,center,radius)
+		graph_stats.graph_plot(G, conn,center,radius, communities)
 
-	mintree = st.checkbox("Minimum tree", value = True)
+	mintree = st.checkbox("Minimum tree", value = False)
 	if mintree:
 		with nc() as conn: graph_stats.mintree(G,conn)
 
-	maxtree = st.checkbox("Maximum tree", value = False)
+	maxtree = st.checkbox("Maximum tree", value = True)
 	if maxtree:
 		with nc() as conn: graph_stats.maxtree(G,conn)
 
 	energy_density = st.checkbox("Energy density", value = True)
 	if energy_density:
-		with nc() as conn: graph_stats.view_energy(G,conn)
+		with nc() as conn: 
+			graph_stats.view_energy(G,conn)
+			graph_stats.view_gravity(G,conn)
 
 	dd = st.checkbox("Degree distribution", value = False)
 	if dd:
-		with nc() as conn: graph_stats.view_degrees(G,conn)
+		with nc() as conn: 
+			graph_stats.view_degrees(G,conn)
 
 	spectrum = st.checkbox("Spectrum",value=False)
 	if spectrum:
