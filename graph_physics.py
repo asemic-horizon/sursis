@@ -3,6 +3,7 @@ import physics as phys
 from networkx import line_graph as dual
 import networkx as nx
 import numpy as np
+from scipy.stats import norm
 from numpy import array
 import logging
 
