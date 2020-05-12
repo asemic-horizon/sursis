@@ -23,13 +23,17 @@ def penrose_potential(graph : nx.Graph,mass : np.ndarray):
 def potential(graph: nx.Graph, mass : np.ndarray):
 	rho = mass.reshape(-1,1)
 	L = nx.laplacian_matrix(graph)
-	sol = scipy.sparse.linalg.lsmr(L, rho,damp=1e-2)
+	sol = scipy.sparse.linalg.lsmr(L, -rho,damp=1e-3)
 	return sol[0]
 
 def energy(graph : nx.Graph):
-	return rescale(potential(graph,mass(graph)))
+	return potential(graph,mass(graph))
+
+def gravity(graph : nx.Graph):
+	return mass(graph) * energy(graph)
+
+def net_gravity(graph : nx.Graph):
+	return np.sum(gravity(graph))
 
 def rescale(y : np.ndarray):
-	#y = y - y.mean()
-	#t = (y - y.min())/(y.max()-y.min())
-	return y/0.3
+	return y
