@@ -96,7 +96,7 @@ def sufficient(graph):
 
 def graph_plot(G, conn, center, radius, communities = False, circular = False):
 	if circular:
-		pos_fun = nx.circular_layout
+		pos_fun = nx.shell_layout
 	else:
 		pos_fun = nx.kamada_kawai_layout
 	full_graph = center is None
@@ -134,14 +134,14 @@ def mintree(G,conn):
 		H = nx.minimum_spanning_tree(G)
 		ui.separator()
 		st.write("#### Minimum tree")
-		viz.draw(H, conn, cmap = cmap, pos_fun = nx.planar_layout)
+		viz.draw(H, conn, cmap = cmap, pos_fun = nx.circular_layout)
 		st.pyplot()
 
 def maxtree(G,conn):
 	if sufficient(G):
 		J = nx.maximum_spanning_tree(G)
 		st.write("#### Maximum tree")
-		viz.draw(J, conn, cmap = cmap, pos_fun = nx.planar_layout)
+		viz.draw(J, conn, cmap = cmap, pos_fun = nx.circular_layout)
 		st.pyplot()
 
 def view_energy(G,conn):

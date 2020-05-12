@@ -71,11 +71,11 @@ elif op_mode == view_mode:
 		G = chem.graph(conn,center,radius)
 		gv.graph_plot(G, conn,center,radius, communities, circular = circular)
 
-	mintree = st.checkbox("Minimum tree", value = False)
+	mintree = st.checkbox("Minimum tree", value = True)
 	if mintree:
 		with nc() as conn: gv.mintree(G,conn)
 
-	maxtree = st.checkbox("Maximum tree", value = True)
+	maxtree = st.checkbox("Maximum tree", value = False)
 	if maxtree:
 		with nc() as conn: gv.maxtree(G,conn)
 
