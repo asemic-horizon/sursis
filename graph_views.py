@@ -6,25 +6,26 @@ import numpy as np
 import physics as phys
 import graph_physics as chem
 from scipy.optimize import curve_fit
-from scipy.stats import gaussian_kde,mode
+from scipy.stats import gaussian_kde
 import ui_elems as ui
-import viz
+import viz, stats
 
 cmap = "RdYlBu_r"
 
 def power_law(x,k,slope):
 	return np.exp(np.log(k) + slope*np.log(x))
 
-def plot_degree_distribution(graph):
-	degree_sequence = sorted([d for n, d in graph.degree()], reverse=True)  # degree sequence
-	degreeCount = collections.Counter(degree_sequence)
-	deg, cnt = zip(*degreeCount.items())
+def fit_power_distribution(graph):
 	popt, _ = curve_fit(f=power_law,xdata=deg,ydata=cnt)
 	k, slope = tuple(popt)
+	return k, slope
+
+def plot_degree_distribution(graph):
+	deg, cnt = stats.degree_distribution(graph)
+	k, slope = fit_power_distribution(graph)
+
 	plt.scatter(deg,cnt)
-	plt.plot(deg,power_law(deg,k,slope),\
-		linewidth=1,c='k',linestyle='dotted')
-		#plt.yscale('log')
+	plt.plot(deg,power_law(deg,k,slope), linewidth=1,c='k',linestyle='dotted')
 	plt.grid(True)
 	plt.title("Degree distribution")
 	st.pyplot()
@@ -32,8 +33,7 @@ def plot_degree_distribution(graph):
 		f"* Approximation: k={k:2.1f}, slope={slope:2.1f}")
 
 def eigenvalues(graph):
-	L = nx.laplacian_matrix(graph).todense()
-	eigvals = np.linalg.eigvals(L)
+	eigvals = stats.spectrum(graph)
 	plt.scatter(np.arange(len(eigvals)),eigvals, alpha = 0.5)
 	plt.grid(True)
 	plt.title("Laplacian eigenvalues")
