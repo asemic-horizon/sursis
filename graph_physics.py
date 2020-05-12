@@ -7,22 +7,23 @@ from scipy.stats import norm
 from numpy import array
 import logging
 
-def get_physics(conn, index, table, prop="energy"):
-    query = f"SELECT {index}, {prop} FROM {table}"
-    return db.run_sql(conn,query).fetchall()
+def get_physics(conn, index, table):
+    query = f"SELECT {index}, energy, mass FROM {table}"
+    return np.array(db.run_sql(conn,query).fetchall())
+
 
 def graph(conn, center = None, radius = None, prop = "energy"):
-    nodes = get_physics(conn, index = "name", table =  "nodes", prop = prop)
-    edges = get_physics(conn, index = "node_1, node_2", table = "named_edges", prop = prop)
-
+    nodes = get_physics(conn, index = "name", table =  "nodes")
+    edges = get_physics(conn, index = "node_1, node_2", table = "named_edges")
     G = nx.Graph()
-    for node, prop in nodes:
-        G.add_node(node, weight=prop)
-    for u,v, prop in edges:
+    for node, energy, mass in nodes:
+        G.add_node(node, weight=energy)
+    for u,v, energy, mass in edges:
         if u in G.nodes() and v in G.nodes():
-            if prop: prop = float(prop)
-            else: prop = 0
-            w = norm.cdf(-prop)
+            if energy and mass:
+                w = norm.cdf(0.1 - float(energy)*float(mass))
+            else:
+                w = 0.5
             G.add_edge(u,v,weight=w if w>0 else 0)
     if center and radius:
         G = nx.ego_graph(G,n=center, radius=radius)

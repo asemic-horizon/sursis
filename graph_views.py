@@ -96,7 +96,7 @@ def sufficient(graph):
 
 def graph_plot(G, conn, center, radius, communities = False):
 	full_graph = center is None
-	st.write(f"Net subgraph/full graph outwards momentum: **{-phys.net_gravity(G):2.3f}**/{-chem.total_energy(conn):2.3f}")
+	st.write(f"Expansion force **{-phys.net_gravity(G):2.3f}** (subgraph)/{-chem.total_energy(conn):2.3f} (full graph)")
 	viz.draw(G,conn,labels = not full_graph, cmap=cmap)
 
 	out, coll = chem.gravity_partition(G,conn)
