@@ -4,12 +4,13 @@ import networkx as nx
 import collections
 import numpy as np
 import physics as phys
+import graph_physics as chem
 from scipy.optimize import curve_fit
 from scipy.stats import gaussian_kde,mode
 import ui_elems as ui
 import viz
 
-cmap = "terrain_r"
+cmap = "RdYlBu_r"
 
 def power_law(x,k,slope):
 	return np.exp(np.log(k) + slope*np.log(x))
@@ -38,7 +39,7 @@ def eigenvalues(graph):
 	plt.title("Laplacian eigenvalues")
 	st.pyplot()
 	st.write(f"* Spectral gap: {eigvals[0]-eigvals[1]:2.1f}")
-	st.write(f"* Smallest nonzero eigenvalue: {np.min(eigvals[eigvals>0]):e}")
+	st.write(f"* Smallest nonzero eigenvalue: {np.min(eigvals[eigvals>1e-10]):e}")
 
 def mass(graph):
 	m = sorted(phys.mass(graph))
@@ -51,15 +52,29 @@ def mass(graph):
 	st.write(f"* Mean mass {np.mean(m):e}")
 
 def energy(graph):
-	m = sorted(phys.energy(graph))
-	m = np.array(m)
-	density = gaussian_kde(m)
-	plt.plot(m,density(m))
-	plt.title("Energy")
+	#m = phys.mass(graph)
+	e = phys.energy(graph)
+	grav = sorted(np.array(e))
+	density = gaussian_kde(grav)
+	plt.plot(grav,density(grav))
+	plt.title("Potential energy")
 	plt.grid(True);
 	st.pyplot()
-	st.write(f"* Mean energy {np.mean(m):e}")
-	st.write(f"* % attractive {100*len(m[m>0])/len(m):2.1f}%")
+	st.write(f"* Mean energy {np.mean(e):e}")
+	st.write(f"* % attractive {100*len(e[e>0])/len(e):2.1f}%")
+
+def gravity(graph):
+	m = phys.mass(graph)
+	e = phys.energy(graph)
+	grav = np.array(sorted(np.array(e)*np.array(m)))
+	density = gaussian_kde(grav)
+	plt.plot(grav,density(grav))
+	plt.title("Gravity momentum")
+	plt.grid(True);
+	st.pyplot()
+	st.write(f"* Mean gravity {np.mean(grav):e}")
+	st.write(f"* % collapsing {100*len(grav[grav>0])/len(grav):2.1f}%")
+
 
 def phase(graph):
 	plt.scatter(phys.mass(graph),phys.energy(graph))
@@ -76,14 +91,30 @@ def stats_view(graph):
 	energy(graph)
 	phase(graph)
 
-def graph_plot(G, conn, center, radius):
+def graph_plot(G, conn, center, radius, communities = False):
 	full_graph = center is None
-
+	st.write(f"Net subgraph/full graph outwards momentum: **{-phys.net_gravity(G):2.3f}**/{-chem.total_energy(conn):2.3f}")
 	viz.draw(G,conn,labels = not full_graph, cmap=cmap)
+
+	out, coll = chem.gravity_partition(G,conn)
+	ui.separator()
+	st.write("### Collapsing")
+	viz.draw(out,conn,cmap=cmap)
+	st.write("### Expanding")
+	viz.draw(coll,conn,cmap=cmap)
+
 	if full_graph:
 		ui.separator()
 		st.write("### Components")
 		S = [G.subgraph(c).copy() for c in nx.connected_components(G)]
+		for subgraph in S:
+			viz.draw(subgraph, conn, cmap = cmap)
+			ui.separator()
+	if communities:
+		u = nx.algorithms.community.label_propagation.label_propagation_communities(G)
+		thresh = 4 if full_graph else 4
+		S = [G.subgraph(c).copy() for c in u if len(c)>thresh]
+		st.write("### Communities")
 		for subgraph in S:
 			viz.draw(subgraph, conn, cmap = cmap)
 			ui.separator()
@@ -99,12 +130,18 @@ def maxtree(G,conn):
 		J = nx.maximum_spanning_tree(G)
 		st.write("#### Maximum tree")
 		viz.draw(J, conn, cmap = cmap)
-		st.pyplot
+		st.pyplot()
 
 def view_energy(G,conn):
 	ui.separator()
 	st.write("### Energy density")
 	energy(G)
+
+def view_gravity(G,conn):
+	ui.separator()
+	st.write("### Momentum")
+	gravity(G)
+
 
 def view_spectrum(G,conn):
 	ui.separator()
