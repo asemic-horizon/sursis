@@ -15,7 +15,7 @@ cmap = "RdYlBu_r"
 def power_law(x,k,slope):
 	return np.exp(np.log(k) + slope*np.log(x))
 
-def fit_power_distribution(graph):
+def fit_power_distribution(deg,cnt):
 	popt, _ = curve_fit(f=power_law,xdata=deg,ydata=cnt)
 	k, slope = tuple(popt)
 	return k, slope
