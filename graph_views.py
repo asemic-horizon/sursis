@@ -98,10 +98,11 @@ def graph_plot(G, conn, center, radius, communities = False):
 
 	out, coll = chem.gravity_partition(G,conn)
 	ui.separator()
-	st.write("### Collapsing")
-	viz.draw(out,conn,cmap=cmap)
-	st.write("### Expanding")
-	viz.draw(coll,conn,cmap=cmap)
+	if G.number_of_nodes()>5:
+		st.write("### Collapsing")
+		viz.draw(out,conn,cmap=cmap)
+		st.write("### Expanding")
+		viz.draw(coll,conn,cmap=cmap)
 
 	if full_graph:
 		ui.separator()
