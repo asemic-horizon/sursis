@@ -33,13 +33,6 @@ def add_del(tag1="Add",tag2="Delete"):
 	rem = st.button(tag2)
 	return add, rem
 
-def representative(fields):
-	u, v = choice(range(len(fields)),2)
-	return int(u), int(v)
-	# middle = len(fields)//2 if len(fields)>4 else 1
-	# middle_ = middle + 1 if middle>1 else 1
-	# return middle, middle_
-
 
 def similar(node,substring_length = 7, max_examples = 2):
 	effective_length = min(len(node),substring_length)
@@ -48,7 +41,8 @@ def similar(node,substring_length = 7, max_examples = 2):
 	effective_num_candidates = min(len(candidates),max_examples)
 	return list(set(np.random.choice(candidates,effective_num_candidates)))
 
-def graph_stats(G):
+# not currently used
+def graph_views(G):
 	messages = [
 	f"{nx.number_of_nodes(G)} nodes, {nx.number_of_edges(G)} edges, {100*nx.density(G):2.2f}% density",
 	f"{100*nx.average_clustering(G):2.2f}% of triangles, {100*nx.algorithms.cluster.transitivity(G):2.2f}% of triads",

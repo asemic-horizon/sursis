@@ -6,25 +6,26 @@ import numpy as np
 import physics as phys
 import graph_physics as chem
 from scipy.optimize import curve_fit
-from scipy.stats import gaussian_kde,mode
+from scipy.stats import gaussian_kde
 import ui_elems as ui
-import viz
+import viz, stats
 
 cmap = "RdYlBu_r"
 
 def power_law(x,k,slope):
 	return np.exp(np.log(k) + slope*np.log(x))
 
-def plot_degree_distribution(graph):
-	degree_sequence = sorted([d for n, d in graph.degree()], reverse=True)  # degree sequence
-	degreeCount = collections.Counter(degree_sequence)
-	deg, cnt = zip(*degreeCount.items())
+def fit_power_distribution(deg,cnt):
 	popt, _ = curve_fit(f=power_law,xdata=deg,ydata=cnt)
 	k, slope = tuple(popt)
+	return k, slope
+
+def plot_degree_distribution(graph):
+	deg, cnt = stats.degree_distribution(graph)
+	k, slope = fit_power_distribution(deg,cnt)
+
 	plt.scatter(deg,cnt)
-	plt.plot(deg,power_law(deg,k,slope),\
-		linewidth=1,c='k',linestyle='dotted')
-		#plt.yscale('log')
+	plt.plot(deg,power_law(deg,k,slope), linewidth=1,c='k',linestyle='dotted')
 	plt.grid(True)
 	plt.title("Degree distribution")
 	st.pyplot()
@@ -32,8 +33,7 @@ def plot_degree_distribution(graph):
 		f"* Approximation: k={k:2.1f}, slope={slope:2.1f}")
 
 def eigenvalues(graph):
-	L = nx.laplacian_matrix(graph).todense()
-	eigvals = np.linalg.eigvals(L)
+	eigvals = stats.spectrum(graph)
 	plt.scatter(np.arange(len(eigvals)),eigvals, alpha = 0.5)
 	plt.grid(True)
 	plt.title("Laplacian eigenvalues")
@@ -91,6 +91,9 @@ def stats_view(graph):
 	energy(graph)
 	phase(graph)
 
+def sufficient(graph):
+	return graph.number_of_nodes() > 5
+
 def graph_plot(G, conn, center, radius, communities = False):
 	full_graph = center is None
 	st.write(f"Net subgraph/full graph outwards momentum: **{-phys.net_gravity(G):2.3f}**/{-chem.total_energy(conn):2.3f}")
@@ -98,10 +101,12 @@ def graph_plot(G, conn, center, radius, communities = False):
 
 	out, coll = chem.gravity_partition(G,conn)
 	ui.separator()
-	st.write("### Collapsing")
-	viz.draw(out,conn,cmap=cmap)
-	st.write("### Expanding")
-	viz.draw(coll,conn,cmap=cmap)
+
+	if sufficient(G):
+		st.write("### Collapsing")
+		viz.draw(out,conn,cmap=cmap)
+		st.write("### Expanding")
+		viz.draw(coll,conn,cmap=cmap)
 
 	if full_graph:
 		ui.separator()
@@ -110,7 +115,8 @@ def graph_plot(G, conn, center, radius, communities = False):
 		for subgraph in S:
 			viz.draw(subgraph, conn, cmap = cmap)
 			ui.separator()
-	if communities:
+
+	if sufficient(G) and communities:
 		u = nx.algorithms.community.label_propagation.label_propagation_communities(G)
 		thresh = 4 if full_graph else 4
 		S = [G.subgraph(c).copy() for c in u if len(c)>thresh]
@@ -120,6 +126,7 @@ def graph_plot(G, conn, center, radius, communities = False):
 			ui.separator()
 
 def mintree(G,conn):
+	if sufficient(G):
 		H = nx.minimum_spanning_tree(G)
 		ui.separator()
 		st.write("#### Minimum tree")
@@ -127,31 +134,36 @@ def mintree(G,conn):
 		st.pyplot()
 
 def maxtree(G,conn):
+	if sufficient(G):
 		J = nx.maximum_spanning_tree(G)
 		st.write("#### Maximum tree")
 		viz.draw(J, conn, cmap = cmap)
 		st.pyplot()
 
 def view_energy(G,conn):
-	ui.separator()
-	st.write("### Energy density")
-	energy(G)
+	if sufficient(G):
+		ui.separator()
+		st.write("### Energy density")
+		energy(G)
 
 def view_gravity(G,conn):
-	ui.separator()
-	st.write("### Momentum")
-	gravity(G)
+	if sufficient(G):
+		ui.separator()
+		st.write("### Momentum")
+		gravity(G)
 
 
 def view_spectrum(G,conn):
-	ui.separator()
-	st.write("### Laplacian spectrum")
-	eigenvalues(G)
+	if sufficient(G):	
+		ui.separator()
+		st.write("### Laplacian spectrum")
+		eigenvalues(G)
 
 
 def view_degrees(G,conn):
-	ui.separator()
-	st.write("### Degree distribution")
-	plot_degree_distribution(G)
+	if sufficient(G):
+		ui.separator()
+		st.write("### Degree distribution")
+		plot_degree_distribution(G)
 
 	

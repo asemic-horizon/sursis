@@ -6,7 +6,7 @@ import layout
 import db, viz
 import physics as phys
 import graph_physics as chem
-import graph_stats
+import graph_views as gv
 import ui_elems as ui
 import dialogs as dlg
 from db import nc
@@ -54,13 +54,12 @@ elif op_mode == merge_mode:
 	with nc() as conn: dlg.node_merge(conn)
 elif op_mode == stats_mode:
 	with nc() as conn: graph = chem.graph(conn)
-	graph_stats.stats_view(graph)
+	gv.stats_view(graph)
 elif op_mode == view_mode:
 	ui.separator()
 	full_graph = st.checkbox("Full graph",value=False)
 	communities = st.checkbox("Communities", value = False)
 	with nc() as conn: 
-		chem.update_physics(conn)
 		if full_graph:
 			center, radius = None, None
 		if not full_graph:
@@ -69,27 +68,27 @@ elif op_mode == view_mode:
 			center = st.selectbox("Choose nodes",fields,index = u)
 			radius = st.number_input("Radius",value=5)
 		G = chem.graph(conn,center,radius)
-		graph_stats.graph_plot(G, conn,center,radius, communities)
+		gv.graph_plot(G, conn,center,radius, communities)
 
 	mintree = st.checkbox("Minimum tree", value = False)
 	if mintree:
-		with nc() as conn: graph_stats.mintree(G,conn)
+		with nc() as conn: gv.mintree(G,conn)
 
 	maxtree = st.checkbox("Maximum tree", value = True)
 	if maxtree:
-		with nc() as conn: graph_stats.maxtree(G,conn)
+		with nc() as conn: gv.maxtree(G,conn)
 
 	energy_density = st.checkbox("Energy density", value = True)
 	if energy_density:
 		with nc() as conn: 
-			graph_stats.view_energy(G,conn)
-			graph_stats.view_gravity(G,conn)
+			gv.view_energy(G,conn)
+			gv.view_gravity(G,conn)
 
 	dd = st.checkbox("Degree distribution", value = False)
 	if dd:
 		with nc() as conn: 
-			graph_stats.view_degrees(G,conn)
+			gv.view_degrees(G,conn)
 
 	spectrum = st.checkbox("Spectrum",value=False)
 	if spectrum:
-		with nc() as conn: graph_stats.view_spectrum(G,conn)
+		with nc() as conn: gv.view_spectrum(G,conn)
