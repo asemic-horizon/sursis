@@ -94,26 +94,30 @@ def stats_view(graph):
 def sufficient(graph):
 	return graph.number_of_nodes() > 5
 
-def graph_plot(G, conn, center, radius, communities = False):
+def graph_plot(G, conn, center, radius, communities = False, circular = False):
+	if circular:
+		pos_fun = nx.circular_layout
+	else:
+		pos_fun = nx.kamada_kawai_layout
 	full_graph = center is None
 	st.write(f"Expansion force **{-phys.net_gravity(G):2.3f}** (subgraph)/{-chem.total_energy(conn):2.3f} (full graph)")
-	viz.draw(G,conn,labels = not full_graph, cmap=cmap)
+	viz.draw(G,conn,labels = not full_graph, cmap=cmap,pos_fun = pos_fun)
 
 	out, coll = chem.gravity_partition(G,conn)
 	ui.separator()
 
 	if sufficient(G):
 		st.write("### Collapsing")
-		viz.draw(out,conn,cmap=cmap)
+		viz.draw(out,conn,cmap=cmap,pos_fun = pos_fun)
 		st.write("### Expanding")
-		viz.draw(coll,conn,cmap=cmap)
+		viz.draw(coll,conn,cmap=cmap,pos_fun = pos_fun)
 
 	if full_graph:
 		ui.separator()
 		st.write("### Components")
 		S = [G.subgraph(c).copy() for c in nx.connected_components(G)]
 		for subgraph in S:
-			viz.draw(subgraph, conn, cmap = cmap)
+			viz.draw(subgraph, conn, cmap = cmap, pos_fun = pos_fun)
 			ui.separator()
 
 	if sufficient(G) and communities:
@@ -122,7 +126,7 @@ def graph_plot(G, conn, center, radius, communities = False):
 		S = [G.subgraph(c).copy() for c in u if len(c)>thresh]
 		st.write("### Communities")
 		for subgraph in S:
-			viz.draw(subgraph, conn, cmap = cmap)
+			viz.draw(subgraph, conn, cmap = cmap, pos_fun = pos_fun)
 			ui.separator()
 
 def mintree(G,conn):
@@ -130,14 +134,14 @@ def mintree(G,conn):
 		H = nx.minimum_spanning_tree(G)
 		ui.separator()
 		st.write("#### Minimum tree")
-		viz.draw(H, conn, cmap = cmap)
+		viz.draw(H, conn, cmap = cmap, pos_fun = nx.planar_layout)
 		st.pyplot()
 
 def maxtree(G,conn):
 	if sufficient(G):
 		J = nx.maximum_spanning_tree(G)
 		st.write("#### Maximum tree")
-		viz.draw(J, conn, cmap = cmap)
+		viz.draw(J, conn, cmap = cmap, pos_fun = nx.planar_layout)
 		st.pyplot()
 
 def view_energy(G,conn):
