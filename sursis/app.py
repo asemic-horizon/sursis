@@ -1,17 +1,16 @@
 import streamlit as st
 import networkx as nx
-import random
-import layout
 #
-import db, viz
-import physics as phys
-import graph_physics as chem
+import backend.db as db
+import backend.physics as phys
+import backend.graph_physics as chem
+#
 import graph_views as gv
 import ui_elems as ui
 import dialogs as dlg
-from db import nc
+#
+from backend.db import nc
 
-#cmap = "PuOr_r"
 
 
 node_mode = "Nodes"
