@@ -4,8 +4,8 @@ import matplotlib as mpl
 import matplotlib.colors as colors
 import networkx as nx
 import numpy as np
-import physics as phys
-import graph_physics as chem
+from backend import physics as phys
+from backend import graph_physics as chem
 
 def draw_bw(G, pos_fun=nx.spring_layout):
         pos = pos_fun(G)
