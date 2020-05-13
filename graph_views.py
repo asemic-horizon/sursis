@@ -100,7 +100,7 @@ def graph_plot(G, conn, center, radius, communities = False):
 	full_graph = center is None
 	a = -phys.net_gravity(G)
 	b = -chem.total_energy(conn)
-	st.write(f"Net force = **{a:2.3f}** - (subgraph)/{b:2.3f} = {a-b:2.3f}")
+	st.write(f"Net force = **{a:2.3f}** - {b:2.3f} = {a-b:2.3f}")
 	viz.draw(G,conn,labels = not full_graph, cmap=cmap,pos_fun = pos_fun)
 	try:
 		out, coll = chem.gravity_partition(G,conn)
