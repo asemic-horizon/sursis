@@ -100,10 +100,11 @@ def graph_plot(G, conn, center, radius, communities = False):
 	full_graph = center is None
 	st.write(f"Expansion force **{-phys.net_gravity(G):2.3f}** (subgraph)/{-chem.total_energy(conn):2.3f} (full graph)")
 	viz.draw(G,conn,labels = not full_graph, cmap=cmap,pos_fun = pos_fun)
-
-	out, coll = chem.gravity_partition(G,conn)
-	ui.separator()
-
+	try:
+		out, coll = chem.gravity_partition(G,conn)
+		ui.separator()
+	except:
+		st.write("Error! Please reload")
 	if sufficient(G):
 		st.write("### Collapsing")
 		viz.draw(out,conn,cmap=cmap,pos_fun = pos_fun)

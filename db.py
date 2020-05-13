@@ -49,6 +49,7 @@ def initialize(conn):
 def run_sql(conn,sql,*args):
     cur = conn.cursor()
     cur.execute(sql,(*args,))
+
     return cur
 
 # insert and delete functions do db work
@@ -82,7 +83,9 @@ def get_node_id(conn,node):
 # edges are written in one direction, but are assumed to be undirected
 def insert_edge(conn, node_1, node_2):
     try:
-        id_1, id_2 = get_node_id(conn,node_1),get_node_id(conn,node_2)
+        # ensure pattern for edges where n1 dominates alphabetically
+        n1, n2 = min(node_1, node_2), max(node_1,node_2)
+        id_1, id_2 = get_node_id(conn,n1),get_node_id(conn,n2)
         return run_sql(conn,"INSERT INTO edges (left,right) VALUES (?,?)",id_1,id_2).lastrowid
     except:
         logging.error(f"Couldn't create edge {node_1}-{node_2}")
@@ -147,9 +150,8 @@ def list_edges(conn):
     return run_sql(conn,query).fetchall()
 
 def query_connections(conn,node):
-    query = """SELECT node_1, node_2 FROM named_edges 
-                WHERE node_1 = ? OR node_2 = ?"""
-    connected = run_sql(conn,query, node, node).fetchall()
+    connected = run_sql(conn,"SELECT node_1, node_2 FROM named_edges WHERE node_1 = ?").fetchall()
+    connected += run_sql(conn,"SELECT node_1, node_2 FROM named_edges WHERE node_2 = ?").fetchall()
     return connected
 
 def merge_nodes(conn,node1,node2,new_name = None):
