@@ -1,7 +1,7 @@
 import streamlit as st
 import ui_elems as ui
-import db
-import graph_physics as chem
+from backend import db
+from backend import graph_physics as chem
 
 def node_entry(conn):
 	node = st.text_input('Enter new node name')

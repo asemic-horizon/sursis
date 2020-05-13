@@ -3,12 +3,13 @@ import matplotlib.pyplot as plt
 import networkx as nx 
 import collections
 import numpy as np
-import physics as phys
-import graph_physics as chem
+from backend import physics as phys
+from backend import graph_physics as chem
+from backend import stats
 from scipy.optimize import curve_fit
 from scipy.stats import gaussian_kde
 import ui_elems as ui
-import viz, stats
+import viz
 
 cmap = "RdYlBu_r"
 

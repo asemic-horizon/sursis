@@ -3,3 +3,4 @@ networkx
 matplotlib
 scipy
 graph-tools
+hy

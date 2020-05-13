@@ -3,7 +3,7 @@ import networkx as nx
 import numpy as np
 from time import ctime
 from numpy.random import choice
-import db
+from backend import db
 
 def separator():
 	st.write("----")

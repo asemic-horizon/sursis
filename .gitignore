@@ -12,3 +12,4 @@ edges.txt
 nodes.txt
 named_edges.txt
 cache/*
+backup/*
