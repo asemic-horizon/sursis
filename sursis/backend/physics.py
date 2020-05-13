@@ -1,9 +1,9 @@
 import networkx as nx 
 import scipy
 import numpy as np
-from joblib import Memory
+#from joblib import Memory
 
-memory = Memory("./cache")
+#memory = Memory("./cache")
 
 #@memory.cache
 def mass(graph):

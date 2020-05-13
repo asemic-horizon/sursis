@@ -6,7 +6,7 @@ from numpy import unique, array
 from time import ctime
 import networkx as nx 
 
-import physics as phys
+import backend.physics as phys
 
 
 

@@ -1,9 +1,10 @@
 import networkx as nx 
 import collections
 import numpy as np
-import physics as phys
-import graph_physics as chem
 import scipy
+#
+from backend import physics as phys
+from backend import graph_physics as chem
 
 def degree_distribution(graph):
 	degree_sequence = sorted([d for n, d in graph.degree()], reverse=True)  # degree sequence
