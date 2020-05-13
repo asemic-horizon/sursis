@@ -98,18 +98,19 @@ def graph_plot(G, conn, center, radius, communities = False):
 
 	pos_fun = lambda G: nx.spring_layout(G, k=0.1)#nx.kamada_kawai_layout
 	full_graph = center is None
-	st.write(f"Expansion force **{-phys.net_gravity(G):2.3f}** (subgraph)/{-chem.total_energy(conn):2.3f} (full graph)")
+	a = -phys.net_gravity(G)
+	b = -chem.total_energy(conn)
+	st.write(f"Net force = **{a:2.3f}** - (subgraph)/{b:2.3f} = {a-b:2.3f}")
 	viz.draw(G,conn,labels = not full_graph, cmap=cmap,pos_fun = pos_fun)
 	try:
 		out, coll = chem.gravity_partition(G,conn)
 		ui.separator()
-	except:
-		st.write("Error! Please reload")
-	if sufficient(G):
 		st.write("### Collapsing")
 		viz.draw(out,conn,cmap=cmap,pos_fun = pos_fun)
 		st.write("### Expanding")
 		viz.draw(coll,conn,cmap=cmap,pos_fun = pos_fun)
+	except:
+		st.write("Couldn't make expanding/collapsing subsets")
 
 	if full_graph:
 		ui.separator()
