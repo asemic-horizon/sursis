@@ -23,43 +23,44 @@ merge_mode = "Merge"
 view_mode = "Visualization"
 stats_mode = "Advanced stats"
 
-st.write("## `sursis`")
+with nc() as conn:
+	st.write("## `sursis`")
 
-op_mode = st.radio(label="Operation mode",\
-	options=[view_mode,node_mode,edge_mode, dyad_mode, triad_mode, trail_mode, merge_mode,stats_mode,])
+	op_mode = st.radio(label="Operation mode",\
+		options=[view_mode,node_mode,edge_mode, dyad_mode, triad_mode, trail_mode, merge_mode,stats_mode,])
 
-if op_mode == node_mode:
-	ui.separator()
-	st.write("### Add/remove nodes")
-	with nc() as conn: dlg.node_entry(conn)
-elif op_mode == dyad_mode:
-	ui.separator()
-	st.write("### Add two nodes and connect them")
-	with nc() as conn: dlg.dyad_entry(conn)
-elif op_mode == triad_mode:
-	ui.separator()
-	st.write("### Add a parent node and two children")
-	with nc() as conn: dlg.triad_entry(conn)
-elif op_mode == edge_mode:
-	ui.separator()
-	st.write("### Add/remove connections")
-	with nc() as conn: dlg.edge_entry(conn)
-elif op_mode == trail_mode:
-	ui.separator()
-	st.write("### Add new node and connect to existing")
-	with nc() as conn: dlg.trail_node_entry(conn)
-elif op_mode == merge_mode:
-	ui.separator()
-	st.write("### Merge nodes")
-	with nc() as conn: dlg.node_merge(conn)
-elif op_mode == stats_mode:
-	with nc() as conn: graph = chem.graph(conn)
-	gv.stats_view(graph)
-elif op_mode == view_mode:
-	ui.separator()
-	full_graph = st.checkbox("Full graph",value=False)
-	communities = st.checkbox("Communities", value = False)
-	with nc() as conn: 
+	if op_mode == node_mode:
+		ui.separator()
+		st.write("### Add/remove nodes")
+		dlg.node_entry(conn)
+	elif op_mode == dyad_mode:
+		ui.separator()
+		st.write("### Add two nodes and connect them")
+		dlg.dyad_entry(conn)
+	elif op_mode == triad_mode:
+		ui.separator()
+		st.write("### Add a parent node and two children")
+		dlg.triad_entry(conn)
+	elif op_mode == edge_mode:
+		ui.separator()
+		st.write("### Add/remove connections")
+		dlg.edge_entry(conn)
+	elif op_mode == trail_mode:
+		ui.separator()
+		st.write("### Add new node and connect to existing")
+		dlg.trail_node_entry(conn)
+	elif op_mode == merge_mode:
+		ui.separator()
+		st.write("### Merge nodes")
+		dlg.node_merge(conn)
+	elif op_mode == stats_mode:
+		graph = chem.graph(conn)
+		gv.stats_view(graph)
+	elif op_mode == view_mode:
+		ui.separator()
+		full_graph = st.checkbox("Full graph",value=False)
+		communities = st.checkbox("Communities", value = False)
+		
 		if full_graph:
 			center, radius = None, None
 		if not full_graph:
@@ -70,25 +71,19 @@ elif op_mode == view_mode:
 		G = chem.graph(conn,center,radius)
 		gv.graph_plot(G, conn,center,radius, communities)
 
-	mintree = st.checkbox("Minimum tree", value = True)
-	if mintree:
-		with nc() as conn: gv.mintree(G,conn)
+		mintree = st.checkbox("Minimum tree", value = True)
+		if mintree:	gv.mintree(G,conn)
 
-	maxtree = st.checkbox("Maximum tree", value = False)
-	if maxtree:
-		with nc() as conn: gv.maxtree(G,conn)
+		maxtree = st.checkbox("Maximum tree", value = False)
+		if maxtree: gv.maxtree(G,conn)
 
-	energy_density = st.checkbox("Energy density", value = True)
-	if energy_density:
-		with nc() as conn: 
+		energy_density = st.checkbox("Energy density", value = True)
+		if energy_density:
 			gv.view_energy(G,conn)
 			gv.view_gravity(G,conn)
 
-	dd = st.checkbox("Degree distribution", value = False)
-	if dd:
-		with nc() as conn: 
-			gv.view_degrees(G,conn)
+		dd = st.checkbox("Degree distribution", value = False)
+		if dd: gv.view_degrees(G,conn)
 
-	spectrum = st.checkbox("Spectrum",value=False)
-	if spectrum:
-		with nc() as conn: gv.view_spectrum(G,conn)
+		spectrum = st.checkbox("Spectrum",value=False)
+		if spectrum: gv.view_spectrum(G,conn)
