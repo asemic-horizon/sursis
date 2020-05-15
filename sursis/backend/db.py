@@ -9,6 +9,12 @@ import networkx as nx
 import backend.physics as phys
 
 
+def ft(s):
+    if bool(s) and all([v in "0123456789." for v in s]):
+        return float(s)
+    else:
+        return 0
+
 
 
 def nc(file="data.sqlite"):
@@ -17,6 +23,8 @@ def nc(file="data.sqlite"):
         return conn
     except sqlite3.Error as e:
         logging.error(e)
+
+
 
 
 def initialize(conn):
