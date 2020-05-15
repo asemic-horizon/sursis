@@ -33,14 +33,16 @@ def initialize(conn):
             id integer PRIMARY KEY,
             name text NOT NULL,
             mass real,
-            energy real);"""
+            energy real,
+            degree real);"""
     sql_edges_table =\
     """CREATE TABLE IF NOT EXISTS edges (
             id integer PRIMARY KEY,
             left integer NOT NULL,
             right integer NOT NULL,
             mass real,
-            energy real);"""
+            energy real,
+            degree real);"""
     sql_named_edges_view=\
     """CREATE VIEW named_edges as 
         SELECT edges.id, n1.name as node_1,n2.name as node_2, edges.mass, edges.energy FROM edges 
