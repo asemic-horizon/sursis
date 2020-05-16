@@ -53,7 +53,7 @@ def potential(graph: nx.Graph, mass: np.ndarray, boundary_value = 0.0, bracket=(
 	bounds = boundary_condition(graph, boundary_value, *bracket)
 	sol = scipy.optimize.lsq_linear(
 		L,
-		rho,
+		-rho,
 		bounds=bounds,
 		max_iter = len(rho)*len(rho))
 	logging.info("Optimality: " + sol.message)
