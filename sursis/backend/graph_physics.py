@@ -77,13 +77,7 @@ def read_edge_prop(conn,subgraph,prop="energy"):
 def prop_bounds(conn,prop="energy",table="nodes",slices=4):
     count = db.run_sql(conn,f"SELECT (COUNT(*)) FROM {table}").fetchone()[0]
     
-    #min_val = db.run_sql(conn,f"select MIN({prop}) FROM {table}").fetchone()[0]
-    min_val = db.run_sql(conn,\
-        f"""SELECT {prop} FROM {table} ORDER BY {prop} LIMIT 1
-            OFFSET
-                {count//slices}
-
-        """).fetchone()[0]
+    min_val = db.run_sql(conn,f"select MIN({prop}) FROM {table}").fetchone()[0]
 
     avg_val = db.run_sql(conn,f"select AVG({prop}) FROM {table}").fetchone()[0]
     med_val = db.run_sql(conn,\
@@ -92,13 +86,8 @@ def prop_bounds(conn,prop="energy",table="nodes",slices=4):
                 {count//2}
 
         """).fetchone()[0]
-#    max_val = db.run_sql(conn,f"select MAX({prop}) FROM {table}").fetchone()[0]
-    max_val = db.run_sql(conn,\
-        f"""SELECT {prop} FROM {table} ORDER BY {prop} LIMIT 1
-            OFFSET
-                {(slices - 1)*count//slices}
+    max_val = db.run_sql(conn,f"select MAX({prop}) FROM {table}").fetchone()[0]
 
-        """).fetchone()[0]
 
     return min_val, max_val, avg_val, med_val
 
