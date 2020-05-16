@@ -22,7 +22,7 @@ class MidpointNormalize(colors.Normalize):
         def __call__(self, value, clip=None):
                 # I'm ignoring masked values and all kinds of edge cases to make a
                 # simple example...
-                x, y = [self.vmin, self.midpoint, self.vmax], [0, 0.5, 1]
+                x, y = [self.vmin, self.midpoint, self.vmax], [0, 0.5, 0.8]
                 return np.ma.masked_array(np.interp(value, x, y), np.isnan(value))
 
 
