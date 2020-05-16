@@ -157,13 +157,13 @@ def view_energy(G,conn):
 	if sufficient(G):
 		ui.separator()
 		st.write("### Energy density")
-		energy(G)
+		#energy(G)
 
 def view_gravity(G,conn):
 	if sufficient(G):
 		ui.separator()
 		st.write("### Momentum")
-		gravity(G)
+		#gravity(G)
 
 
 def view_spectrum(G,conn):
