@@ -4,7 +4,8 @@ logging.basicConfig(filename="physics.log",level = logging.INFO)
 import networkx as nx 
 import scipy
 import numpy as np
-
+from joblib import Memory
+mem = Memory('./cache')
 def isolates(graph):
 	 return [n for n,f in enumerate(graph.nodes) if graph.degree[f]==0]
 
@@ -14,6 +15,8 @@ def boundary(graph):
 def weaklink(graph):
 	 return [n for n,f in enumerate(graph.nodes) if graph.degree[f]==2]
 
+def test_boundary(graph,vector):
+	return np.median(vector[boundary(graph)])
 
 def boundary_condition(graph, value = 0.0, lower = -np.inf, higher = np.inf, eps = 1e-10):
 	n = graph.number_of_nodes()
@@ -42,11 +45,18 @@ def least_squares_potential(graph: nx.Graph, mass : np.ndarray):
 	sol = scipy.sparse.linalg.lsmr(L, -rho,damp=1e-3)
 	return sol[0]
 
-def potential(graph: nx.Graph, mass: np.ndarray, boundary_value = 0.0):
+@mem.cache
+def potential(graph: nx.Graph, mass: np.ndarray, boundary_value = 0.0, edge_values=(-0.1,0.1)):
 	rho = mass.reshape(-1,)
 	L = nx.laplacian_matrix(graph)
-	bounds = boundary_condition(graph, boundary_value,-1.0,1.0)
-	sol = scipy.optimize.lsq_linear(L,-rho,bounds=bounds)
+	bounds = boundary_condition(graph, boundary_value, *edge_values)
+	sol = scipy.optimize.lsq_linear(
+		L,
+		-rho,
+		bounds=bounds,
+		max_iter = len(rho)*len(rho))
+	logging.info("Optimality " + str(sol.status))
+	logging.info(str(test_boundary(graph, sol.x)))
 	return sol.x
 
 def energy(graph : nx.Graph):
