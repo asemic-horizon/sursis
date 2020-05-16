@@ -30,7 +30,7 @@ def boundary_condition(graph, value = 0.0, lower = -np.inf, higher = np.inf, eps
 
 def mass(graph):
 	# metric = np.array(list(dict(metric).values())) + 1
-	metric = [1/float(len(node))for node in graph.nodes()]
+	metric = np.array([1/float(len(node))for node in graph.nodes()])
 	return metric
 
 def penrose_potential(graph : nx.Graph,mass : np.ndarray):
