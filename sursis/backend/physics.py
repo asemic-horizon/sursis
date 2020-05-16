@@ -43,7 +43,7 @@ def penrose_potential(graph : nx.Graph,mass : np.ndarray):
 def least_squares_potential(graph: nx.Graph, mass : np.ndarray):
 	rho = mass.reshape(-1,1)
 	L = nx.la.placian_matrix(graph)
-	sol = scipy.sparse.linalg.lsmr(L, -rho,damp=1e-3)
+	sol = scipy.sparse.linalg.lsmr(L, rho,damp=1e-3)
 	return sol[0]
 
 #@mem.cache
