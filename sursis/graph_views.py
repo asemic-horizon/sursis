@@ -48,8 +48,8 @@ def eigenvalues(graph):
 	st.write(f"* Spectral gap: {eigvals[0]-eigvals[1]:2.1f}")
 	st.write(f"* Smallest nonzero eigenvalue: {np.min(eigvals[eigvals>1e-10]):e}")
 
-def mass(graph):
-	m = sorted(phys.mass(graph))
+def mass(graph,conn):
+	m = chem.read_node_prop(conn,graph,"mass")
 	density = gaussian_kde(m)
 	plt.plot(m,density(m))
 	plt.grid(True)
@@ -58,7 +58,7 @@ def mass(graph):
 	st.pyplot()
 	st.write(f"* Mean mass {np.mean(m):e}")
 
-def energy(graph):
+def energy(graph,conn):
 	e = chem.read_node_prop(conn,graph,"energy")
 	grav = sorted(np.array(e))
 	density = gaussian_kde(grav)
@@ -69,7 +69,7 @@ def energy(graph):
 	st.write(f"* Mean energy {np.mean(e):e}")
 	st.write(f"* % attractive {100*len(e[e>0])/len(e):2.1f}%")
 
-def gravity(graph):
+def gravity(graph,conn):
 	m = chem.read_node_prop(conn,graph,"mass")
 	e = chem.read_node_prop(conn,graph,"energy")
 	grav = np.array(sorted(np.array(e)*np.array(m)))
@@ -81,12 +81,6 @@ def gravity(graph):
 	st.write(f"* Mean gravity {np.mean(grav):e}")
 	st.write(f"* % collapsing {100*len(grav[grav>0])/len(grav):2.1f}%")
 
-
-def phase(graph):
-	plt.scatter(phys.mass(graph),phys.energy(graph))
-	plt.xscale("log")
-	plt.xlabel("Mass");plt.ylabel("Energy")
-	st.pyplot()
 
 
 def stats_view(graph):
@@ -156,13 +150,13 @@ def view_energy(G,conn):
 	if sufficient(G):
 		ui.separator()
 		st.write("### Energy density")
-		energy(G)
+		energy(G,conn)
 
 def view_gravity(G,conn):
 	if sufficient(G):
 		ui.separator()
 		st.write("### Momentum")
-		gravity(G)
+		gravity(G,conn)
 
 
 def view_spectrum(G,conn):
