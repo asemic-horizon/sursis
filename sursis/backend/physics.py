@@ -29,7 +29,7 @@ def boundary_condition(graph, value = 0.0, lower = -np.inf, higher = np.inf, eps
 	return (lb,ub)
 
 def mass(graph):
-	metric =np.array([1.0/len(node) for node in  G.nodes()])#nx.degree_centrality(graph)
+	metric =np.array([1.0/len(node) for node in  graph.nodes()])#nx.degree_centrality(graph)
 	metric = np.array(list(dict(metric).values()))
 	#metric = metric/np.sum(metric)
 	return metric
