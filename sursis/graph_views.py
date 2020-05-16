@@ -59,8 +59,7 @@ def mass(graph):
 	st.write(f"* Mean mass {np.mean(m):e}")
 
 def energy(graph):
-	#m = phys.mass(graph)
-	e = phys.energy(graph)
+	e = chem.read_node_prop(conn,graph,"energy")
 	grav = sorted(np.array(e))
 	density = gaussian_kde(grav)
 	plt.plot(grav,density(grav))
@@ -71,8 +70,8 @@ def energy(graph):
 	st.write(f"* % attractive {100*len(e[e>0])/len(e):2.1f}%")
 
 def gravity(graph):
-	m = phys.mass(graph)
-	e = phys.energy(graph)
+	m = chem.read_node_prop(conn,graph,"mass")
+	e = chem.read_node_prop(conn,graph,"energy")
 	grav = np.array(sorted(np.array(e)*np.array(m)))
 	density = gaussian_kde(grav)
 	plt.plot(grav,density(grav))
@@ -157,13 +156,13 @@ def view_energy(G,conn):
 	if sufficient(G):
 		ui.separator()
 		st.write("### Energy density")
-		#energy(G)
+		energy(G)
 
 def view_gravity(G,conn):
 	if sufficient(G):
 		ui.separator()
 		st.write("### Momentum")
-		#gravity(G)
+		gravity(G)
 
 
 def view_spectrum(G,conn):
