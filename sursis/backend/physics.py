@@ -46,10 +46,10 @@ def least_squares_potential(graph: nx.Graph, mass : np.ndarray):
 	return sol[0]
 
 @mem.cache
-def potential(graph: nx.Graph, mass: np.ndarray, boundary_value = 0.0, edge_values=(-0.1,0.1)):
+def potential(graph: nx.Graph, mass: np.ndarray, boundary_value = 0.0, bracket=(-np.inf,np.inf)):
 	rho = mass.reshape(-1,)
 	L = nx.laplacian_matrix(graph)
-	bounds = boundary_condition(graph, boundary_value, *edge_values)
+	bounds = boundary_condition(graph, boundary_value, *bracket)
 	sol = scipy.optimize.lsq_linear(
 		L,
 		-rho,
