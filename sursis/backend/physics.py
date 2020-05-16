@@ -29,9 +29,10 @@ def boundary_condition(graph, value = 0.0, lower = -np.inf, higher = np.inf, eps
 	return (lb,ub)
 
 def mass(graph):
-	metric = graph.degree()
-	metric = np.array(list(dict(metric).values())) + 1
-	metric = metric/np.sum(metric)
+	# metric = graph.degree()
+	# metric = np.array(list(dict(metric).values())) + 1
+	# metric = metric/np.sum(metric)
+	metric = np.ones((graph.number_of_nodes(),))
 	return metric
 
 def penrose_potential(graph : nx.Graph,mass : np.ndarray):
