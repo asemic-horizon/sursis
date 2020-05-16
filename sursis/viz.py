@@ -62,8 +62,8 @@ def draw(G, conn, labels = True, cmap = "terrain_r", pos_fun=nx.kamada_kawai_lay
         energy = np.array(chem.read_node_prop(conn,G,"energy"))
         mass = np.array(chem.read_node_prop(conn,G,"mass"))
         minm, maxm, avgm, medm = chem.prop_bounds(conn,prop="mass")
-        multiplier = -1000/np.log10(medm)
-        node_size = 5+multiplier*mass
+        multiplier = -600/np.log10(medm)
+        node_size = 50+multiplier*mass
         minv, maxv, avgv, medv = chem.prop_bounds(conn,slices=10)
         #pot = np.exp(energy)
         #window = [minv if -minv > maxv else -maxv, medv, maxv if -maxv > minv else -minv]
