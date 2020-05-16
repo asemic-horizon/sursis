@@ -67,7 +67,7 @@ def draw(G, conn, labels = True, cmap = "terrain_r", pos_fun=nx.kamada_kawai_lay
         minv, maxv, avgv, medv = chem.prop_bounds(conn,slices=10)
         #pot = np.exp(energy)
         #window = [minv if -minv > maxv else -maxv, medv, maxv if -maxv > minv else -minv]
-        skew = 1
+        skew = 2
         energy[energy>0] = skew*energy[energy>0]
         window = [minv,0,skew*maxv]
         
