@@ -13,11 +13,11 @@ import ui_elems as ui
 import viz
 
 #cmap = "RdYlBu"
-#cmap = "PuOr_r"
+cmap = "PuOr_r"
 #cmap = "jet"
 #cmap = "coolwarm"
 #cmap = "bwr"
-cmap = "gist_stern"
+#cmap = "gist_stern"
 def power_law(x,k,slope):
 	return np.exp(np.log(k) + slope*np.log(x))
 
