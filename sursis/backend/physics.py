@@ -45,7 +45,7 @@ def least_squares_potential(graph: nx.Graph, mass : np.ndarray):
 	sol = scipy.sparse.linalg.lsmr(L, -rho,damp=1e-3)
 	return sol[0]
 
-@mem.cache
+#@mem.cache
 def potential(graph: nx.Graph, mass: np.ndarray, boundary_value = 0.0, bracket=(-np.inf,np.inf)):
 	rho = mass.reshape(-1,)
 	L = nx.laplacian_matrix(graph)
