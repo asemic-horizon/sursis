@@ -66,7 +66,7 @@ def read_node_prop(conn,subgraph,prop="energy"):
     nodes = list(subgraph.nodes())
     res = [db.run_sql(conn,\
         f"SELECT {prop} FROM nodes WHERE name = ?", n).fetchall()[0][0] for n in nodes]
-    return [db.surefloat(r) for r in res]
+    return array([db.surefloat(r) for r in res])
 
 def read_edge_prop(conn,subgraph,prop="energy"):
     edges = list(subgraph.edges())
