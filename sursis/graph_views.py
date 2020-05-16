@@ -16,8 +16,8 @@ import viz
 #cmap = "PuOr_r"
 #cmap = "jet"
 #cmap = "coolwarm"
-cmap = "bwr"
-
+#cmap = "bwr"
+cmap = "gist_stern"
 def power_law(x,k,slope):
 	return np.exp(np.log(k) + slope*np.log(x))
 
