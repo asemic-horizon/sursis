@@ -12,9 +12,12 @@ from scipy.stats import gaussian_kde
 import ui_elems as ui
 import viz
 
-cmap = "RdYlBu_r"
+#cmap = "RdYlBu"
 #cmap = "PuOr_r"
 #cmap = "jet"
+#cmap = "coolwarm"
+cmap = "bwr"
+
 def power_law(x,k,slope):
 	return np.exp(np.log(k) + slope*np.log(x))
 
@@ -105,14 +108,14 @@ def graph_plot(G, conn, center, radius, communities = False):
 	full_graph = center is None
 	a = -phys.net_gravity(G)
 	b = -chem.total_energy(conn)
-	st.write(f"Net force = **{a:2.3f}** - {b:2.3f} = {a-b:2.3f}")
+	st.write(f"Net gravity = **{a:2.3f}** - {b:2.3f} = {a-b:2.3f}")
 	viz.draw(G,conn,labels = not full_graph, cmap=cmap,pos_fun = pos_fun)
 	try:
 		out, coll = chem.gravity_partition(G,conn)
 		ui.separator()
-		st.write("### Collapsing")
-		viz.draw(out,conn,cmap=cmap,pos_fun = pos_fun)
 		st.write("### Expanding")
+		viz.draw(out,conn,cmap=cmap,pos_fun = pos_fun)
+		st.write("### Collapsing")
 		viz.draw(coll,conn,cmap=cmap,pos_fun = pos_fun)
 	except:
 		st.write("Couldn't make expanding/collapsing subsets")

@@ -35,8 +35,16 @@ def draw_bw(G, pos_fun=nx.spring_layout):
 
 def draw_color(G, pot, window, labels, node_size = 50, pos_fun=nx.spring_layout, cmap="gnuplot"):
         pos = pos_fun(G)
-        font_size = 11 if G.number_of_nodes()<10 else 9
-        alpha = 0.8
+        N = G.number_of_nodes()
+        font_size = 11 if N<10 else 9
+        if N<10:
+                alpha = 1
+        elif N<50:
+                alpha = 0.8
+        elif N<200:
+                alpha = 0.6
+        else:
+                alpha = 0.5
         scheme = mpl.pyplot.get_cmap(cmap)
         
 
@@ -46,7 +54,7 @@ def draw_color(G, pot, window, labels, node_size = 50, pos_fun=nx.spring_layout,
         colorvals = smap.to_rgba(pot)
         nx.draw(G,pos=pos,with_labels=labels, node_color = colorvals, node_size = node_size,font_size=font_size,width=0.2,alpha=alpha)
         cbar = mpl.pyplot.colorbar(smap,ticks=window,orientation='horizontal',label="Potential field")
-        cbar.ax.set_xticklabels(["               Repulsive","Neutral", "Attractive                "])
+        cbar.ax.set_xticklabels(["                Collapsing","Neutral", "Expanding                "])
         st.pyplot()
 
 
@@ -56,8 +64,10 @@ def draw(G, conn, labels = True, cmap = "terrain_r", pos_fun=nx.kamada_kawai_lay
         minm, maxm, avgm, medm = chem.prop_bounds(conn,prop="mass")
         multiplier = -1400/np.log10(medm)
         node_size = 30+multiplier*mass
-        minv, maxv, avgv, medv = chem.prop_bounds(conn,slices=50)
+        minv, maxv, avgv, medv = chem.prop_bounds(conn,slices=10)
         #pot = np.exp(energy)
         #window = [minv if -minv > maxv else -maxv, medv, maxv if -maxv > minv else -minv]
-        window = [minv,avgv,maxv]
+        energy[energy>0] = 5*energy[energy>0]
+        window = [minv,0,7*maxv]
+        
         draw_color(G,pot = energy, node_size = node_size, window = window, labels = labels, pos_fun = pos_fun, cmap = cmap)
