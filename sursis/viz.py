@@ -4,8 +4,27 @@ import matplotlib as mpl
 import matplotlib.colors as colors
 import networkx as nx
 import numpy as np
-from backend import physics as phys
 from backend import graph_physics as chem
+
+
+
+# set the colormap and centre the colorbar
+class MidpointNormalize(colors.Normalize):
+        """
+        Normalise the colorbar so that diverging bars work there way either side from a prescribed midpoint value)
+
+        e.g. im=ax1.imshow(array, norm=MidpointNormalize(midpoint=0.,vmin=-100, vmax=100))
+        """
+        def __init__(self, vmin=None, vmax=None, midpoint=None, clip=False):
+                self.midpoint = midpoint
+                colors.Normalize.__init__(self, vmin, vmax, clip)
+
+        def __call__(self, value, clip=None):
+                # I'm ignoring masked values and all kinds of edge cases to make a
+                # simple example...
+                x, y = [self.vmin, self.midpoint, self.vmax], [0, 0.5, 1]
+                return np.ma.masked_array(np.interp(value, x, y), np.isnan(value))
+
 
 def draw_bw(G, pos_fun=nx.spring_layout):
         pos = pos_fun(G)
@@ -22,7 +41,8 @@ def draw_color(G, pot, window, labels, node_size = 50, pos_fun=nx.spring_layout,
         
 
         cnorm = colors.Normalize(vmin=window[0], vmax = window[2])
-        smap = cm.ScalarMappable(norm=cnorm, cmap=scheme)
+        smap = cm.ScalarMappable(norm=MidpointNormalize(vmin=window[0],vmax=window[2],midpoint=window[1]), cmap=scheme)
+        #smap = cm.ScalarMappable(norm=cnorm, cmap=scheme)
         colorvals = smap.to_rgba(pot)
         nx.draw(G,pos=pos,with_labels=labels, node_color = colorvals, node_size = node_size,font_size=font_size,width=0.2,alpha=alpha)
         cbar = mpl.pyplot.colorbar(smap,ticks=window,orientation='horizontal',label="Potential field")
@@ -36,6 +56,8 @@ def draw(G, conn, labels = True, cmap = "terrain_r", pos_fun=nx.kamada_kawai_lay
         minm, maxm, avgm, medm = chem.prop_bounds(conn,prop="mass")
         multiplier = -1400/np.log10(medm)
         node_size = 30+multiplier*mass
-        minv, maxv, avgv, medv = chem.prop_bounds(conn)
-        window = [minv if -minv > maxv else -maxv, 0, maxv if -maxv > minv else -minv]
+        minv, maxv, avgv, medv = chem.prop_bounds(conn,slices=50)
+        #pot = np.exp(energy)
+        #window = [minv if -minv > maxv else -maxv, medv, maxv if -maxv > minv else -minv]
+        window = [minv,avgv,maxv]
         draw_color(G,pot = energy, node_size = node_size, window = window, labels = labels, pos_fun = pos_fun, cmap = cmap)

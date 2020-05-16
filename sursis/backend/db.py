@@ -2,18 +2,38 @@ import logging
 logging.basicConfig(filename="app.log")
 
 import os, json, sqlite3
+#
 from numpy import unique, array
 from time import ctime
 import networkx as nx 
-
+#
 import backend.physics as phys
 
 
-def ft(s):
-    if bool(s) and all([v in "0123456789." for v in s]):
+def is_numericstring(s : str) -> bool:
+    return all([v in "0123456789." for v in s])
+
+def surefloat(s):
+    if isinstance(s,float) or isinstance(s,int):
+        return s
+    if isinstance(s,str) and is_numericstring(s):
         return float(s)
     else:
         return 0
+
+def stringfloat(s):
+    if isinstance(s,str) and is_numericstring(s):
+        return float(s)
+    else:
+        return 0
+
+def dt(s):
+    if len(s)==0:
+        return None
+    elif len(s)==1:
+        return stringfloat(s[0])
+    else:
+        return [stringfloat(u) for u in s]
 
 
 
@@ -24,54 +44,38 @@ def nc(file="data.sqlite"):
     except sqlite3.Error as e:
         logging.error(e)
 
-
-
-
-def initialize(conn):
-    sql_nodes_table =\
-    """CREATE TABLE IF NOT EXISTS nodes (
-            id integer PRIMARY KEY,
-            name text NOT NULL,
-            mass real,
-            energy real,
-            degree real);"""
-    sql_edges_table =\
-    """CREATE TABLE IF NOT EXISTS edges (
-            id integer PRIMARY KEY,
-            left integer NOT NULL,
-            right integer NOT NULL,
-            mass real,
-            energy real,
-            degree real);"""
-    sql_named_edges_view=\
-    """CREATE VIEW named_edges as 
-        SELECT edges.id, n1.name as node_1,n2.name as node_2, edges.mass, edges.energy FROM edges 
-            LEFT JOIN nodes AS n1 ON n1.id = edges.left 
-            LEFT JOIN nodes AS n2 ON n2.id = edges.right;"""
-    try:
-        c = conn.cursor()
-        c.execute(sql_nodes_table)
-        c.execute(sql_edges_table)
-        c.execute(sql_named_edges_view)
-    except sqlite3.Error as e:
-        logging.error(e)
-
-def run_sql(conn,sql,*args):
+def run_sql(conn, sql, *args):
     cur = conn.cursor()
     cur.execute(sql,(*args,))
-
     return cur
+
+def push(conn, sql, *args):
+    return run_sql(conn,sql,*args).lastrowid
+
+def grab(conn, sql, *args):
+    cur = run_sql(conn,sql,*args)
+    res = cur.fetchone()
+    return dt(res)
+
+def pull(conn, sql, *args):
+    cur = run_sql(conn,sql,*args)
+    res = cur.fetchall()
+    return [dt(r) for r in res]
+
 
 # insert and delete functions do db work
 def insert_node(conn,node):
-    return run_sql(conn,"INSERT INTO nodes (name) VALUES (?)",node).lastrowid
+    push(conn,
+        "INSERT INTO nodes (name) VALUES (?)",node)
 
 def node_exists(conn, node):
-    res = run_sql(conn,"SELECT id FROM nodes WHERE name = ? LIMIT 1",node).fetchall()
+    res = pull(conn,
+        "SELECT id FROM nodes WHERE name = ? LIMIT 1",node)
     return len(res)>0
 
 def count_nodes(conn):
-    return run_sql(conn,"select (count (name)) from nodes;").fetchall()[0][0]
+    return grab(conn,
+        "select (count (name)) from nodes;")
 
 
 # edges are written in one direction, but are assumed to be undirected

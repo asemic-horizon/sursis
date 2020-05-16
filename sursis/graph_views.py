@@ -1,5 +1,6 @@
 import streamlit as st
 import matplotlib.pyplot as plt
+import matplotlib.colors as colors
 import networkx as nx 
 import collections
 import numpy as np
@@ -12,7 +13,8 @@ import ui_elems as ui
 import viz
 
 cmap = "RdYlBu_r"
-
+#cmap = "PuOr_r"
+#cmap = "jet"
 def power_law(x,k,slope):
 	return np.exp(np.log(k) + slope*np.log(x))
 
@@ -96,8 +98,10 @@ def sufficient(graph):
 	return graph.number_of_nodes() > 5
 
 def graph_plot(G, conn, center, radius, communities = False):
-
-	pos_fun = lambda G: nx.spring_layout(G, k=0.1)#nx.kamada_kawai_layout
+	but = st.button("Recalculate physics")
+	if but: 
+		chem.update_physics(conn)
+	pos_fun = nx.kamada_kawai_layout
 	full_graph = center is None
 	a = -phys.net_gravity(G)
 	b = -chem.total_energy(conn)

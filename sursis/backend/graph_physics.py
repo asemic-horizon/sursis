@@ -8,7 +8,7 @@ from scipy.stats import norm
 from numpy import array
 
 def get_physics(conn, index, table):
-    query = f"SELECT {index}, energy, mass FROM {table}"
+    query = f"SELECT {index}, energy, mass, degree FROM {table}"
     return np.array(db.run_sql(conn,query).fetchall())
 
 
@@ -16,15 +16,22 @@ def graph(conn, center = None, radius = None, prop = "energy"):
     nodes = get_physics(conn, index = "name", table =  "nodes")
     edges = get_physics(conn, index = "node_1, node_2", table = "named_edges")
     G = nx.Graph()
-    for node, energy, mass in nodes:
-        G.add_node(node, weight=energy)
-    for u,v, energy, mass in edges:
+    for node, energy, mass, degree in nodes:
+        G.add_node(node, 
+                weight=db.surefloat(energy), 
+                energy=db.surefloat(energy), 
+                mass = db.surefloat(mass), 
+                degree=int(db.surefloat(degree)))
+    for u,v, energy, mass, degree in edges:
         if u in G.nodes() and v in G.nodes():
             if energy and mass:
-                w = norm.cdf(0.1 - float(energy)*float(mass))
+                w = norm.cdf(0.1 - db.surefloat(energy)*db.surefloat(mass))
             else:
                 w = 0.5
-            G.add_edge(u,v,weight=w if w>0 else 0)
+            G.add_edge(u,v,weight=w if w>0 else 0, 
+                energy = db.surefloat(energy), 
+                mass = db.surefloat(mass),
+                degree = int(db.surefloat(degree)))
     if center and radius:
         G = nx.ego_graph(G,n=center, radius=radius)
     return G
@@ -34,29 +41,25 @@ def update_physics(conn):
     G = graph(conn, center = None)
 
     # NODES
-    mass, energy = phys.mass(G), phys.energy(G)
-    values = zip(G.nodes(),mass,energy)
-    for node, mass, energy in values:
-        db.run_sql(conn,\
-            "UPDATE nodes SET mass = ? WHERE name = ? LIMIT 1", mass, node).lastrowid
-        db.run_sql(conn,\
-            "UPDATE nodes SET energy = ? WHERE name = ? LIMIT 1", energy, node).lastrowid
+    for node, mass, energy in zip(G.nodes(), phys.mass(G), phys.energy(G)):
+        db.push(conn,\
+            """UPDATE nodes SET mass = ?, energy = ?, degree = ? 
+               WHERE name = ? """,
+               mass, energy, G.degree[node],node)
 
     # EDGES
     H = dual(G); del G
     mass, energy = phys.mass(H), phys.energy(H)
     values = [(u,v,m,p) for (u,v),m, p in zip(H.nodes(),mass,energy)]
 
-    for u, v,  mass, energy in values:
-        id_1, id_2 = db.get_node_id(conn,u), db.get_node_id(conn,v)
-        db.run_sql(conn,\
-            "UPDATE edges SET mass = ? WHERE left  = ? and right = ?", mass, id_1, id_2).lastrowid
-        db.run_sql(conn,\
-            "UPDATE edges SET mass = ? WHERE left  = ? and right = ?", mass, id_2, id_1).lastrowid
-        db.run_sql(conn,\
-            "UPDATE edges SET energy = ? WHERE left  = ? and right = ?", energy, id_1, id_2).lastrowid
-        db.run_sql(conn,\
-            "UPDATE edges SET energy = ? WHERE left  = ? and right = ?", energy, id_2, id_1).lastrowid
+    for u, v,  mass, energy in values: 
+        n1 = min(u,v); n2 = max(u,v)
+        id_1, id_2 = db.get_node_id(conn,n1), db.get_node_id(conn,n2)
+        db.push(conn,\
+            """UPDATE edges SET mass = ?, energy = ?, degree = ? 
+                WHERE (left  = ? and right = ?)
+                   OR (right = ? and left  = ?) """, 
+                   mass, energy, H.degree[(u,v)], id_1, id_2, id_1, id_2)
 
 
 def read_node_prop(conn,subgraph,prop="energy"):
@@ -71,16 +74,32 @@ def read_edge_prop(conn,subgraph,prop="energy"):
         "SELECT energy FROM edges WHERE left = ? AND right = ?", u,v).fetchall()[0][0] for u,v in edges]
     return array([get_edge_energy(conn,u,v) for u,v in edges])
 
-def prop_bounds(conn,prop="energy",table="nodes"):
-    min_val = db.run_sql(conn,f"select MIN({prop}) FROM {table}").fetchone()[0]
+def prop_bounds(conn,prop="energy",table="nodes",slices=4):
+    count = db.run_sql(conn,f"SELECT (COUNT(*)) FROM {table}").fetchone()[0]
+    
+    #min_val = db.run_sql(conn,f"select MIN({prop}) FROM {table}").fetchone()[0]
+    min_val = db.run_sql(conn,\
+        f"""SELECT {prop} FROM {table} ORDER BY {prop} LIMIT 1
+            OFFSET
+                {count//slices}
+
+        """).fetchone()[0]
+
     avg_val = db.run_sql(conn,f"select AVG({prop}) FROM {table}").fetchone()[0]
     med_val = db.run_sql(conn,\
         f"""SELECT {prop} FROM {table} ORDER BY {prop} LIMIT 1
             OFFSET
-                (SELECT COUNT(*) FROM {table})/2
+                {count//2}
 
         """).fetchone()[0]
-    max_val = db.run_sql(conn,f"select MAX({prop}) FROM {table}").fetchone()[0]
+#    max_val = db.run_sql(conn,f"select MAX({prop}) FROM {table}").fetchone()[0]
+    max_val = db.run_sql(conn,\
+        f"""SELECT {prop} FROM {table} ORDER BY {prop} LIMIT 1
+            OFFSET
+                {(slices - 1)*count//slices}
+
+        """).fetchone()[0]
+
     return min_val, max_val, avg_val, med_val
 
 def total_energy(conn, table = "nodes"):
