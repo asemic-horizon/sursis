@@ -55,7 +55,7 @@ with nc() as conn:
 	elif op_mode == stats_mode:
 		but = st.button("Recalculate physics")
 		if but: 
-			chem.update_physics(conn,fast=False,n_iter = 30)
+			chem.update_physics(conn,fast=False)
 
 	elif op_mode == view_mode:
 		ui.separator()
