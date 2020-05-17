@@ -40,9 +40,12 @@ def graph(conn, center = None, radius = None, prop = "energy"):
 
 def update_physics(conn, fast = True):
     G = graph(conn, center = None)
-
+        boundary = db.sql(conn,
+        "SELECT AVG(energy) FROM nodes WHERE degree=1").fetchone()[0]
+boundary = db.sql(conn,
+        "SELECT AVG(energy) FROM nodes WHERE degree=1").fetchone()[0]
     # NODES
-    mass, energy = phys.autophysics(graph=G, n_iters = 10, fast=fast)
+    mass, energy = phys.autophysics(graph=G, initial_boundary = boundary, n_iters = 12, fast=fast)
     for node, mass, energy in zip(G.nodes(), mass, energy):
         db.push(conn,\
             """UPDATE nodes SET mass = ?, energy = ?, degree = ? 
@@ -50,8 +53,11 @@ def update_physics(conn, fast = True):
                mass, energy, G.degree[node],node)
 
     # EDGES
+    boundary = db.sql(conn,
+        "SELECT AVG(energy) FROM edges WHERE degree=1").fetchone()[0]
+
     H = dual(G); del G
-    mass, energy = phys.autophysics(graph=H,fast=fast)
+    mass, energy = phys.autophysics(graph=H,initial_boundary = boundary,fast=fast)
     values = [(u,v,m,p) for (u,v),m, p in zip(H.nodes(),mass,energy)]
 
     for u, v,  mass, energy in values: 
@@ -94,9 +100,9 @@ def prop_bounds(conn,prop="energy",table="nodes",slices=4):
     return min_val, max_val, avg_val, med_val
 
 
-def total_energy(conn, table = "nodes"):
+def total_energy(conn, table = "nodes",where=""):
     return db.run_sql(conn,\
-        f"SELECT SUM((mass * energy)) from {table}").fetchone()[0]
+        f"SELECT SUM((mass * energy)) from {table} {where}").fetchone()[0]
 
 def subgraph_energy(conn,subgraph):
     m = read_node_prop(conn,subgraph,"mass")
