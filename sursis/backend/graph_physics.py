@@ -118,7 +118,7 @@ def gravity_partition(G, conn):
 
 def boundary(conn,table="nodes"):
     return db.run_sql(conn,
-        "SELECT AVG(energy) FROM {table} WHERE degree=1").fetchone()[0]
+        f"SELECT AVG(energy) FROM {table} WHERE degree=1").fetchone()[0]
 
 
 #end
