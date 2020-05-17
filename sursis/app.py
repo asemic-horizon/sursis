@@ -55,8 +55,8 @@ with nc() as conn:
 	elif op_mode == stats_mode:
 		nb = chem.boundary(conn,"nodes")
 		eb = chem.boundary(conn,"edges")
-		node_boundary = st.number_input("Node boundary values",value=nb,format=".4f")
-		edge_boundary = st.number_input("Edge boundary values", value=eb,format=".4f")
+		node_boundary = st.number_input("Node boundary values",value=nb,format="%2.4f")
+		edge_boundary = st.number_input("Edge boundary values", value=eb,format="%2.4f")
 		but = st.button("Recalculate physics")
 		if but: 
 			chem.update_physics(conn,node_boundary, edge_boundary, fast=False)
