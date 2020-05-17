@@ -56,7 +56,7 @@ def potential(graph: nx.Graph, mass: np.ndarray, boundary_value = 0.025, bracket
 		L,
 		-rho,
 		bounds=bounds,
-		max_iter = 1000)
+		max_iter = 500)
 	logging.info("Optimality: " + sol.message)
 	logging.info(str(test_boundary(graph, sol.x)))
 	return sol.x
