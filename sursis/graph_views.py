@@ -97,7 +97,6 @@ def sufficient(graph):
 	return graph.number_of_nodes() > 5
 
 def graph_plot(G, conn, center, radius, communities = False):
-)
 	pos_fun = nx.kamada_kawai_layout
 	full_graph = center is None
 	if full_graph: pos = nx.spring_layout
