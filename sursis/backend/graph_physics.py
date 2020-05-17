@@ -1,3 +1,6 @@
+import logging
+logging.basicConfig(filename="physics.log",level = logging.INFO)
+
 from backend import db
 from backend import physics as phys 
 #
@@ -40,6 +43,7 @@ def graph(conn, center = None, radius = None, prop = "energy"):
 
 def update_physics(conn, fast = True):
     G = graph(conn, center = None)
+    logging.info("Calculate node physics")
     boundary = db.run_sql(conn,
         "SELECT AVG(energy) FROM nodes WHERE degree=1").fetchone()[0]
     # NODES
@@ -51,6 +55,7 @@ def update_physics(conn, fast = True):
                mass, energy, G.degree[node],node)
 
     # EDGES
+    logging.info("Calculate edge physics")
     boundary = db.run_sql(conn,
         "SELECT AVG(energy) FROM edges WHERE degree=1").fetchone()[0]
 
