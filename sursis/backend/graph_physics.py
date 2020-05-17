@@ -42,7 +42,7 @@ def update_physics(conn, fast = True):
     G = graph(conn, center = None)
 
     # NODES
-    mass, energy = phys.autophysics(graph=G, fast=fast)
+    mass, energy = phys.autophysics(graph=G, n_iter = 10, fast=fast)
     for node, mass, energy in zip(G.nodes(), mass, energy):
         db.push(conn,\
             """UPDATE nodes SET mass = ?, energy = ?, degree = ? 
