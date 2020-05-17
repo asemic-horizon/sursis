@@ -80,7 +80,7 @@ def autophysics(graph,
 	iter = 0
 	boundary = initial_boundary
 	m = mass(graph)
-	b0 = 0; b1 = 10;
+	b0 = 0; b1 = 1;
 	while iter <= n_iters:
 		e = potential(graph = graph, 
 					mass = m,
