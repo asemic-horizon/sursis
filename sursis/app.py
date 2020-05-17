@@ -62,7 +62,7 @@ with nc() as conn:
 			chem.update_physics(conn,node_boundary, edge_boundary, fast=False)
 			st.write(f"System energy: {chem.total_energy(conn):2.3f}")
 			ui.confirm()
-		gv.view_energy(conn)
+		gv.view_energy(chem.graph(),conn)
 	elif op_mode == view_mode:
 		ui.separator()
 		full_graph = st.checkbox("Full graph",value=False)
