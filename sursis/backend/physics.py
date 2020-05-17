@@ -56,7 +56,7 @@ def potential(graph: nx.Graph,
 	rho = mass.reshape(-1,)
 	L = nx.laplacian_matrix(graph)
 	bounds = boundary_condition(graph, boundary_value, *bracket)
-	logging.info("Fast recalc: {fast}")
+	logging.info(f"Fast recalc: {fast}")
 	sol = scipy.optimize.lsq_linear(
 		L,
 		-rho,
@@ -86,6 +86,7 @@ def autophysics(graph,
 					boundary_value = boundary,
 					bracket=bracket,
 					fast = fast)
-
-		boundary = shrink*np.mean(e[e>0])
-		logging.info(f"Autophysics: on iter {iter} recommended boundary value {boundary}")
+		if iter < n_iters:
+			boundary = shrink*np.mean(e[e>0])
+			logging.info(f"Autophysics: on iter {iter} recommended boundary value {boundary}")
+		iter +=1
