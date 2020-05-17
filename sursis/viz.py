@@ -71,4 +71,4 @@ def draw(G, conn, labels = True, cmap = "terrain_r", pos_fun=nx.kamada_kawai_lay
         energy[energy>0] = skew*energy[energy>0]
         window = [minv,0,skew*maxv]
         
-        draw_color(G,pot = -energy, node_size = node_size, window = window, labels = labels, pos_fun = pos_fun, cmap = cmap)
+        draw_color(G,pot = energy, node_size = node_size, window = window, labels = labels, pos_fun = pos_fun, cmap = cmap)
