@@ -37,11 +37,13 @@ def graph(conn, center = None, radius = None, prop = "energy"):
     return G
 
 
-def update_physics(conn):
+
+def update_physics(conn, fast = True):
     G = graph(conn, center = None)
 
     # NODES
-    for node, mass, energy in zip(G.nodes(), phys.mass(G), phys.energy(G)):
+    mass, energy = phys.autophysics(fast=fast)
+    for node, mass, energy in zip(G.nodes(), mass, energy):
         db.push(conn,\
             """UPDATE nodes SET mass = ?, energy = ?, degree = ? 
                WHERE name = ? """,
@@ -49,7 +51,7 @@ def update_physics(conn):
 
     # EDGES
     H = dual(G); del G
-    mass, energy = phys.mass(H), phys.energy(H)
+    mass, energy = phys.autophysics(fast=fast)
     values = [(u,v,m,p) for (u,v),m, p in zip(H.nodes(),mass,energy)]
 
     for u, v,  mass, energy in values: 
@@ -100,7 +102,7 @@ def subgraph_energy(conn,subgraph):
     m = read_node_prop(conn,subgraph,"mass")
     e = read_node_prop(conn,subgraph,"energy")
     return np.sum(m*e)
-    
+
 def gravity_partition(G, conn):
     expanding = db.list_nodes(conn, "(mass * energy) >0")
     collapsing = db.list_nodes(conn, "(mass * energy) < 0")

@@ -48,7 +48,7 @@ def least_squares_potential(graph: nx.Graph, mass : np.ndarray):
 	return sol[0]
 
 #@mem.cache
-def potential(graph: nx.Graph, mass: np.ndarray, boundary_value = 0.025, bracket=(-np.inf,np.inf)):
+def potential(graph: nx.Graph, mass: np.ndarray, boundary_value, bracket,fast = True)):
 	rho = mass.reshape(-1,)
 	L = nx.laplacian_matrix(graph)
 	bounds = boundary_condition(graph, boundary_value, *bracket)
@@ -56,16 +56,24 @@ def potential(graph: nx.Graph, mass: np.ndarray, boundary_value = 0.025, bracket
 		L,
 		-rho,
 		bounds=bounds,
-		max_iter = 500)
+		max_iter = 50 if fast else 5000)
 	logging.info("Optimality: " + sol.message)
-	logging.info(str(test_boundary(graph, sol.x)))
+	logging.info("Effective boundary:" +  str(test_boundary(graph, sol.x)))
 	return sol.x
 
-def energy(graph : nx.Graph):
-	return potential(graph,mass(graph))
+def physics(graph : nx.Graph, , boundary_value = 0.025, bracket=(-np.inf,np.inf,fast = True ):
+	m = phys.mass(graph)	
+	return m, potential(graph,m, boundary_value,bracket, fast)
 
-def gravity(graph : nx.Graph):
-	return mass(graph) * energy(graph)
+def autophysics(graph, initial_boundary = 0, shrink = 0.1, n_iters = 2, fast = True):
+	iter = 0
+	boundary = initial_boundary
+	m = phys.mass(graph)
+	while iter <= n_iters:
+		e = = potential(graph = graph, 
+						mass = m,
+						boundary_value = boundary,
+						fast = fast)
 
-def rescale(y : np.ndarray):
-	return y
+		boundary = shrink*np.mean(e[e>0])
+		logging.info(f"Autophysics: on iter {iter} recommended boundary value {boundary}")
