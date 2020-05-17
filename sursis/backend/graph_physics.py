@@ -51,7 +51,7 @@ def update_physics(conn, fast = True):
 
     # EDGES
     H = dual(G); del G
-    mass, energy = phys.autophysics(graph=G,fast=fast)
+    mass, energy = phys.autophysics(graph=H,fast=fast)
     values = [(u,v,m,p) for (u,v),m, p in zip(H.nodes(),mass,energy)]
 
     for u, v,  mass, energy in values: 
