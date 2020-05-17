@@ -41,11 +41,13 @@ def graph(conn, center = None, radius = None, prop = "energy"):
 
 
 
-def update_physics(conn,node_boundary, edge_boundary, fast = True):
+def update_physics(conn,node_boundary = None, edge_boundary = None, fast = True):
+    if node_boundary is None:
+        node_boundary = boundary(conn,"nodes")
+    if edge_boundary is None:
+        edge_boundary = boundary(conn,"edges")
     G = graph(conn, center = None)
     logging.info("Calculate node physics")
-    boundary = db.run_sql(conn,
-        "SELECT AVG(energy) FROM nodes WHERE degree=1").fetchone()[0]
     # NODES
     mass, energy = phys.physics(graph=G, boundary_value = node_boundary,fast=fast)
     for node, mass, energy in zip(G.nodes(), mass, energy):
@@ -56,9 +58,6 @@ def update_physics(conn,node_boundary, edge_boundary, fast = True):
 
     # EDGES
     logging.info("Calculate edge physics")
-    boundary = db.run_sql(conn,
-        "SELECT AVG(energy) FROM edges WHERE degree=1").fetchone()[0]
-
     H = dual(G); del G
     mass, energy = phys.physics(graph=H,boundary_value=edge_boundary,fast=fast)
     values = [(u,v,m,p) for (u,v),m, p in zip(H.nodes(),mass,energy)]
@@ -116,4 +115,10 @@ def gravity_partition(G, conn):
     expanding = db.list_nodes(conn, "(mass * energy) >0")
     collapsing = db.list_nodes(conn, "(mass * energy) < 0")
     return G.subgraph(expanding), G.subgraph(collapsing)    
+
+def boundary(conn,table="nodes"):
+    return db.run_sql(conn,
+        "SELECT AVG(energy) FROM {table} WHERE degree=1").fetchone()[0]
+
+
 #end

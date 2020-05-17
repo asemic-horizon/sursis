@@ -53,9 +53,10 @@ with nc() as conn:
 		st.write("### Merge nodes")
 		dlg.node_merge(conn)
 	elif op_mode == stats_mode:
-
-		node_boundary = st.number_input("Node boundary values",value=0.015)
-		edge_boundary = st.number_input("Edge boundary values", value=0.2)
+		nb = chem.boundary(conn,"nodes")
+		eb = chem.boundary(conn,"edges")
+		node_boundary = st.number_input("Node boundary values",value=nb,format=".4f")
+		edge_boundary = st.number_input("Edge boundary values", value=eb,format=".4f")
 		but = st.button("Recalculate physics")
 		if but: 
 			chem.update_physics(conn,node_boundary, edge_boundary, fast=False)
