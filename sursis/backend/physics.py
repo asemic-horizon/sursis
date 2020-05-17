@@ -69,7 +69,7 @@ def physics(graph : nx.Graph,
 			boundary_value = 0.025, 
 			bracket=(-np.inf,np.inf),
 			fast = True ):
-	m = phys.mass(graph)	
+	m = mass(graph)	
 	return m, potential(graph,m, boundary_value,bracket, fast)
 
 def autophysics(graph, initial_boundary = 0, shrink = 0.1, n_iters = 2, fast = True):
