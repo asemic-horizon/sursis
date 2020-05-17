@@ -56,7 +56,7 @@ with nc() as conn:
 		nb = chem.boundary(conn,"nodes")
 		eb = chem.boundary(conn,"edges")
 		node_boundary = st.number_input("Node boundary values",value=nb,step=0.001,format="%2.4f")
-		edge_boundary = st.number_input("Edge boundary values", value=eb,step=0.001format="%2.4f")
+		edge_boundary = st.number_input("Edge boundary values", value=eb,step=0.001,format="%2.4f")
 		but = st.button("Recalculate physics")
 		if but: 
 			chem.update_physics(conn,node_boundary, edge_boundary, fast=False)
