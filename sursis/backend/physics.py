@@ -77,10 +77,10 @@ def autophysics(graph, initial_boundary = 0, shrink = 0.1, n_iters = 2, fast = T
 	boundary = initial_boundary
 	m = phys.mass(graph)
 	while iter <= n_iters:
-		e = = potential(graph = graph, 
-						mass = m,
-						boundary_value = boundary,
-						fast = fast)
+		e = potential(graph = graph, 
+					mass = m,
+					boundary_value = boundary,
+					fast = fast)
 
 		boundary = shrink*np.mean(e[e>0])
 		logging.info(f"Autophysics: on iter {iter} recommended boundary value {boundary}")
