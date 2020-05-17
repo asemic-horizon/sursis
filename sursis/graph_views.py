@@ -13,11 +13,13 @@ import ui_elems as ui
 import viz
 
 #cmap = "RdYlBu"
-cmap = "PuOr"
+#cmap = "PuOr"
 #cmap = "jet"
 #cmap = "coolwarm"
 #cmap = "bwr"
 #cmap = "gist_stern"
+cmap = "gnuplot2"
+
 def power_law(x,k,slope):
 	return np.exp(np.log(k) + slope*np.log(x))
 
