@@ -99,7 +99,7 @@ def autophysics(graph,
 		elif gravity < 1e-2:
 			boundary = (boundary + b1)/2
 			b0 = boundary
-		logging.info(f"Autophysics: on iter {iter}, gravity is {gravity:3.2f}, recommended boundary value {boundary}")
+			logging.info(f"Autophysics: on iter {iter}, gravity is {gravity:3.2f}, recommended boundary value {boundary}")
 		else:
 			iter = n_iters
 			logging.info("Converged")
