@@ -80,6 +80,6 @@ def autophysics(graph,
 	m = mass(graph); 
 	grav = lambda b: m*(potential(graph,m,b,bracket,fast))
 	sol = scipy.optimize.fsolve(func = grav, x0 = initial_boundary)
-	e = potential(graph,m,sol.x,bracket,fast)
-	logging.write(f"Fsolve: {sol.x}, {sol.ler}, {sol.mesg}")
+	e = potential(graph,m,sol.x[0],bracket,fast)
+	logging.info(f"Fsolve: {sol.x}, {sol.ler}, {sol.mesg}")
 	return m, e
