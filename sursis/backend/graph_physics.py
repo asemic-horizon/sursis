@@ -60,7 +60,7 @@ def update_physics(conn, fast = True,n_iter=2):
         "SELECT AVG(energy) FROM edges WHERE degree=1").fetchone()[0]
 
     H = dual(G); del G
-    mass, energy = phys.autophysics(graph=H,n_iter =1, initial_boundary = boundary,fast=fast)
+    mass, energy = phys.autophysics(graph=H,n_iters =1, initial_boundary = boundary,fast=fast)
     values = [(u,v,m,p) for (u,v),m, p in zip(H.nodes(),mass,energy)]
 
     for u, v,  mass, energy in values: 
