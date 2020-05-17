@@ -41,13 +41,13 @@ def graph(conn, center = None, radius = None, prop = "energy"):
 
 
 
-def update_physics(conn, fast = True):
+def update_physics(conn,node_boundary, edge_boundary, fast = True):
     G = graph(conn, center = None)
     logging.info("Calculate node physics")
     boundary = db.run_sql(conn,
         "SELECT AVG(energy) FROM nodes WHERE degree=1").fetchone()[0]
     # NODES
-    mass, energy = phys.physics(graph=G, fast=fast)
+    mass, energy = phys.physics(graph=G, boundary_value = node_boundary,fast=fast)
     for node, mass, energy in zip(G.nodes(), mass, energy):
         db.push(conn,\
             """UPDATE nodes SET mass = ?, energy = ?, degree = ? 
@@ -60,7 +60,7 @@ def update_physics(conn, fast = True):
         "SELECT AVG(energy) FROM edges WHERE degree=1").fetchone()[0]
 
     H = dual(G); del G
-    mass, energy = phys.physics(graph=H,boundary_value=0.5,fast=fast)
+    mass, energy = phys.physics(graph=H,boundary_value=edge_boundary,fast=fast)
     values = [(u,v,m,p) for (u,v),m, p in zip(H.nodes(),mass,energy)]
 
     for u, v,  mass, energy in values: 

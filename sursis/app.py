@@ -54,8 +54,10 @@ with nc() as conn:
 		dlg.node_merge(conn)
 	elif op_mode == stats_mode:
 		but = st.button("Recalculate physics")
+		node_boundary = st.numeric("Node boundary values",value=0.015)
+		edge_boundary = st.numeric("Edge boundary values", value=0.2)
 		if but: 
-			chem.update_physics(conn,fast=False)
+			chem.update_physics(conn,node_boundary, edge_boundary, fast=False)
 
 	elif op_mode == view_mode:
 		ui.separator()
