@@ -79,7 +79,7 @@ def autophysics(graph,
 				shrink = 0.1, n_iters = 2, fast = True):
 	iter = 0
 	boundary = initial_boundary
-	m =.mass(graph)
+	m = mass(graph)
 	while iter <= n_iters:
 		e = potential(graph = graph, 
 					mass = m,
