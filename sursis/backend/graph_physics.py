@@ -40,9 +40,7 @@ def graph(conn, center = None, radius = None, prop = "energy"):
 
 def update_physics(conn, fast = True):
     G = graph(conn, center = None)
-        boundary = db.sql(conn,
-        "SELECT AVG(energy) FROM nodes WHERE degree=1").fetchone()[0]
-boundary = db.sql(conn,
+    boundary = db.run_sql(conn,
         "SELECT AVG(energy) FROM nodes WHERE degree=1").fetchone()[0]
     # NODES
     mass, energy = phys.autophysics(graph=G, initial_boundary = boundary, n_iters = 12, fast=fast)
@@ -53,7 +51,7 @@ boundary = db.sql(conn,
                mass, energy, G.degree[node],node)
 
     # EDGES
-    boundary = db.sql(conn,
+    boundary = db.run_sql(conn,
         "SELECT AVG(energy) FROM edges WHERE degree=1").fetchone()[0]
 
     H = dual(G); del G
