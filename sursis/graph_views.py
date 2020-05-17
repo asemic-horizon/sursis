@@ -13,7 +13,7 @@ import ui_elems as ui
 import viz
 
 #cmap = "RdYlBu"
-cmap = "PuOr_r"
+cmap = "PuOr"
 #cmap = "jet"
 #cmap = "coolwarm"
 #cmap = "bwr"
