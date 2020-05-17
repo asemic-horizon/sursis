@@ -1,3 +1,8 @@
+import logging
+logging.basicConfig(filename="physics.log",level = logging.INFO)
+
+
+
 import streamlit as st
 import matplotlib.cm as cm
 import matplotlib as mpl
