@@ -88,10 +88,10 @@ def autophysics(graph,
 					bracket=bracket,
 					fast = True)
 		gravity = np.sum(m*e)
-		if gravity > 1e-2:
+		if gravity < 1e-2:
 			boundary = (b0 + boundary)/2
 			b1 = boundary
-		elif gravity < 1e-2:
+		elif gravity > 1e-2:
 			boundary = (boundary + b1)/2
 			b0 = boundary
 			logging.info(f"Autophysics: on iter {iter}, gravity is {gravity:3.2f}, recommended boundary value {boundary}")
