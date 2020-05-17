@@ -54,7 +54,7 @@ def draw_color(G, pot, window, labels, node_size = 50, pos_fun=nx.spring_layout,
         colorvals = smap.to_rgba(pot)
         nx.draw(G,pos=pos,with_labels=labels, node_color = colorvals, node_size = node_size,font_size=font_size,width=0.2,alpha=alpha)
         cbar = mpl.pyplot.colorbar(smap,ticks=window,orientation='horizontal',label="Potential field")
-        cbar.ax.set_xticklabels(["       (-)","Stationary", "(+)              "])
+        cbar.ax.set_xticklabels(["   (-)","Stationary", "(+)      "])
         st.pyplot()
 
 
