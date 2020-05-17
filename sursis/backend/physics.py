@@ -65,7 +65,10 @@ def potential(graph: nx.Graph,
 	logging.info("Effective boundary:" +  str(test_boundary(graph, sol.x)))
 	return sol.x
 
-def physics(graph : nx.Graph, , boundary_value = 0.025, bracket=(-np.inf,np.inf,fast = True ):
+def physics(graph : nx.Graph,
+			boundary_value = 0.025, 
+			bracket=(-np.inf,np.inf),
+			fast = True ):
 	m = phys.mass(graph)	
 	return m, potential(graph,m, boundary_value,bracket, fast)
 
