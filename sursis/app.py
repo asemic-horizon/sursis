@@ -53,7 +53,7 @@ with nc() as conn:
 		st.write("### Merge nodes")
 		dlg.node_merge(conn)
 	elif op_mode == stats_mode:
-		nb = 0.0; eb =0.0
+		nb = None; eb = None
 		but0 = st.button("Get current boundaries")
 		if but0:
 			nb = chem.boundary(conn,"nodes")
