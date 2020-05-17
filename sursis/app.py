@@ -60,6 +60,7 @@ with nc() as conn:
 		but = st.button("Recalculate physics")
 		if but: 
 			chem.update_physics(conn,node_boundary, edge_boundary, fast=False)
+			st.write(f"System energy: {chem.total_energy(conn):2.3f}")
 			ui.confirm()
 	elif op_mode == view_mode:
 		ui.separator()
