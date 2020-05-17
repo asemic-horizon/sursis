@@ -102,6 +102,7 @@ def graph_plot(G, conn, center, radius, communities = False):
 		chem.update_physics(conn)
 	pos_fun = nx.kamada_kawai_layout
 	full_graph = center is None
+	if full_graph: pos = nx.spring_layout
 	a = -phys.net_gravity(G)
 	b = -chem.total_energy(conn)
 	st.write(f"Net gravity = **{a:2.3f}** - {b:2.3f} = {a-b:2.3f}")
