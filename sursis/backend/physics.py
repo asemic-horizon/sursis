@@ -105,5 +105,7 @@ def autophysics(graph,
 				boundary_value = boundary,
 				bracket=bracket,
 				fast = True)
+	else: 
+		e = boundary
 
 	return m, e
