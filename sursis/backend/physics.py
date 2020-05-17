@@ -79,8 +79,8 @@ def autophysics(graph,
 				shrink = 0.8, n_iters = 2, fast = True):
 	iter = 0
 	boundary = initial_boundary
-	m = mass(graph)
-	b0 = 0; b1 = 1;
+	m = mass(graph); 
+	b0 = -1; b1 = 1;
 	while iter <= n_iters:
 		e = potential(graph = graph, 
 					mass = m,
@@ -88,13 +88,13 @@ def autophysics(graph,
 					bracket=bracket,
 					fast = True)
 		gravity = np.sum(m*e)
-		if gravity < 1e-2:
+		logging.info(f"Autophysics: on iter {iter}, gravity is {gravity:3.2f}, recommended boundary value {boundary}")
+		if gravity > 1e-2:
 			boundary = (b0 + boundary)/2
 			b1 = boundary
-		elif gravity > 1e-2:
+		elif gravity < 1e-2:
 			boundary = (boundary + b1)/2
 			b0 = boundary
-			logging.info(f"Autophysics: on iter {iter}, gravity is {gravity:3.2f}, recommended boundary value {boundary}")
 		else:
 			iter = n_iters
 			logging.info("Converged")
@@ -104,8 +104,7 @@ def autophysics(graph,
 				mass = m,
 				boundary_value = boundary,
 				bracket=bracket,
-				fast = True)
-	else: 
-		e = boundary
+				fast = False)
+	
 
 	return m, e
