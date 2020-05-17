@@ -18,7 +18,7 @@ import viz
 #cmap = "coolwarm"
 #cmap = "bwr"
 #cmap = "gist_stern"
-cmap = "gnuplot2"
+cmap = "PiYG_r"
 
 def power_law(x,k,slope):
 	return np.exp(np.log(k) + slope*np.log(x))
