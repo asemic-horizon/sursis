@@ -80,12 +80,7 @@ def autophysics(graph,
 	iter = 0
 	boundary = initial_boundary
 	m = mass(graph)
-	e = potential(graph = graph, 
-				mass = m,
-				boundary_value = boundary,
-				bracket=bracket,
-				fast = True)
-	b0 = np.median(e); b1 = np.max(e)
+	b0 = 0; b1 = 10;
 	while iter <= n_iters:
 		e = potential(graph = graph, 
 					mass = m,
