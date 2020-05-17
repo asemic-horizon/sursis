@@ -67,8 +67,5 @@ def energy(graph : nx.Graph):
 def gravity(graph : nx.Graph):
 	return mass(graph) * energy(graph)
 
-def net_gravity(graph : nx.Graph):
-	return np.sum(gravity(graph))
-
 def rescale(y : np.ndarray):
 	return y

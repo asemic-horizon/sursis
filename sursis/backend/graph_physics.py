@@ -91,10 +91,16 @@ def prop_bounds(conn,prop="energy",table="nodes",slices=4):
 
     return min_val, max_val, avg_val, med_val
 
+
 def total_energy(conn, table = "nodes"):
     return db.run_sql(conn,\
         f"SELECT SUM((mass * energy)) from {table}").fetchone()[0]
 
+def subgraph_energy(conn,subgraph):
+    m = read_node_prop(conn,subgraph,"mass")
+    e = read_node_prop(conn,subgraph,"energy")
+    return np.sum(m*e)
+    
 def gravity_partition(G, conn):
     expanding = db.list_nodes(conn, "(mass * energy) >0")
     collapsing = db.list_nodes(conn, "(mass * energy) < 0")
