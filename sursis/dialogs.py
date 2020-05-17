@@ -1,3 +1,7 @@
+import logging
+logging.basicConfig(filename="physics.log",level = logging.INFO)
+
+
 import streamlit as st
 import ui_elems as ui
 from backend import db
