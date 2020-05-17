@@ -53,6 +53,9 @@ with nc() as conn:
 		st.write("### Merge nodes")
 		dlg.node_merge(conn)
 	elif op_mode == stats_mode:
+		but = st.button("Recalculate physics")
+		if but: 
+			chem.update_physics(conn)
 		graph = chem.graph(conn)
 		gv.stats_view(graph)
 	elif op_mode == view_mode:
@@ -64,9 +67,9 @@ with nc() as conn:
 			center, radius = None, None
 		if not full_graph:
 			fields = list(reversed(db.list_nodes(conn)))
-			u = 1
+			u = 0
 			center = st.selectbox("Choose nodes",fields,index = u)
-			radius = st.number_input("Radius",value=5)
+			radius = st.number_input("Radius",value=4)
 		G = chem.graph(conn,center,radius)
 		gv.graph_plot(G, conn,center,radius, communities)
 
