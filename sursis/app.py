@@ -53,15 +53,18 @@ with nc() as conn:
 		st.write("### Merge nodes")
 		dlg.node_merge(conn)
 	elif op_mode == stats_mode:
-		nb = chem.boundary(conn,"nodes")
-		eb = chem.boundary(conn,"edges")
+		nb = 0; eb =0
+		but0 = st.button("Get current boundaries")
+		if but0:
+			nb = chem.boundary(conn,"nodes")
+			eb = chem.boundary(conn,"edges")
 		node_boundary = st.number_input("Node boundary values",value=nb,step=0.001,format="%2.4f")
 		edge_boundary = st.number_input("Edge boundary values", value=eb,step=0.001,format="%2.4f")
 		but = st.button("Recalculate physics")
 		if but: 
 			chem.update_physics(conn,node_boundary, edge_boundary, fast=False)
-			st.write(f"System energy: {chem.total_energy(conn):2.3f}")
-			ui.confirm()
+		st.write(f"System energy: {chem.total_energy(conn):2.3f}")ui.confirm()
+
 		gv.view_energy(chem.graph(conn),conn)
 	elif op_mode == view_mode:
 		ui.separator()
