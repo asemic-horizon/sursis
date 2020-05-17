@@ -74,6 +74,7 @@ def draw(G, conn, labels = True, cmap = "terrain_r", pos_fun=nx.kamada_kawai_lay
         #window = [minv if -minv > maxv else -maxv, medv, maxv if -maxv > minv else -minv]
         skew = 3.5
         energy[energy>0] = skew*energy[energy>0]
-        window = [minv,0,skew*maxv]
+        center = chem.boundary(conn,"nodes")
+        window = [minv,center,skew*maxv]
         logging.info(f"Window: {window}, {[minm,maxm,avgm,medm]},{[minv,maxv,avgv,medv]}")   
         draw_color(G,pot = energy.reshape(-1,), node_size = node_size, window = window, labels = labels, pos_fun = pos_fun, cmap = cmap)
