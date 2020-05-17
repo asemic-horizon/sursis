@@ -76,7 +76,7 @@ def physics(graph : nx.Graph,
 def autophysics(graph, 
 				initial_boundary = 0, 
 				bracket=(-np.inf,np.inf),
-				shrink = 0.1, n_iters = 2, fast = True):
+				shrink = 0.8, n_iters = 2, fast = True):
 	iter = 0
 	boundary = initial_boundary
 	m = mass(graph)
@@ -90,3 +90,4 @@ def autophysics(graph,
 			boundary = shrink*np.mean(e[e>0])
 			logging.info(f"Autophysics: on iter {iter} recommended boundary value {boundary}")
 		iter +=1
+	return m, e
