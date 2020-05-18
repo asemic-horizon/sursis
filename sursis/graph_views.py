@@ -131,6 +131,8 @@ def graph_plot(G, conn, center, radius, communities = False):
 			ui.separator()
 
 def mintree(G,conn):
+	cpos_fun = lambda G: nx.circular_layout if G.number_of_nodes()>50 else nx.kamada_kawai_layout
+
 	if sufficient(G):
 		H = nx.minimum_spanning_tree(G)
 		ui.separator()
@@ -139,6 +141,8 @@ def mintree(G,conn):
 		st.pyplot()
 
 def maxtree(G,conn):
+	cpos_fun = lambda G: nx.circular_layout if G.number_of_nodes()>50 else nx.kamada_kawai_layout
+
 	if sufficient(G):
 		J = nx.maximum_spanning_tree(G)
 		st.write("#### Maximum tree")
