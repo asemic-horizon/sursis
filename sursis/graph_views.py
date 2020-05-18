@@ -77,7 +77,7 @@ def energy(graph,conn):
 	# density = gaussian_kde(grav)
 	# plt.plot(grav,density(grav))
 	# plt.title("Gravity momentum")
-	plt.grid(True);
+	plt.grid(True,which='minor');
 	st.pyplot()
 	st.write(f"* % expanding {100*len(grav[grav>0])/len(grav):2.1f}%")
 
