@@ -32,10 +32,10 @@ def fit_power_distribution(deg,cnt):
 def plot_degree_distribution(graph):
 	deg, cnt = stats.degree_distribution(graph)
 	k, slope = fit_power_distribution(deg,cnt)
-	k_, slope_ = fit_power_distribution(deg[-2:],cnt[-2:])
+	#k_, slope_ = fit_power_distribution(deg[-2:],cnt[-2:])
 	plt.scatter(deg,cnt)
 	plt.plot(deg,power_law(deg,k,slope), linewidth=1,c='k',linestyle='dotted')
-	plt.plot(deg,power_law(deg,k_,slope_), linewidth=1,c='b',linestyle='dotted')
+	#plt.plot(deg,power_law(deg,k_,slope_), linewidth=1,c='b',linestyle='dotted')
 	plt.grid(True)
 	plt.title("Degree distribution")
 	plt.yscale("log")
@@ -129,7 +129,7 @@ def graph_plot(G, conn, center, radius, communities = False):
 		S = [G.subgraph(c).copy() for c in u if len(c)>thresh]
 		st.write("### Communities")
 		for subgraph in S:
-			viz.draw(subgraph, conn, cmap = cmap, pos_fun = cpos_fun(subgrap))
+			viz.draw(subgraph, conn, cmap = cmap, pos_fun = cpos_fun(subgraph))
 			ui.separator()
 
 def mintree(G,conn):
