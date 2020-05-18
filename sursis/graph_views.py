@@ -19,7 +19,7 @@ import viz
 #cmap = "bwr"
 #cmap = "gist_stern"
 #cmap = "PiYG_r"
-cmap = "spectral"
+cmap = "Spectral"
 
 def power_law(x,k,slope):
 	x = np.array(x)
