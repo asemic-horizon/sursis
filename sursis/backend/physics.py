@@ -18,7 +18,7 @@ def boundary_condition(graph, value = 0.0, thresh=2, lower = -np.inf, higher = n
 	lb = np.full((n,),lower)
 	ub = np.full((n,),higher)
 	for i in range(1+thresh):
-		gb = boundary(graph)
+		gb = boundary(graph,i)
 		lb[gb] = value-eps
 		ub[gb] = value+eps
 	#print(lb)
