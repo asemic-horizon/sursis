@@ -68,7 +68,7 @@ def energy(graph,conn):
 	plt.plot(grav,qtile)
 	plt.axhline(0.5)
 	plt.axvline(np.median(grav))
-	plt.axvline(no.mean(grav))
+	plt.axvline(np.mean(grav))
 	plt.title("Cumulative energy")
 	# grav = np.array(sorted(np.array(e)*np.array(m)))
 	# density = gaussian_kde(grav)
