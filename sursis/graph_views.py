@@ -69,7 +69,7 @@ def energy(graph,conn):
 	plt.axhline(0.5,c='g',linestyle="dotted")
 	plt.axvline(np.median(grav),c='g',linestyle="dotted")
 	plt.axvline(np.mean(grav),c='r',linestyle="dashed")
-	plx.axvline(0,c='y',linestyle="dotted")
+	plt.axvline(0,c='y',linestyle="dotted")
 
 #	plt.axhline(np.where(grav==np.mean(grav))[0],c="r",linestyle="dashed")
 	plt.title("Cumulative energy")
