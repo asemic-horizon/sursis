@@ -62,9 +62,10 @@ def mass(graph,conn):
 
 def energy(graph,conn):
 	e = chem.read_node_prop(conn,graph,"energy")
-	grav = sorted(np.array(e)/len(e))
-	density = gaussian_kde(grav)
-	plt.plot(grav)
+	grav = np.array(sorted(np.array(e)/len(e)))
+	qtile = np.linspace(np.min(grav),np.max(grav),len(grav))
+	#density = gaussian_kde(grav)
+	plt.plot(grav,qtile)
 
 	plt.title("Cumulative energy")
 	# grav = np.array(sorted(np.array(e)*np.array(m)))
