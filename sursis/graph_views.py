@@ -21,7 +21,7 @@ import viz
 cmap = "PiYG_r"
 
 def power_law(x,k,slope):
-	return np.exp(np.log(k) + slope*np.log(x))
+	return np.exp(np.log(k) + slope*np.log(x)/np.log(k))
 
 def fit_power_distribution(deg,cnt):
 	popt, _ = curve_fit(f=power_law,xdata=deg,ydata=cnt)
