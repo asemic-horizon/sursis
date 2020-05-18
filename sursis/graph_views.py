@@ -65,8 +65,8 @@ def energy(graph,conn):
 	grav = sorted(np.array(e)/len(e))
 	density = gaussian_kde(grav)
 	plt.plot(grav)
-	
-	plt.title("Cumulative energy
+
+	plt.title("Cumulative energy"
 	grav = np.array(sorted(np.array(e)*np.array(m)))
 	density = gaussian_kde(grav)
 	plt.plot(grav,density(grav))
