@@ -90,7 +90,7 @@ with nc() as conn:
 		energy_density = st.checkbox("Energy density", value = True)
 		if energy_density:
 			gv.view_energy(G,conn)
-			gv.view_gravity(G,conn)
+			#gv.view_gravity(G,conn)
 
 		dd = st.checkbox("Degree distribution", value = False)
 		if dd: gv.view_degrees(G,conn)
