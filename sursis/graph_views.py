@@ -63,7 +63,7 @@ def mass(graph,conn):
 def energy(graph,conn):
 	e = chem.read_node_prop(conn,graph,"energy")
 	grav = np.array(sorted(np.array(e)/len(e)))
-	qtile = np.linspace(np.min(grav),np.max(grav),len(grav))
+	qtile = np.linspace(0,1,len(grav))
 	#density = gaussian_kde(grav)
 	plt.plot(grav,qtile)
 
@@ -145,11 +145,11 @@ def view_energy(G,conn):
 		st.write("### Energy density")
 		energy(G,conn)
 
-def view_gravity(G,conn):
-	if sufficient(G):
-		ui.separator()
-		st.write("### Momentum")
-		gravity(G,conn)
+# def view_gravity(G,conn):
+# 	if sufficient(G):
+# 		ui.separator()
+# 		st.write("### Momentum")
+# 		gravity(G,conn)
 
 
 def view_spectrum(G,conn):
