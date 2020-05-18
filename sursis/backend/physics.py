@@ -48,6 +48,7 @@ def least_squares_potential(graph: nx.Graph, mass : np.ndarray):
 def potential(graph: nx.Graph,
 			  mass: np.ndarray, 
 			  boundary_value,
+			  thresh
 			  bracket,
 			  fast = True):
 	rho = mass.reshape(-1,)
@@ -60,7 +61,8 @@ def potential(graph: nx.Graph,
 		bounds=bounds,
 		max_iter = 50 if fast else 5000)
 	logging.info("Optimality: " + sol.message)
-	logging.info("Effective boundary:" +  str(test_boundary(graph, sol.x)))
+	btest = '\n'.join([f"Effective {t}-nodes: {test_boundary(graph,sol.x,t)}" for t in range(1+thresh)])
+	logging.info(btest)
 	return sol.x
 
 def physics(graph : nx.Graph,
