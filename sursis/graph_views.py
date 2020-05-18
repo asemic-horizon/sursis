@@ -70,7 +70,7 @@ def energy(graph,conn):
 	plt.axvline(np.median(grav),c='g',linestyle="dotted")
 	plt.axvline(np.mean(grav),c='r',linestyle="dashed")
 	plt.axvline(0,c='y',linestyle="dotted")
-	plt.set_yscale("log")
+	plt.yscale("log")
 #	plt.axhline(np.where(grav==np.mean(grav))[0],c="r",linestyle="dashed")
 	plt.title("Cumulative energy")
 	# grav = np.array(sorted(np.array(e)*np.array(m)))
