@@ -45,13 +45,14 @@ def draw_color(G, pot, window, labels, node_size = 50, pos_fun=nx.spring_layout,
         if N<10:
                 alpha = 1
         elif 10<N<50:
-                font_size = 8
+                font_size = 9
                 alpha = 0.8
-        elif 50<N<200:
-                font_size = 6
+        elif 50<N<100:
+                font_size = 8
                 alpha = 0.7
         else:
                 alpha = 0.7
+                font_size = 7
         scheme = mpl.pyplot.get_cmap(cmap)
         
 
