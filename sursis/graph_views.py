@@ -21,6 +21,7 @@ import viz
 cmap = "PiYG_r"
 
 def power_law(x,k,slope):
+	x = np.array(x)
 	return np.exp(k + slope*x)
 
 def fit_power_distribution(deg,cnt):
