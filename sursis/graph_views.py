@@ -66,15 +66,14 @@ def energy(graph,conn):
 	density = gaussian_kde(grav)
 	plt.plot(grav)
 
-	plt.title("Cumulative energy"
+	plt.title("Cumulative energy")
 	# grav = np.array(sorted(np.array(e)*np.array(m)))
 	# density = gaussian_kde(grav)
 	# plt.plot(grav,density(grav))
 	# plt.title("Gravity momentum")
 	plt.grid(True);
 	st.pyplot()
-	st.write(f"* Mean gravity {np.mean(grav):e}")
-	st.write(f"* % collapsing {100*len(grav[grav>0])/len(grav):2.1f}%")
+	st.write(f"* % expanding {100*len(grav[grav>0])/len(grav):2.1f}%")
 
 
 
