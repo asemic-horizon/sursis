@@ -17,7 +17,7 @@ def boundary_condition(graph, value = 0.0, thresh=2, lower = -np.inf, higher = n
 	n = graph.number_of_nodes()
 	lb = np.full((n,),lower)
 	ub = np.full((n,),higher)
-	for i in range(1+thresh):
+	for i in range(1,1+thresh):
 		gb = boundary(graph,i)
 		lb[gb] = value-eps
 		ub[gb] = value+eps
@@ -61,7 +61,7 @@ def potential(graph: nx.Graph,
 		bounds=bounds,
 		max_iter = 50 if fast else 5000)
 	logging.info("Optimality: " + sol.message)
-	btest = '\n'.join([f"Effective {t}-nodes: {test_boundary(graph,sol.x,t)}" for t in range(1+thresh)])
+	btest = '\n'.join([f"Effective {t}-nodes: {test_boundary(graph,sol.x,t)}" for t in range(1,1+thresh)])
 	logging.info(btest)
 	return sol.x
 

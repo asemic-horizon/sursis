@@ -96,6 +96,7 @@ def sufficient(graph):
 
 def graph_plot(G, conn, center, radius, communities = False):
 	pos_fun = nx.kamada_kawai_layout
+	cpos_fun = lambda G: nx.circular_layout if G.number_of_nodes()>50 else nx.kamada_kawai_layout
 	full_graph = center is None
 	if full_graph: pos = nx.spring_layout
 	a = -chem.subgraph_energy(conn,G)
@@ -106,9 +107,9 @@ def graph_plot(G, conn, center, radius, communities = False):
 		out, coll = chem.gravity_partition(G,conn)
 		ui.separator()
 		st.write("### Expanding")
-		viz.draw(out,conn,cmap=cmap,pos_fun = pos_fun)
+		viz.draw(out,conn,cmap=cmap,pos_fun = cpos_fun(out))
 		st.write("### Collapsing")
-		viz.draw(coll,conn,cmap=cmap,pos_fun = pos_fun)
+		viz.draw(coll,conn,cmap=cmap,pos_fun = cpos_fun(coll))
 	except:
 		st.write("Couldn't make expanding/collapsing subsets")
 
@@ -117,7 +118,7 @@ def graph_plot(G, conn, center, radius, communities = False):
 		st.write("### Components")
 		S = [G.subgraph(c).copy() for c in nx.connected_components(G)]
 		for subgraph in S:
-			viz.draw(subgraph, conn, cmap = cmap, pos_fun = pos_fun)
+			viz.draw(subgraph, conn, cmap = cmap, pos_fun = cpos_fun(subgraph))
 			ui.separator()
 
 	if sufficient(G) and communities:
@@ -126,7 +127,7 @@ def graph_plot(G, conn, center, radius, communities = False):
 		S = [G.subgraph(c).copy() for c in u if len(c)>thresh]
 		st.write("### Communities")
 		for subgraph in S:
-			viz.draw(subgraph, conn, cmap = cmap, pos_fun = pos_fun)
+			viz.draw(subgraph, conn, cmap = cmap, pos_fun = cpos_fun(subgrap))
 			ui.separator()
 
 def mintree(G,conn):
@@ -134,14 +135,14 @@ def mintree(G,conn):
 		H = nx.minimum_spanning_tree(G)
 		ui.separator()
 		st.write("#### Minimum tree")
-		viz.draw(H, conn, cmap = cmap, pos_fun = lambda G: nx.spring_layout(G,k=0.2))
+		viz.draw(H, conn, cmap = cmap, pos_fun = cpos_fun(G))
 		st.pyplot()
 
 def maxtree(G,conn):
 	if sufficient(G):
 		J = nx.maximum_spanning_tree(G)
 		st.write("#### Maximum tree")
-		viz.draw(J, conn, cmap = cmap, pos_fun = lambda G: nx.spring_layout(G,k=0.2))
+		viz.draw(J, conn, cmap = cmap, pos_fun = cpos_fun(J))
 		st.pyplot()
 
 def view_energy(G,conn):
