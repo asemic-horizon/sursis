@@ -53,7 +53,7 @@ def potential(graph: nx.Graph,
 			  fast = True):
 	rho = mass.reshape(-1,)
 	L = nx.laplacian_matrix(graph)
-	bounds = boundary_condition(graph, boundary_value, *bracket)
+	bounds = boundary_condition(graph, boundary_value,thresh, *bracket)
 	logging.info(f"Fast recalc: {fast}")
 	sol = scipy.optimize.lsq_linear(
 		L,
