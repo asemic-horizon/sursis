@@ -48,7 +48,7 @@ def least_squares_potential(graph: nx.Graph, mass : np.ndarray):
 def potential(graph: nx.Graph,
 			  mass: np.ndarray, 
 			  boundary_value,
-			  thresh
+			  thresh,
 			  bracket,
 			  fast = True):
 	rho = mass.reshape(-1,)
