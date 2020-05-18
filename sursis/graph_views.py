@@ -70,14 +70,14 @@ def energy(graph,conn):
 	plt.axvline(np.median(grav),c='g',linestyle="dotted")
 	plt.axvline(np.mean(grav),c='r',linestyle="dashed")
 	plt.axvline(0,c='y',linestyle="dotted")
-
+	plt.set_yscale("log")
 #	plt.axhline(np.where(grav==np.mean(grav))[0],c="r",linestyle="dashed")
 	plt.title("Cumulative energy")
 	# grav = np.array(sorted(np.array(e)*np.array(m)))
 	# density = gaussian_kde(grav)
 	# plt.plot(grav,density(grav))
 	# plt.title("Gravity momentum")
-	plt.grid(True,which='minor');
+	plt.grid(True);
 	st.pyplot()
 	st.write(f"* % expanding {100*len(grav[grav>0])/len(grav):2.1f}%")
 
