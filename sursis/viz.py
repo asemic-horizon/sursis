@@ -44,10 +44,10 @@ def draw_color(G, pot, window, labels, node_size = 50, pos_fun=nx.spring_layout,
         font_size = 11 if N<10 else 9
         if N<10:
                 alpha = 1
-        elif N<50:
+        elif 10<N<50:
                 font_size = 8
                 alpha = 0.8
-        elif N<200:
+        elif 50<N<200:
                 font_size = 6
                 alpha = 0.7
         else:
