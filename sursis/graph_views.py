@@ -62,18 +62,11 @@ def mass(graph,conn):
 
 def energy(graph,conn):
 	e = chem.read_node_prop(conn,graph,"energy")
-	grav = sorted(np.array(e))
+	grav = sorted(np.array(e)/len(e))
 	density = gaussian_kde(grav)
-	plt.plot(grav,density(grav))
-	plt.title("Potential energy")
-	plt.grid(True);
-	st.pyplot()
-	st.write(f"* Mean energy {np.mean(e):e}")
-	st.write(f"* % attractive {100*len(e[e>0])/len(e):2.1f}%")
-
-def gravity(graph,conn):
-	m = chem.read_node_prop(conn,graph,"mass")
-	e = chem.read_node_prop(conn,graph,"energy")
+	plt.plot(grav)
+	
+	plt.title("Cumulative energy
 	grav = np.array(sorted(np.array(e)*np.array(m)))
 	density = gaussian_kde(grav)
 	plt.plot(grav,density(grav))
