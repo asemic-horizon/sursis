@@ -37,6 +37,7 @@ def plot_degree_distribution(graph):
 	plt.plot(deg,power_law(deg,k_,slope_), linewidth=1,c='b',linestyle='dotted')
 	plt.grid(True)
 	plt.title("Degree distribution")
+	plt.xaxis("log"); plt.yaxis("log")
 	st.pyplot()
 	st.write(\
 		f"* Approximation: k={k:2.1f}, slope={slope:2.1f}")
