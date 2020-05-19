@@ -28,7 +28,7 @@ def mass(graph):
 	#metric =np.array([1.0/len(node) for node in  graph.nodes()])#nx.degree_centrality(graph)
 	metric = nx.betweenness_centrality(graph)
 	metric = np.array(list(dict(metric).values()))
-	metric = np.log(1+metric)
+	#metric = np.log(1+metric)
 	#metric = metric/np.sum(metric)
 	return metric
 
@@ -59,7 +59,7 @@ def potential(graph: nx.Graph,
 		L,
 		-rho,
 		bounds=bounds,
-		max_iter = 50 if fast else 5000)
+		max_iter = 10 if fast else 5000)
 	logging.info("Optimality: " + sol.message)
 	btest = '\n'.join([f"Effective {t}-nodes: {test_boundary(graph,sol.x,t)}" for t in range(1,1+thresh)])
 	logging.info(btest)
