@@ -70,11 +70,12 @@ with nc() as conn:
 		ui.separator()
 		full_graph = st.checkbox("Full graph",value=False)
 		communities = st.checkbox("Communities", value = False)
-		
+	
 		if full_graph:
 			center, radius = None, None
 		if not full_graph:
-			fields = list(reversed(db.list_nodes(conn)))
+			order = st.checkbox("Order by energy", value=False)
+			fields = list(reversed(db.list_nodes(conn, order = order)))
 			u = 0
 			center = st.selectbox("Choose nodes",fields,index = u)
 			radius = st.number_input("Radius",value=4)

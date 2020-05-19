@@ -153,8 +153,10 @@ def del_edge(conn,node_1,node_2):
         return False
 
 # meant to be called directly from the app too.
-def list_nodes(conn, where=None):
+def list_nodes(conn, where=None, order = False):
+    
     query = "SELECT name FROM nodes"
+    if order: query+= " ORDER BY energy ASC"
     if where: query += " WHERE " + where
     return [n[0] for n in run_sql(conn,query).fetchall()]
 
