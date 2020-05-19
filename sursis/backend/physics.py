@@ -67,7 +67,7 @@ def potential(graph: nx.Graph,
 
 def physics(graph : nx.Graph,
 			boundary_value = 0.025, 
-			bracket=(-np.inf,np.inf), thresh=2,
+			bracket=(-np.inf,np.inf), thresh=1,
 			fast = True ):
 	m = mass(graph)	
 	return m, potential(graph,m, boundary_value,thresh,bracket, fast)
