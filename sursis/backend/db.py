@@ -180,19 +180,3 @@ def merge_nodes(conn,node1,node2,new_name = None):
         write_edge(conn,u,v)
     del_node(conn,node1); del_node(conn,node2)
 
-
-## convertion from OOOLD json format. 
-def convert_json(conn, json_file):
-    with open(json_file,"r") as f: d = json.load(f)
-    for node in d["nodes"]:
-        insert_node(conn,node)
-    for edge in d["edges"]:
-        u, v = edge.split(";")
-        try:
-            insert_edge(conn,u,v)
-        except:
-            logging.error(f"Conversion error in edge {node_1}-{node_2}")
-
-
-
-
