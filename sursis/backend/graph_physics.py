@@ -39,6 +39,30 @@ def graph(conn, center = None, radius = None, prop = "energy"):
         G = nx.ego_graph(G,n=center, radius=radius)
     return G
 
+def digraph(conn, center = None, radius = None, prop = "energy"):
+    nodes = get_physics(conn, index = "name", table =  "nodes")
+    edges = get_physics(conn, index = "node_1, node_2", table = "named_edges")
+    G = nx.DiGraph()
+    for node, energy, mass, degree in nodes:
+        G.add_node(node, 
+                weight=db.surefloat(energy), 
+                energy=db.surefloat(energy), 
+                mass = db.surefloat(mass), 
+                degree=int(db.surefloat(degree)))
+    for u,v, energy, mass, degree in edges:
+        if u in G.nodes() and v in G.nodes():
+            w = norm.cdf(0.1 - db.surefloat(energy)*db.surefloat(mass))
+            if db.surefloat(energy) >= 0:
+                source, sink = u, v
+            else:
+                source, sink = v, u            
+            G.add_edge(source,sink,weight=w if w>0 else 0, 
+                energy = db.surefloat(energy), 
+                mass = db.surefloat(mass),
+                degree = int(db.surefloat(degree)))
+    if center and radius:
+        G = nx.ego_graph(G,n=center, radius=radius)
+    return G    
 
 
 def update_physics(conn,node_boundary = None, edge_boundary = None, fast = True):

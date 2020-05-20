@@ -79,7 +79,7 @@ with nc() as conn:
 			u = 0
 			center = st.selectbox("Choose nodes",fields,index = u)
 			radius = st.number_input("Radius",value=4)
-		G = chem.graph(conn,center,radius)
+		G = chem.digraph(conn,center,radius)
 		gv.graph_plot(G, conn,center,radius, communities)
 
 		mintree = st.checkbox("Minimum tree", value = True)
