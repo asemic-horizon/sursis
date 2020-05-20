@@ -64,8 +64,10 @@ with nc() as conn:
 			chem.update_physics(conn,node_boundary, edge_boundary, fast=False)
 			st.write(f"System energy: {chem.total_energy(conn):2.3f}")
 			ui.confirm()
-
-			gv.view_energy(chem.graph(conn),conn)
+		G = chem.graph(conn)
+		gv.view_energy(G,conn)
+		gv.view_degrees(G,conn)
+		gv.view_spectrum(G,conn)
 	elif op_mode == view_mode:
 		ui.separator()
 		full_graph = st.checkbox("Full graph",value=False)
@@ -79,7 +81,7 @@ with nc() as conn:
 			u = 0
 			center = st.selectbox("Choose nodes",fields,index = u)
 			radius = st.number_input("Radius",value=4)
-		G = chem.digraph(conn,center,radius)
+		G = chem.graph(conn,center,radius)
 		gv.graph_plot(G, conn,center,radius, communities)
 
 		mintree = st.checkbox("Minimum tree", value = True)
