@@ -17,10 +17,9 @@ def boundary_condition(graph, value = 0.0, crit_degree=2, lower = -np.inf, highe
 	n = graph.number_of_nodes()
 	lb = np.full((n,),lower)
 	ub = np.full((n,),higher)
-	for i in range(1,1+crit_degree):
-		gb = boundary(graph,i)
-		lb[gb] = value-eps
-		ub[gb] = value+eps
+	gb = boundary(graph,crit_degree)
+	lb[gb] = value-eps
+	ub[gb] = value+eps
 	#print(lb)
 	return (lb,ub)
 
