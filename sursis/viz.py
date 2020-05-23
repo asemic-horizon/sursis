@@ -31,15 +31,17 @@ class MidpointNormalize(colors.Normalize):
                 return np.ma.masked_array(np.interp(value, x, y), np.isnan(value))
 
 
-def draw_bw(G, pos_fun=nx.spring_layout):
-        pos = pos_fun(G)
+def draw_bw(G):
+        pos = nx.spectral_layout(G)
+        pos = nx.kamada_kawai_layout(G,pos=pos,weight="mass")
         font_size = 10 if G.number_of_nodes()<10 else 6
         alpha = 1 if G.number_of_nodes()<150 else 0.855
         nx.draw(G,pos=pos,with_labels=True, node_color='w',font_size=font_size,width=0.2,alpha=alpha)
         st.pyplot()
 
-def draw_color(G, pot, window, labels, node_size = 50, pos_fun=nx.spring_layout, cmap="gnuplot"):
-        pos = pos_fun(G)
+def draw_color(G, pot, window, labels, node_size = 50, cmap="gnuplot"):
+        pos = nx.spectral_layout(G)
+        pos = nx.kamada_kawai_layout(G,pos=pos,weight="mass")
         N = G.number_of_nodes()
         font_size = 11 if N<10 else 9
         if N<10:
@@ -66,7 +68,7 @@ def draw_color(G, pot, window, labels, node_size = 50, pos_fun=nx.spring_layout,
         st.pyplot()
 
 
-def draw(G, conn, labels = True, cmap = "terrain_r", pos_fun=nx.kamada_kawai_layout):
+def draw(G, conn, labels = True, cmap = "terrain_r"):
         energy = np.array(chem.read_node_prop(conn,G,"energy"))
         mass = np.array(chem.read_node_prop(conn,G,"mass"))
         minm, maxm, avgm, medm = chem.prop_bounds(conn,prop="mass")
@@ -80,4 +82,4 @@ def draw(G, conn, labels = True, cmap = "terrain_r", pos_fun=nx.kamada_kawai_lay
         center = chem.boundary(conn,"nodes")
         window = [minv,center,skew*maxv]
         #logging.info(f"Window: {window}, {[minm,maxm,avgm,medm]},{[minv,maxv,avgv,medv]}")   
-        draw_color(G,pot = energy.reshape(-1,), node_size = node_size, window = window, labels = labels, pos_fun = pos_fun, cmap = cmap)
+        draw_color(G,pot = energy.reshape(-1,), node_size = node_size, window = window, labels = labels, cmap = cmap)
