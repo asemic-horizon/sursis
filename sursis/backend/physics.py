@@ -26,9 +26,9 @@ def boundary_condition(graph, value = 0.0, crit_degree=2, lower = -np.inf, highe
 def mass(graph):
 	#metric =np.array([1.0/len(node) for node in  graph.nodes()])#nx.degree_centrality(graph)
 	#metric = nx.betweenness_centrality(graph)
-	metric = nx.eigenvector_centrality(graph)
+	metric = nx.pagerank(graph)
 	metric = np.array(list(dict(metric).values()))
-	#metric[metric>0] = metric*np.log(metric)
+	metric[metric>0] = metric*np.log(metric)
 	#metric = np.log(1+metric)
 	#metric = metric/np.sum(metric)
 	return metric
