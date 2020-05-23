@@ -7,17 +7,17 @@ import numpy as np
 from joblib import Memory
 mem = Memory('./cache')
 
-def boundary(graph,thresh):
-	 return [n for n,f in enumerate(graph.nodes) if graph.degree[f]==thresh]
+def boundary(graph,crit_degree):
+	 return [n for n,f in enumerate(graph.nodes) if graph.degree[f]==crit_degree]
 
-def test_boundary(graph,vector,thresh):
-	return np.median(vector[boundary(graph,thresh)])
+def test_boundary(graph,vector,crit_degree):
+	return np.median(vector[boundary(graph,crit_degree)])
 
-def boundary_condition(graph, value = 0.0, thresh=2, lower = -np.inf, higher = np.inf, eps = 1e-10):
+def boundary_condition(graph, value = 0.0, crit_degree=2, lower = -np.inf, higher = np.inf, eps = 1e-10):
 	n = graph.number_of_nodes()
 	lb = np.full((n,),lower)
 	ub = np.full((n,),higher)
-	for i in range(1,1+thresh):
+	for i in range(1,1+crit_degree):
 		gb = boundary(graph,i)
 		lb[gb] = value-eps
 		ub[gb] = value+eps
@@ -48,12 +48,12 @@ def least_squares_potential(graph: nx.Graph, mass : np.ndarray):
 def potential(graph: nx.Graph,
 			  mass: np.ndarray, 
 			  boundary_value,
-			  thresh,
+			  crit_degree,
 			  bracket,
 			  fast = True):
 	rho = mass.reshape(-1,)
 	L = nx.laplacian_matrix(graph)
-	bounds = boundary_condition(graph, boundary_value,thresh, *bracket)
+	bounds = boundary_condition(graph, boundary_value,crit_degree, *bracket)
 	logging.info(f"Fast recalc: {fast}")
 	sol = scipy.optimize.lsq_linear(
 		L,
@@ -61,16 +61,16 @@ def potential(graph: nx.Graph,
 		bounds=bounds,
 		max_iter = 10 if fast else 5000)
 	logging.info("Optimality: " + sol.message)
-	btest = '\n'.join([f"Effective {t}-nodes: {test_boundary(graph,sol.x,t)}" for t in range(1,1+thresh)])
+	btest = '\n'.join([f"Effective {t}-nodes: {test_boundary(graph,sol.x,t)}" for t in range(1,1+crit_degree)])
 	logging.info(btest)
 	return sol.x
 
 def physics(graph : nx.Graph,
 			boundary_value = 0.025, 
-			bracket=(-np.inf,np.inf), thresh=1,
+			bracket=(-np.inf,np.inf), crit_degree=2,
 			fast = True ):
 	m = mass(graph)	
-	return m, potential(graph,m, boundary_value,thresh,bracket, fast)
+	return m, potential(graph,m, boundary_value,crit_degree,bracket, fast)
 
 def autophysics(graph, 
 				initial_boundary = 0, 
