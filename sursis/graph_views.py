@@ -99,21 +99,19 @@ def sufficient(graph):
 	return graph.number_of_nodes() > 5
 
 def graph_plot(G, conn, center, radius, communities = False):
-	pos_fun = nx.kamada_kawai_layout
-	cpos_fun = lambda G: nx.spring_layout if G.number_of_nodes()>50 else nx.kamada_kawai_layout
 	full_graph = center is None
 	if full_graph: pos = nx.spring_layout
 	a = -chem.subgraph_energy(conn,G)
 	b = -chem.total_energy(conn)
 	st.write(f"Net gravity = **{a:2.3f}** - {b:2.3f} = {a-b:2.3f}")
-	viz.draw(G,conn,labels = not full_graph, cmap=cmap,pos_fun = pos_fun)
+	viz.draw(G,conn,labels = not full_graph, cmap=cmap)
 	try:
 		out, coll = chem.gravity_partition(G,conn)
 		ui.separator()
 		st.write("### Expanding")
-		viz.draw(out,conn,cmap=cmap,pos_fun = cpos_fun(out))
+		viz.draw(out,conn,cmap=cmap)
 		st.write("### Collapsing")
-		viz.draw(coll,conn,cmap=cmap,pos_fun = cpos_fun(coll))
+		viz.draw(coll,conn,cmap=cmap)
 	except:
 		st.write("Couldn't make expanding/collapsing subsets")
 
@@ -122,7 +120,7 @@ def graph_plot(G, conn, center, radius, communities = False):
 		st.write("### Components")
 		S = [G.subgraph(c).copy() for c in nx.connected_components(G)]
 		for subgraph in S:
-			viz.draw(subgraph, conn, cmap = cmap, pos_fun = cpos_fun(subgraph))
+			viz.draw(subgraph, conn, cmap = cmap)
 			ui.separator()
 
 	if sufficient(G) and communities:
@@ -131,26 +129,24 @@ def graph_plot(G, conn, center, radius, communities = False):
 		S = [G.subgraph(c).copy() for c in u if len(c)>thresh]
 		st.write("### Communities")
 		for subgraph in S:
-			viz.draw(subgraph, conn, cmap = cmap, pos_fun = cpos_fun(subgraph))
+			viz.draw(subgraph, conn, cmap = cmap)
 			ui.separator()
 
 def mintree(G,conn):
-	cpos_fun = lambda G: nx.circular_layout if G.number_of_nodes()>50 else nx.kamada_kawai_layout
 
 	if sufficient(G):
 		H = nx.minimum_spanning_tree(G)
 		ui.separator()
 		st.write("#### Minimum tree")
-		viz.draw(H, conn, cmap = cmap, pos_fun = cpos_fun(G))
+		viz.draw(H, conn, cmap = cmap)
 		st.pyplot()
 
 def maxtree(G,conn):
-	cpos_fun = lambda G: nx.circular_layout if G.number_of_nodes()>50 else nx.kamada_kawai_layout
 
 	if sufficient(G):
 		J = nx.maximum_spanning_tree(G)
 		st.write("#### Maximum tree")
-		viz.draw(J, conn, cmap = cmap, pos_fun = cpos_fun(J))
+		viz.draw(J, conn, cmap = cmap)
 		st.pyplot()
 
 def view_energy(G,conn):
