@@ -40,8 +40,7 @@ def draw_bw(G):
         st.pyplot()
 
 def draw_color(G, pot, window, labels, node_size = 50, cmap="gnuplot"):
-        pos = nx.random_layout(G)
-        pos = nx.kamada_kawai_layout(G,pos=pos,weight="mass")
+        pos = nx.kamada_kawai_layout(G,weight="weight")
         N = G.number_of_nodes()
         font_size = 11 if N<10 else 9
         if N<10:
