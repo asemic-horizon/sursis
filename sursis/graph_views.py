@@ -18,9 +18,9 @@ import viz
 #cmap = "coolwarm"
 #cmap = "bwr"
 #cmap = "gist_stern"
-#cmap = "PiYG_r"
+cmap = "PiYG_r"
 #cmap = "Spectral"
-cmap = "nipy_spectral_r"
+#cmap = "nipy_spectral_r"
 
 def power_law(x,k,slope):
 	x = np.array(x)
