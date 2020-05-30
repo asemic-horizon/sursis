@@ -3,6 +3,8 @@ logging.basicConfig(filename="physics.log",level = logging.INFO)
 
 
 import streamlit as st
+from itertools import combinations
+
 import ui_elems as ui
 from backend import db
 from backend import graph_physics as chem
@@ -34,6 +36,16 @@ def edge_entry(conn):
 		st.write("(Edge deleted.)")
 		conn.commit(); ui.confirm()
 	return None
+
+def cluster_connect(conn):
+	n_units = st.number_input("Number of nodes",value=2)
+	units = dict()
+	for i in range(n_units):
+		units[i] = ui.known_field_input(conn,f"Source {i+1}:",offset=i)
+	for node_1, node_2 in combinations(unit.values(),2):
+		db.write_edge(conn, node_1, node_2)
+		st.write(f"Added: {node_1}:{node_2}")
+		conn.commit(); ui.confirm()
 
 def node_merge(conn):
 	nodes = db.list_nodes(conn)

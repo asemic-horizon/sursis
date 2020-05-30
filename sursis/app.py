@@ -15,6 +15,7 @@ from backend.db import nc
 
 node_mode = "Nodes"
 edge_mode = "Connections"
+cluster_mode = "Cluster"
 trail_mode = "Trailing"
 dyad_mode = "Dyad"
 triad_mode = "Triad"
@@ -26,7 +27,7 @@ with nc() as conn:
 	st.write("## `sursis`")
 
 	op_mode = st.radio(label="Operation mode",\
-		options=[view_mode,node_mode,edge_mode, dyad_mode, triad_mode, trail_mode, merge_mode,stats_mode,])
+		options=[view_mode,node_mode,trail_mode, edge_mode, cluster_mode, dyad_mode, triad_mode, merge_mode,stats_mode,])
 
 	if op_mode == node_mode:
 		ui.separator()
