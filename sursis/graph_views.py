@@ -12,19 +12,19 @@ from scipy.stats import gaussian_kde
 import ui_elems as ui
 import viz
 
-#cmap = "RdYlBu"
+cmap = "RdYlBu"
 #cmap = "PuOr"
 #cmap = "jet"
 #cmap = "coolwarm"
 #cmap = "bwr"
 #cmap = "gist_stern"
-cmap = "PiYG_r"
+#cmap = "PiYG_r"
 #cmap = "Spectral"
 #cmap = "nipy_spectral_r"
 
 def power_law(x,k,slope):
 	x = np.array(x)
-	return np.exp(k + slope*x)
+	return np.exp(k + slope*np.log(x))
 
 def fit_power_distribution(deg,cnt):
 	popt, _ = curve_fit(f=power_law,xdata=deg,ydata=cnt)
@@ -100,7 +100,7 @@ def sufficient(graph):
 
 def graph_plot(G, conn, center, radius, communities = False):
 	full_graph = center is None
-	if full_graph: pos = nx.spring_layout
+	if full_graph: pos = nx.kamada_kawai_layout
 	a = -chem.subgraph_energy(conn,G)
 	b = -chem.total_energy(conn)
 	st.write(f"Net gravity = **{a:2.3f}** - {b:2.3f} = {a-b:2.3f}")
