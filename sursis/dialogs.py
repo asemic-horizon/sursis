@@ -16,7 +16,7 @@ def node_entry(conn):
 		ui.if_confirm(found,"Name already exists")
 	if node and del_button:
 		found = db.del_node(conn,node)
-		conn.commit()
+		chem.update_physics(conn); conn.commit()
 		ui.if_confirm(found)	
 	return None 
 
@@ -26,13 +26,13 @@ def edge_entry(conn):
 	add_button, del_button = ui.add_del()
 	if node_1 and node_2 and add_button: 
 		db.write_edge(conn, node_1,node_2)
-		conn.commit(); ui.confirm()
+		chem.update_physics(conn); conn.commit(); ui.confirm()
 	if node_1 and node_2 and del_button:
 		found = True
 		while found:
 			found = db.del_edge(conn,node_1, node_2)
 		st.write("(Edge deleted.)")
-		conn.commit(); ui.confirm()
+		chem.update_physics(conn); conn.commit(); ui.confirm()
 	return None
 
 def node_merge(conn):
@@ -49,7 +49,7 @@ def node_merge(conn):
 		merge_button = st.button("Merge")
 		if merge_button:
 			db.merge_nodes(conn,node_1,node_2, new_node)
-			conn.commit(); ui.confirm()
+			chem.update_physics(conn); conn.commit(); ui.confirm()
 	return None
 
 def trail_node_entry(conn):
@@ -61,7 +61,7 @@ def trail_node_entry(conn):
 	if node_1 and node_2 and nonn_button:
 		db.write_node(conn,node_2)
 		db.write_edge(conn,node_1,node_2)
-		conn.commit(); ui.confirm()
+		chem.update_physics(conn); conn.commit(); ui.confirm()
 	return None
 
 def dyad_entry(conn):
@@ -72,12 +72,12 @@ def dyad_entry(conn):
 		db.write_node(conn,node_1)
 		db.write_node(conn,node_2)
 		db.write_edge(conn,node_1, node_2)
-		conn.commit(); ui.confirm()
+		chem.update_physics(conn); conn.commit(); ui.confirm()
 	if node_1 and node_2 and del_button:
 		db.del_edge(conn,node_1,node_2)
 		db.del_node(conn,node_1)
 		db.del_node(conn,node_2)
-		conn.commit(); ui.confirm()
+		chem.update_physics(conn); conn.commit(); ui.confirm()
 	return None
 
 def triad_entry(conn):

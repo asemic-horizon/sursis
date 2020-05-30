@@ -10,7 +10,7 @@ import ui_elems as ui
 import dialogs as dlg
 #
 from backend.db import nc
-
+##
 
 
 node_mode = "Nodes"
@@ -59,10 +59,11 @@ with nc() as conn:
 		st.write(f"Current boundary values - nodes: {nb}, edges: {eb}")
 		node_boundary = st.number_input("Node boundary values",step=0.001,format="%2.4f")
 		edge_boundary = st.number_input("Edge boundary values",step=0.001,format="%2.4f")
-
-		chem.update_physics(conn,node_boundary, edge_boundary, fast=False)
-		st.write(f"System energy: {chem.total_energy(conn):2.3f}")
-		ui.confirm()
+		but = st.button("Recalculate physics")
+		if but: 
+			chem.update_physics(conn,node_boundary, edge_boundary, fast=False)
+			st.write(f"System energy: {chem.total_energy(conn):2.3f}")
+			ui.confirm()
 		G = chem.graph(conn)
 		gv.view_energy(G,conn)
 		gv.view_degrees(G,conn)
