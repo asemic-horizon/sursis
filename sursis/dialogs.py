@@ -42,10 +42,12 @@ def cluster_connect(conn):
 	units = dict()
 	for i in range(n_units):
 		units[i] = ui.known_field_input(conn,f"Source {i+1}:",offset=i)
-	for node_1, node_2 in combinations(units.values(),2):
-		db.write_edge(conn, node_1, node_2)
-		st.write(f"Added: {node_1}:{node_2}")
-		conn.commit(); ui.confirm()
+	add = st.button("Connect")
+	if add:
+		for node_1, node_2 in combinations(units.values(),2):
+			db.write_edge(conn, node_1, node_2)
+			st.write(f"Added: {node_1}:{node_2}")
+			conn.commit(); ui.confirm()
 
 def node_merge(conn):
 	nodes = db.list_nodes(conn)
