@@ -45,6 +45,10 @@ with nc() as conn:
 		ui.separator()
 		st.write("### Add/remove connections")
 		dlg.edge_entry(conn)
+	elif op_mode== cluster_mode:
+		ui.separator()
+		st.write("### Cluster connect")
+		dlg.cluster_connect(conn)
 	elif op_mode == trail_mode:
 		ui.separator()
 		st.write("### Add new node and connect to existing")
