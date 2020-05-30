@@ -51,7 +51,7 @@ def digraph(conn, center = None, radius = None, prop = "energy"):
                 degree=int(db.surefloat(degree)))
     for u,v, energy, mass, degree in edges:
         if u in G.nodes() and v in G.nodes():
-            w = norm.cdf(0.1 - db.surefloat(energy)*db.surefloat(mass))
+            w = 1/norm.cdf(0.1 - db.surefloat(energy)*db.surefloat(mass))
             if db.surefloat(energy) >= 0:
                 source, sink = u, v
             else:
