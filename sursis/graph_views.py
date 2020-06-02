@@ -14,11 +14,11 @@ import viz
 
 #cmap = "RdYlBu"
 #cmap = "PuOr"
-#cmap = "jet"
+cmap = "jet"
 #cmap = "coolwarm"
 #cmap = "bwr"
 #cmap = "gist_stern"
-cmap = "PiYG_r"
+#cmap = "PiYG_r"
 #cmap = "Spectral"
 #cmap = "nipy_spectral_r"
 
@@ -100,7 +100,7 @@ def sufficient(graph):
 
 def graph_plot(G, conn, center, radius, communities = False):
 	full_graph = center is None
-	if full_graph: pos = nx.spring_layout
+	if full_graph: pos = nx.kamada_kawai_layout
 	a = -chem.subgraph_energy(conn,G)
 	b = -chem.total_energy(conn)
 	st.write(f"Net gravity = **{a:2.3f}** - {b:2.3f} = {a-b:2.3f}")
