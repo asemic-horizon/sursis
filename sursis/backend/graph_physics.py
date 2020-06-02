@@ -140,9 +140,9 @@ def gravity_partition(G, conn):
     collapsing = db.list_nodes(conn, "(mass * energy) < 0")
     return G.subgraph(expanding), G.subgraph(collapsing)    
 
-def boundary(conn,table="nodes", deg = 2):
+def boundary(conn,table="nodes", deg = 1):
     return db.run_sql(conn,
-        f"SELECT AVG(energy) FROM {table} WHERE degree=2").fetchone()[0]
+        f"SELECT AVG(energy) FROM {table} WHERE degree={deg}").fetchone()[0]
 
 
 #end
