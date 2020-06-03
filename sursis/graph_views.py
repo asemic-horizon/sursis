@@ -22,26 +22,15 @@ cmap = "bwr"
 #cmap = "Spectral"
 #cmap = "nipy_spectral_r"
 
-def power_law(x,k,slope):
-	x = np.array(x)
-	return k*(x**slope)
-
-def fit_power_distribution(deg,cnt):
-	popt, _ = curve_fit(f=power_law,xdata=deg,ydata=cnt)
-	k, slope = tuple(popt)
-	return k, slope
 
 def plot_degree_distribution(graph):
 	deg, cnt = stats.degree_distribution(graph)
 	deg = np.array(deg); cnt = np.array(cnt)
-	k, slope = fit_power_distribution(deg[:-1],cnt[:-1])
-	#k_, slope_ = fit_power_distribution(deg[-2:],cnt[-2:])
+	k, slope = stats.fit_power_distribution(deg,cnt)
 	plt.scatter(deg,cnt)
-	plt.plot(deg,power_law(deg,k,slope), linewidth=1,c='k',linestyle='dotted')
-	#plt.plot(deg,power_law(deg,k_,slope_), linewidth=1,c='b',linestyle='dotted')
+	plt.plot(deg,stats.power_law(deg,k,slope), linewidth=1,c='k',linestyle='dotted')
 	plt.grid(True)
 	plt.title("Degree distribution")
-#	plt.yscale("log")
 
 	st.pyplot()
 	st.write(\
@@ -105,9 +94,12 @@ def sufficient(graph):
 def graph_plot(G, conn, center, radius, communities = False):
 	full_graph = center is None
 	if full_graph: pos = nx.kamada_kawai_layout
-	a = -chem.subgraph_energy(conn,G)
-	b = -chem.total_energy(conn)
-	st.write(f"Net gravity = **{a:2.3f}** - {b:2.3f} = {a-b:2.3f}")
+	# a = -chem.subgraph_energy(conn,G)
+	# b = -chem.total_energy(conn)
+	# st.write(f"Net gravity = **{a:2.3f}** - {b:2.3f} = {a-b:2.3f}")
+	leaves, expected_leaves, slope = stats.leaf_analysis(G)
+	st.write("Actual/expected terminal nodes: {leaves}/{expected_leaves:2.0f}")
+	st.write("Power law exponent: {slope:2.2f}")
 	viz.draw(G,conn,labels = not full_graph, cmap=cmap)
 	try:
 		out, coll = chem.gravity_partition(G,conn)

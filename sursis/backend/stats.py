@@ -16,3 +16,17 @@ def spectrum(graph):
 	L = nx.laplacian_matrix(graph)
 	eigvals = np.linalg.eigvals(L.toarray())
 	return eigvals
+
+def power_law(x,k,slope):
+	x = np.array(x)
+	return k*(x**slope)
+
+def fit_power_distribution(deg,cnt):
+	popt, _ = curve_fit(f=power_law,xdata=deg[:-1],ydata=cnt[:-1])
+	k, slope = tuple(popt)
+	return k, slope
+
+def leaf_analysis(graph):
+	deg, cnt = degree_distribution(graph)
+	k, slope = fit_power_distribution(deg,cnt)
+	return cnt[-1],k,slope
