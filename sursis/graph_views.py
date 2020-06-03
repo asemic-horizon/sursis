@@ -14,9 +14,9 @@ import viz
 
 #cmap = "RdYlBu"
 #cmap = "PuOr"
-cmap = "jet"
+#cmap = "jet"
 #cmap = "coolwarm"
-#cmap = "bwr"
+cmap = "bwr"
 #cmap = "gist_stern"
 #cmap = "PiYG_r"
 #cmap = "Spectral"
@@ -24,7 +24,7 @@ cmap = "jet"
 
 def power_law(x,k,slope):
 	x = np.array(x)
-	return np.exp(k + slope*x)
+	return k*(x**slope)
 
 def fit_power_distribution(deg,cnt):
 	popt, _ = curve_fit(f=power_law,xdata=deg,ydata=cnt)
@@ -33,26 +33,30 @@ def fit_power_distribution(deg,cnt):
 
 def plot_degree_distribution(graph):
 	deg, cnt = stats.degree_distribution(graph)
-	k, slope = fit_power_distribution(deg,cnt)
+	deg = np.array(deg); cnt = np.array(cnt)
+	k, slope = fit_power_distribution(deg[:-1],cnt[:-1])
 	#k_, slope_ = fit_power_distribution(deg[-2:],cnt[-2:])
 	plt.scatter(deg,cnt)
 	plt.plot(deg,power_law(deg,k,slope), linewidth=1,c='k',linestyle='dotted')
 	#plt.plot(deg,power_law(deg,k_,slope_), linewidth=1,c='b',linestyle='dotted')
 	plt.grid(True)
 	plt.title("Degree distribution")
-	plt.yscale("log")
+#	plt.yscale("log")
+
 	st.pyplot()
 	st.write(\
-		f"* Approximation: k={k:2.1f}, slope={slope:2.1f}")
+		f"* Approximation: $f \\approx {k:2.0f}x^"+"{"+f"{slope:2.2f}"+"}$")
 
 def eigenvalues(graph):
 	eigvals = stats.spectrum(graph)
-	plt.scatter(np.arange(len(eigvals)),eigvals, alpha = 0.5)
+	eigvals = eigvals[eigvals>1e-6]
+	eigvals.sort()
+	plt.scatter(np.arange(len(eigvals)),1/eigvals, alpha = 0.5)
+	plt.yscale("log")
 	plt.grid(True)
-	plt.title("Laplacian eigenvalues")
+	plt.title("Inverse Laplacian eigenvalues")
 	st.pyplot()
-	st.write(f"* Spectral gap: {eigvals[0]-eigvals[1]:2.1f}")
-	st.write(f"* Smallest nonzero eigenvalue: {np.min(eigvals[eigvals>1e-10]):e}")
+	st.write(f"* Spectral gap: {1/eigvals[0]-1/eigvals[1]:2.2f}")
 
 def mass(graph,conn):
 	m = chem.read_node_prop(conn,graph,"mass")
@@ -124,7 +128,7 @@ def graph_plot(G, conn, center, radius, communities = False):
 			ui.separator()
 
 	if sufficient(G) and communities:
-		u = nx.algorithms.community.label_propagation.label_propagation_communities(G)
+		u = nx.algorithms.community.kernighan_lin.kernighan_lin_bisection(G)
 		thresh = 4 if full_graph else 4
 		S = [G.subgraph(c).copy() for c in u if len(c)>thresh]
 		st.write("### Communities")

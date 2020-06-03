@@ -62,8 +62,8 @@ with nc() as conn:
 		nb = chem.boundary(conn,"nodes")
 		eb = chem.boundary(conn,"edges")
 		st.write(f"Current boundary values - nodes: {nb}, edges: {eb}")
-		node_boundary = st.number_input("Node boundary values",step=0.001,format="%2.4f")
-		edge_boundary = st.number_input("Edge boundary values",step=0.001,format="%2.4f")
+		node_boundary = st.number_input("Node boundary values",step=0.001,format="%2.4e")
+		edge_boundary = st.number_input("Edge boundary values",step=0.001,format="%2.4e")
 		but = st.button("Recalculate physics")
 		if but: 
 			chem.update_physics(conn,node_boundary, edge_boundary, fast=False)
@@ -89,7 +89,7 @@ with nc() as conn:
 		G = chem.graph(conn,center,radius)
 		gv.graph_plot(G, conn,center,radius, communities)
 
-		mintree = st.checkbox("Minimum tree", value = True)
+		mintree = st.checkbox("Minimum tree", value = False)
 		if mintree:	gv.mintree(G,conn)
 
 		maxtree = st.checkbox("Maximum tree", value = False)
@@ -100,7 +100,7 @@ with nc() as conn:
 			gv.view_energy(G,conn)
 			#gv.view_gravity(G,conn)
 
-		dd = st.checkbox("Degree distribution", value = False)
+		dd = st.checkbox("Degree distribution", value = True)
 		if dd: gv.view_degrees(G,conn)
 
 		spectrum = st.checkbox("Spectrum",value=False)

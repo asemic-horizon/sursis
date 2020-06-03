@@ -74,11 +74,8 @@ def draw(G, conn, labels = True, cmap = "terrain_r"):
         multiplier = -3200/np.log10(avgm)
         node_size = 15+multiplier*mass
         minv, maxv, avgv, medv = chem.prop_bounds(conn,slices=10)
-        #pot = np.exp(energy)
-        #window = [minv if -minv > maxv else -maxv, medv, maxv if -maxv > minv else -minv]
-        skew = 1
-        energy[energy>0] = skew*energy[energy>0]
-        center = chem.boundary(conn,"nodes")
-        window = [minv,center,skew*maxv]
+
+        #center = chem.boundary(conn,"nodes")
+        window = [minv,0,maxv]
         #logging.info(f"Window: {window}, {[minm,maxm,avgm,medm]},{[minv,maxv,avgv,medv]}")   
         draw_color(G,pot = energy.reshape(-1,), node_size = node_size, window = window, labels = labels, cmap = cmap)
