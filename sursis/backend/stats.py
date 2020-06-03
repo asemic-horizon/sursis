@@ -30,5 +30,5 @@ def fit_power_distribution(deg,cnt):
 def leaf_analysis(graph):
 	deg, cnt = degree_distribution(graph)
 	k, slope = fit_power_distribution(deg,cnt)
-	return cnt[-1],k,slope
+	return cnt[0],k,slope
 

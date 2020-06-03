@@ -96,9 +96,10 @@ def graph_plot(G, conn, center, radius, communities = False):
 	# a = -chem.subgraph_energy(conn,G)
 	# b = -chem.total_energy(conn)
 	# st.write(f"Net gravity = **{a:2.3f}** - {b:2.3f} = {a-b:2.3f}")
-	leaves, expected_leaves, slope = stats.leaf_analysis(G)
-	st.write(f"Actual/expected terminal nodes: {leaves}/{expected_leaves:2.0f}")
-	st.write(f"Power law exponent: {slope:2.2f}")
+	try:
+		leaves, expected_leaves, slope = stats.leaf_analysis(G)
+		st.write(f"{leaves}/{expected_leaves:1.0f}={slope:1.2f}")
+	except: pass
 	viz.draw(G,conn,labels = not full_graph, cmap=cmap)
 	try:
 		out, coll = chem.gravity_partition(G,conn)
