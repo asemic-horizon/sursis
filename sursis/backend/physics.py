@@ -25,11 +25,11 @@ def boundary_condition(graph, value = 0.0, crit_degree=1, lower = -np.inf, highe
 
 def mass(graph):
 	#metric =np.array([1.0/len(node) for node in  graph.nodes()])#nx.degree_centrality(graph)
-	m0 = nx.algorithms.link_analysis.pagerank(graph)
-	m0 = np.array(list(dict(m0).values()))
+	#m0 = nx.algorithms.link_analysis.pagerank(graph)
+	#m0 = np.array(list(dict(m0).values()))
 	m1 = nx.betweenness_centrality(graph)
 	m1 = np.array(list(dict(m1).values()))
-	metric = 0.95*m1/np.sum(m1) + 0.05*m0/np.sum(m0)
+	metric = m1#0.95*m1/np.sum(m1) + 0.05*m0/np.sum(m0)
 	#metric = np.log(1+metric)
 	metric = metric/np.sum(metric)
 	return metric
