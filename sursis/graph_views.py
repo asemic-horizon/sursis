@@ -7,7 +7,6 @@ import numpy as np
 from backend import physics as phys
 from backend import graph_physics as chem
 from backend import stats
-from scipy.optimize import curve_fit
 from scipy.stats import gaussian_kde
 import ui_elems as ui
 import viz
@@ -98,8 +97,8 @@ def graph_plot(G, conn, center, radius, communities = False):
 	# b = -chem.total_energy(conn)
 	# st.write(f"Net gravity = **{a:2.3f}** - {b:2.3f} = {a-b:2.3f}")
 	leaves, expected_leaves, slope = stats.leaf_analysis(G)
-	st.write("Actual/expected terminal nodes: {leaves}/{expected_leaves:2.0f}")
-	st.write("Power law exponent: {slope:2.2f}")
+	st.write(f"Actual/expected terminal nodes: {leaves}/{expected_leaves:2.0f}")
+	st.write(f"Power law exponent: {slope:2.2f}")
 	viz.draw(G,conn,labels = not full_graph, cmap=cmap)
 	try:
 		out, coll = chem.gravity_partition(G,conn)
