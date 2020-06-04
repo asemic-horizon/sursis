@@ -98,7 +98,7 @@ def graph_plot(G, conn, center, radius, communities = False):
 	# st.write(f"Net gravity = **{a:2.3f}** - {b:2.3f} = {a-b:2.3f}")
 	try:
 		leaves, expected_leaves, slope = stats.leaf_analysis(G)
-		st.write(f"{leaves}/{expected_leaves:1.0f}={slope:1.2f}")
+		st.write(f"{leaves}/{expected_leaves:1.0f} = {slope:1.2f}")
 	except: pass
 	viz.draw(G,conn,labels = not full_graph, cmap=cmap)
 	try:
@@ -128,6 +128,18 @@ def graph_plot(G, conn, center, radius, communities = False):
 			viz.draw(subgraph, conn, cmap = cmap)
 			ui.separator()
 
+def paths(G,conn, source, target):
+	ps = nx.algorithms.shortest_paths.\
+			generic.all_shortest_paths(G,source,target)
+
+	spath = nx.Graph()
+	for q in ps:
+		for p in q:
+			S = nx.ego_graph(G,n=p,radius = 1)
+			spath = nx.compose(spath,S)
+		st.write(f"Steps: {len(q)-1}")
+		st.write(f" $\\to$ ".join(q))
+		viz.draw(spath,conn,cmap=cmap)
 def mintree(G,conn):
 
 	if sufficient(G):

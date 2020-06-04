@@ -4,8 +4,10 @@ logging.basicConfig(filename="physics.log",level = logging.INFO)
 
 import streamlit as st
 from itertools import combinations
+from numpy.random import randint
 
 import ui_elems as ui
+import graph_views as gv
 from backend import db
 from backend import graph_physics as chem
 
@@ -21,6 +23,14 @@ def node_entry(conn):
 		conn.commit()
 		ui.if_confirm(found)	
 	return None 
+
+def spaths(conn):
+	G = chem.graph(conn)
+	u = randint(0,G.number_of_nodes())
+	v = randint(0,G.number_of_nodes())
+	node_1 = ui.known_field_input(conn,"Source",offset=u)
+	node_2 = ui.known_field_input(conn,"Target",offset=v)
+	gv.paths(G,conn,node_1,node_2)
 
 def edge_entry(conn):
 	node_1 = ui.known_field_input(conn,"Source",offset=0)

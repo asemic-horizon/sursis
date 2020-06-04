@@ -22,12 +22,15 @@ triad_mode = "Triad"
 merge_mode = "Merge"
 view_mode = "Visualization"
 stats_mode = "Advanced stats"
+spath_mode = "Spath"
 
 with nc() as conn:
 	st.write("## `sursis`")
 
 	op_mode = st.radio(label="Operation mode",\
-		options=[view_mode,node_mode,trail_mode, edge_mode, cluster_mode, dyad_mode, triad_mode, merge_mode,stats_mode,])
+		options=[view_mode,node_mode,trail_mode, edge_mode,
+		 cluster_mode, dyad_mode, triad_mode, merge_mode,
+		 spath_mode, stats_mode,])
 
 	if op_mode == node_mode:
 		ui.separator()
@@ -57,6 +60,8 @@ with nc() as conn:
 		ui.separator()
 		st.write("### Merge nodes")
 		dlg.node_merge(conn)
+	elif op_mode == spath_mode:
+		dlg.spaths(conn)
 	elif op_mode == stats_mode:
 
 		nb = chem.boundary(conn,"nodes")
@@ -85,7 +90,7 @@ with nc() as conn:
 			fields = list(reversed(db.list_nodes(conn, order = order)))
 			u = 0
 			center = st.selectbox("Choose nodes",fields,index = u)
-			radius = st.number_input("Radius",value=4)
+			radius = st.number_input("Radius",value=2)
 		G = chem.graph(conn,center,radius)
 		gv.graph_plot(G, conn,center,radius, communities)
 
