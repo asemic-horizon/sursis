@@ -14,8 +14,8 @@ import viz
 #cmap = "RdYlBu"
 #cmap = "PuOr"
 #cmap = "jet"
-#cmap = "coolwarm"
-cmap = "bwr"
+cmap = "coolwarm"
+#cmap = "bwr"
 #cmap = "gist_stern"
 #cmap = "PiYG_r"
 #cmap = "Spectral"
@@ -98,8 +98,10 @@ def graph_plot(G, conn, center, radius, communities = False):
 	# st.write(f"Net gravity = **{a:2.3f}** - {b:2.3f} = {a-b:2.3f}")
 	try:
 		leaves, expected_leaves, slope = stats.leaf_analysis(G)
+		print(leaves)
 		st.write(f"{leaves}/{expected_leaves:1.0f} = {slope:1.2f}")
-	except: pass
+	except:
+		pass
 	viz.draw(G,conn,labels = not full_graph, cmap=cmap)
 	try:
 		out, coll = chem.gravity_partition(G,conn)
@@ -128,7 +130,7 @@ def graph_plot(G, conn, center, radius, communities = False):
 			viz.draw(subgraph, conn, cmap = cmap)
 			ui.separator()
 
-def paths(G,conn, source, target):
+def spaths(G,conn, source, target):
 	ps = nx.algorithms.shortest_paths.\
 			generic.all_shortest_paths(G,source,target)
 
@@ -140,6 +142,23 @@ def paths(G,conn, source, target):
 		st.write(f"Steps: {len(q)-1}")
 		st.write(f" $\\to$ ".join(q))
 		viz.draw(spath,conn,cmap=cmap)
+
+def lpaths(G, conn, source, target):
+	cutoff = st.number_input("Max lookup", value=8)
+	pls = nx.all_simple_paths(G, source, target,cutoff=cutoff)
+	if not pls: st.write(list(pls))
+	max_len = max([len(p) for p in pls])
+	pl = [p for p in pls if len(p)==max_len]
+	lpath = nx.Graph()
+	for q in pl:
+		for p in q:
+			L = nx.ego_graph(G,n=p,radius = 1)
+			lpath = nx.compose(lpath,L)
+		st.write(f"Steps: {len(q)-1}")
+		st.write(f" $\\to$ ".join(q))
+		viz.draw(lpath,conn,cmap=cmap)
+
+
 def mintree(G,conn):
 
 	if sufficient(G):
