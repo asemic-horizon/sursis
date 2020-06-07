@@ -21,7 +21,7 @@ dyad_mode = "Dyad"
 triad_mode = "Triad"
 merge_mode = "Merge"
 view_mode = "Visualization"
-stats_mode = "Advanced stats"
+stats_mode = "Advanced"
 spath_mode = "Spath"
 
 with nc() as conn:
@@ -63,21 +63,7 @@ with nc() as conn:
 	elif op_mode == spath_mode:
 		dlg.spaths(conn)
 	elif op_mode == stats_mode:
-
-		nb = chem.boundary(conn,"nodes")
-		eb = chem.boundary(conn,"edges")
-		st.write(f"Current boundary values - nodes: {nb}, edges: {eb}")
-		node_boundary = st.number_input("Node boundary values",step=0.001,format="%2.4e")
-		edge_boundary = st.number_input("Edge boundary values",step=0.001,format="%2.4e")
-		but = st.button("Recalculate physics")
-		if but: 
-			chem.update_physics(conn,node_boundary, edge_boundary, fast=False)
-			st.write(f"System energy: {chem.total_energy(conn):2.3f}")
-			ui.confirm()
-		G = chem.graph(conn)
-		gv.view_energy(G,conn)
-		gv.view_degrees(G,conn)
-		gv.view_spectrum(G,conn)
+		dlg.advanced(conn)
 	elif op_mode == view_mode:
 		ui.separator()
 		full_graph = st.checkbox("Full graph",value=False)
@@ -90,7 +76,7 @@ with nc() as conn:
 			fields = list(reversed(db.list_nodes(conn, order = order)))
 			u = 0
 			center = st.selectbox("Choose nodes",fields,index = u)
-			radius = st.number_input("Radius",value=2)
+			radius = st.number_input("Radius",value=3)
 		G = chem.graph(conn,center,radius)
 		gv.graph_plot(G, conn,center,radius, communities)
 

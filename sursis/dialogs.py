@@ -26,11 +26,52 @@ def node_entry(conn):
 
 def spaths(conn):
 	G = chem.graph(conn)
-	u = randint(0,G.number_of_nodes())
-	v = randint(0,G.number_of_nodes())
-	node_1 = ui.known_field_input(conn,"Source",offset=u)
-	node_2 = ui.known_field_input(conn,"Target",offset=v)
-	gv.paths(G,conn,node_1,node_2)
+	node_1 = ui.known_field_input(conn,"Source",offset=0)
+	node_2 = ui.known_field_input(conn,"Target",offset=10)
+	st.write("### Shortest paths")
+	gv.spaths(G,conn,node_1,node_2)
+
+def advanced(conn):
+	bvp_mode = "Boundary value"
+	penrose_mode = "Penrose"
+	core_mode = "Core value"
+	mode = st.radio("Physics mode",[bvp_mode, core_mode, penrose_mode])	
+	if mode == bvp_mode:
+		nb = chem.boundary(conn,"nodes",deg=2)
+		eb = chem.boundary(conn,"edges",deg=2)
+		st.write(f"Current boundary values - nodes: {nb}, edges: {eb}")
+		nb = st.number_input("Node boundary values",step=0.001,format="%2.4e")
+		eb = st.number_input("Edge boundary values",step=0.001,format="%2.4e")
+		but = st.button("Recalculate physics")
+		if but: 
+			chem.update_physics(conn,model = "bvp",nb = nb, eb = eb, fast=False)
+			st.write(f"System energy: {chem.total_energy(conn):2.3f}")
+			ui.confirm()
+	elif mode == core_mode:
+		graph = chem.graph(conn)
+		crit_degree = max([d for n, d in graph.degree()])
+		nb = chem.boundary(conn,"nodes",deg=crit_degree)
+		eb = chem.boundary(conn,"edges",deg=crit_degree)
+		st.write(f"Current boundary values - nodes: {nb}, edges: {eb}")
+		nb = st.number_input("Node boundary values",step=0.001,format="%2.4e")
+		eb = st.number_input("Edge boundary values",step=0.001,format="%2.4e")
+		but = st.button("Recalculate physics")
+		if but: 
+			chem.update_physics(conn,model = "core",nb = nb, eb = eb, fast=False)
+			st.write(f"System energy: {chem.total_energy(conn):2.3f}")
+			ui.confirm()
+
+	elif mode == penrose_mode:
+		but = st.button("Recalculate physics")
+		if but: 
+			chem.update_physics(conn,model = "penrose",nb = 0, eb = 0, fast=False)
+
+	
+	G = chem.graph(conn)
+	gv.view_energy(G,conn)
+	gv.view_degrees(G,conn)
+	gv.view_spectrum(G,conn)
+
 
 def edge_entry(conn):
 	node_1 = ui.known_field_input(conn,"Source",offset=0)
