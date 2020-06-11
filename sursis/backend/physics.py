@@ -12,7 +12,10 @@ def physics(graph : nx.Graph,
 	m = mass(graph)	
 	if model == "penrose":
 		return m, least_squares_potential(graph,m)
-	else: 
+	elif model == "dirichlet": 
+		return m, dirichlet_potential(graph,m, boundary_value,\
+													crit_degree)
+	else:
 		return m, constrained_potential(graph,m, boundary_value,\
 														crit_degree,bracket, fast)
 
@@ -76,16 +79,16 @@ def dirichlet_potential(graph: nx.Graph,
 			mass: np.ndarray,
 			boundary_value,
 			crit_degree,
-			max_iter = 1000,
+			max_iter = 30,
 			tol = 1e-6):
-	boundary = boundary(graph, crit_degree)
-	internal   = internal(graph, crit_degree)
+	boundary_nodes = boundary(graph, crit_degree)
+	internal_nodes  = internal(graph, crit_degree)
 	deg = list(dict(graph.degree()).values())
 	
 	A = nx.adjacency_matrix(graph)
-	phi =np.empty((graph.number_of_nodes(),))
+	phi = -0.1*np.ones((graph.number_of_nodes(),))
 	
-	phi[boundary] = boundary_value
+	phi[boundary_nodes] = boundary_value
 
 	# A fixed point of x[n+1]=C*x[n]+b is such that
 	# x = Cx+b => (I-C) x = b =>x = inv(I-C)*b
@@ -99,10 +102,13 @@ def dirichlet_potential(graph: nx.Graph,
 	err = np.inf; iter = 0
 	while err>tol and iter < max_iter:
 		phi_hat = phi.copy()
-		for row in internal:
-			phi_hat[row] = np.dot(A[row,:],phi)/deg[row] + mass[row]
+		for row in internal_nodes:
+			z = np.dot(A[row,:].todense(),phi)
+			phi_hat[row] = z.reshape(-1,)[0]/deg[row] - mass[row]
+			
 		err = scipy.linalg.norm(phi_hat - phi)
+		print(iter,err)
 		phi = phi_hat.copy()
 		iter += 1
-	logging.info(f"After {iter} steps, error of {err:.4e}")
+	logging.info(f"After {iter} steps, estimate change of {err:.4e}")
 	return phi
