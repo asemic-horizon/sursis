@@ -17,7 +17,10 @@ def surefloat(s):
     if isinstance(s,float) or isinstance(s,int):
         return s
     if isinstance(s,str) and is_numericstring(s):
-        return float(s)
+        try:
+            return float(s)
+        except:
+            return 0
     else:
         return 0
 
