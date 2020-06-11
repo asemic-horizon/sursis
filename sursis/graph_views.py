@@ -14,13 +14,13 @@ import viz
 #cmap = "RdYlBu"
 #cmap = "PuOr"
 #cmap = "jet"
-#cmap = "coolwarm"
+cmap = "coolwarm"
 #cmap = "bwr"
 #cmap = "gist_stern"
 #cmap = "PiYG_r"
 #cmap = "Spectral"
 #cmap = "nipy_spectral_r"
-cmap = "terrain_r"
+#cmap = "terrain_r"
 
 def plot_degree_distribution(graph):
 	deg, cnt = stats.degree_distribution(graph)
