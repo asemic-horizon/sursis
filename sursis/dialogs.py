@@ -32,14 +32,13 @@ def spaths(conn):
 	gv.spaths(G,conn,node_1,node_2)
 
 def advanced(conn):
-	bvp_mode = "Boundary value"
+	dir_mode = "Dirichlet"
+	bvp_mode = "Constrained least squares"
 	penrose_mode = "Penrose"
-	core_mode = "Core value"
-	mode = st.radio("Physics mode",[bvp_mode, core_mode, penrose_mode])	
+	mode = st.radio("Physics mode",[bvp_mode, dir_mode, penrose_mode])	
 	if mode == bvp_mode:
 		nb = chem.boundary(conn,"nodes",deg=2)
 		eb = chem.boundary(conn,"edges",deg=2)
-		st.write(f"Current boundary values - nodes: {nb}, edges: {eb}")
 		nb = st.number_input("Node boundary values",step=0.001,format="%2.4e")
 		eb = st.number_input("Edge boundary values",step=0.001,format="%2.4e")
 		but = st.button("Recalculate physics")
@@ -47,17 +46,14 @@ def advanced(conn):
 			chem.update_physics(conn,model = "bvp",nb = nb, eb = eb, fast=False)
 			st.write(f"System energy: {chem.total_energy(conn):2.3f}")
 			ui.confirm()
-	elif mode == core_mode:
-		graph = chem.graph(conn)
-		crit_degree = max([d for n, d in graph.degree()])
-		nb = chem.boundary(conn,"nodes",deg=crit_degree)
-		eb = chem.boundary(conn,"edges",deg=crit_degree)
-		st.write(f"Current boundary values - nodes: {nb}, edges: {eb}")
-		nb = st.number_input("Node boundary values",step=0.001,format="%2.4e")
-		eb = st.number_input("Edge boundary values",step=0.001,format="%2.4e")
+	elif mode == dir_mode:
+		nb = chem.boundary(conn,"nodes",deg=2)
+		eb = chem.boundary(conn,"edges",deg=2)
+		nb = st.number_input("Node boundary values",step=5e-3,format="%2.4e")
+		eb = st.number_input("Edge boundary values",step=0.0,format="%2.4e")
 		but = st.button("Recalculate physics")
 		if but: 
-			chem.update_physics(conn,model = "core",nb = nb, eb = eb, fast=False)
+			chem.update_physics(conn,model = "dirichlet",nb = nb, eb = eb, fast=False)
 			st.write(f"System energy: {chem.total_energy(conn):2.3f}")
 			ui.confirm()
 
