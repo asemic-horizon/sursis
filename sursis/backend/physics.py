@@ -5,6 +5,18 @@ import networkx as nx
 import scipy
 import numpy as np
 
+
+def physics(graph : nx.Graph,
+			boundary_value = 0.025, model = None,\
+			bracket=(-np.inf,np.inf), crit_degree=2, fast = True ):
+	m = mass(graph)	
+	if model == "penrose":
+		return m, least_squares_potential(graph,m)
+	else: 
+		return m, constrained_potential(graph,m, boundary_value,\
+														crit_degree,bracket, fast)
+
+
 def boundary(graph,crit_degree):
 	 return [n\
 	 			 for n,f in enumerate(graph.nodes)\
@@ -55,10 +67,3 @@ def constrained_potential(graph: nx.Graph,
 		max_iter = 10 if fast else 5000)
 	logging.info("Optimality: " + sol.message)
 	return sol.x
-
-def physics(graph : nx.Graph,
-			boundary_value = 0.025, model = None, bracket=(-np.inf,np.inf), crit_degree=2, fast = True ):
-	m = mass(graph)	
-	if model == "penrose":
-		return m, least_squares_potential(graph,m)
-	else: return m, constrained_potential(graph,m, boundary_value,crit_degree,bracket, fast)
