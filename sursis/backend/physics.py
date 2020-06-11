@@ -8,9 +8,6 @@ import numpy as np
 def boundary(graph,crit_degree):
 	 return [n for n,f in enumerate(graph.nodes) if graph.degree[f]==crit_degree]
 
-def test_boundary(graph,vector,crit_degree):
-	return np.median(vector[boundary(graph,crit_degree)])
-
 def least_squares_boundary(graph, value = 0.0, crit_degree=1, lower = -np.inf, higher = np.inf, eps = 1e-10):
 	n = graph.number_of_nodes()
 	lb = np.full((n,),lower)
