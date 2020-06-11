@@ -29,6 +29,9 @@ def fit_power_distribution(deg,cnt):
 
 def leaf_analysis(graph):
 	deg, cnt = degree_distribution(graph)
+	leaves = filter(lambda x: graph.degree(x)==1, graph.nodes())
+	leaves = list(leaves)
+	print(leaves)
 	k, slope = fit_power_distribution(deg,cnt)
-	return cnt[0],k,slope
+	return len(leaves),k,slope
 
