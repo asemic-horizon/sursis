@@ -15,16 +15,12 @@ def least_squares_boundary(graph, value = 0.0, crit_degree=1, lower = -np.inf, h
 	gb = boundary(graph,crit_degree)
 	lb[gb] = value-eps
 	ub[gb] = value+eps
-	#print(lb)
 	return (lb,ub)
 
 def mass(graph):
 	m1 = nx.betweenness_centrality(graph)
 	m1 = np.array(list(dict(m1).values()))
-	metric = m1#0.95*m1/np.sum(m1) + 0.05*m0/np.sum(m0)
-	#metric = np.log(1+metric)
-	metric = metric/np.sum(metric)
-	return metric
+	return m1/np.sum(m1)
 
 def penrose_potential(graph : nx.Graph,mass : np.ndarray):
 	rho = mass.reshape(1,-1)
