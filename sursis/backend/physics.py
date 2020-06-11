@@ -42,7 +42,7 @@ def penrose_potential(graph : nx.Graph,mass : np.ndarray):
 
 def least_squares_potential(graph: nx.Graph, mass : np.ndarray):
 	rho = mass.reshape(-1,1)
-	L = nx.la.placian_matrix(graph)
+	L = nx.laplacian_matrix(graph)
 	sol = scipy.sparse.linalg.lsmr(L, -rho,damp=1e-3)
 	return sol[0]
 
@@ -68,11 +68,11 @@ def potential(graph: nx.Graph,
 	return sol.x
 
 def physics(graph : nx.Graph,
-			boundary_value = 0.025, 
-			bracket=(-np.inf,np.inf), crit_degree=2,
-			fast = True ):
+			boundary_value = 0.025, model = None, bracket=(-np.inf,np.inf), crit_degree=2, fast = True ):
 	m = mass(graph)	
-	return m, potential(graph,m, boundary_value,crit_degree,bracket, fast)
+	if model == "penrose":
+		return m, least_squares_potential(graph,m)
+	else: return m, potential(graph,m, boundary_value,crit_degree,bracket, fast)
 
 def autophysics(graph, 
 				initial_boundary = 0, 

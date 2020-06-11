@@ -65,15 +65,11 @@ def digraph(conn, center = None, radius = None, prop = "energy"):
     return G    
 
 
-def update_physics(conn,node_boundary = None, edge_boundary = None, fast = True):
-    if node_boundary is None:
-        node_boundary = boundary(conn,"nodes")
-    if edge_boundary is None:
-        edge_boundary = boundary(conn,"edges")
+def update_physics(conn,model="bvp", nb = None, eb = None, fast = True):
     G = graph(conn, center = None)
     logging.info("Calculate node physics")
     # NODES
-    mass, energy = phys.physics(graph=G, boundary_value = node_boundary,fast=fast)
+    mass, energy = phys.physics(graph=G, model=model, boundary_value = nb, bracket=(-np.inf,np.inf),fast=fast)
     for node, mass, energy in zip(G.nodes(), mass, energy):
         db.push(conn,\
             """UPDATE nodes SET mass = ?, energy = ?, degree = ? 
@@ -83,7 +79,7 @@ def update_physics(conn,node_boundary = None, edge_boundary = None, fast = True)
     # EDGES
     logging.info("Calculate edge physics")
     H = dual(G); del G
-    mass, energy = phys.physics(graph=H,boundary_value=edge_boundary,fast=fast)
+    mass, energy = phys.physics(graph=H, model=model, boundary_value=eb,bracket=(-np.inf,np.inf),fast=fast)
     values = [(u,v,m,p) for (u,v),m, p in zip(H.nodes(),mass,energy)]
 
     for u, v,  mass, energy in values: 
