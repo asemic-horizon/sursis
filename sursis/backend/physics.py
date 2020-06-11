@@ -6,12 +6,15 @@ import scipy
 import numpy as np
 
 def boundary(graph,crit_degree):
-	 return [n for n,f in enumerate(graph.nodes) if graph.degree[f]==crit_degree]
+	 return [n\
+	 			 for n,f in enumerate(graph.nodes)\
+	 			 if graph.degree[f]==crit_degree]
 
-def least_squares_boundary(graph, value = 0.0, crit_degree=1, lower = -np.inf, higher = np.inf, eps = 1e-10):
+def least_squares_boundary(graph, value = 0.0, crit_degree=1,\
+										 lower = -np.inf, higher = np.inf,\
+										 eps = 1e-10):
 	n = graph.number_of_nodes()
-	lb = np.full((n,),lower)
-	ub = np.full((n,),higher)
+	lb = np.full((n,),lower); ub = np.full((n,),higher)
 	gb = boundary(graph,crit_degree)
 	lb[gb] = value-eps
 	ub[gb] = value+eps
@@ -42,7 +45,8 @@ def constrained_potential(graph: nx.Graph,
 			  fast = True):
 	rho = mass.reshape(-1,)
 	L = nx.laplacian_matrix(graph)
-	bounds = least_squares_boundary(graph, boundary_value,crit_degree, *bracket)
+	bounds = least_squares_boundary(graph, boundary_value,\
+														crit_degree, *bracket)
 	logging.info(f"Fast recalc: {fast}")
 	sol = scipy.optimize.lsq_linear(
 		L,
@@ -50,8 +54,6 @@ def constrained_potential(graph: nx.Graph,
 		bounds=bounds,
 		max_iter = 10 if fast else 5000)
 	logging.info("Optimality: " + sol.message)
-	btest = '\n'.join([f"Effective {t}-nodes: {test_boundary(graph,sol.x,t)}" for t in range(1,1+crit_degree)])
-	logging.info(btest)
 	return sol.x
 
 def physics(graph : nx.Graph,
