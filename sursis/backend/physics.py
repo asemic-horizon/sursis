@@ -11,27 +11,31 @@ def physics(graph : nx.Graph,
 			bracket=(-np.inf,np.inf), crit_degree=2, fast = True ):
 	m = mass(graph)	
 	if model == "penrose":
-		return m, least_squares_potential(graph,m)
+		return m, lsq(graph,m)
 	elif model == "dirichlet": 
-		return m, dirichlet_potential(graph,m, boundary_value,\
-													crit_degree)
+		return m, forced_boundary(graph,
+								  mass = m, 
+								  boundary_value = boundary_value,
+   								  crit_degree = crit_degree)
 	else:
-		return m, constrained_potential(graph,m, boundary_value,\
-														crit_degree,bracket, fast)
+		return m, constrained_lsq(graph,
+								  mass = m, 
+								  boundary_value = boundary_value,
+   								  crit_degree = crit_degree,
+   								  fast=fast)
 
 def boundary(graph,crit_degree):
-	 return [n\
-	 			 for n,f in enumerate(graph.nodes)\
-	 			 if graph.degree[f]==crit_degree]
+	 return [n for n,f in enumerate(graph.nodes)\
+	 	       if graph.degree[f]==crit_degree]
 
 def internal(graph,crit_degree):
 	 return [n\
 	 			 for n,f in enumerate(graph.nodes)\
 	 			 if graph.degree[f]!=crit_degree]
 
-def least_squares_boundary(graph, value = 0.0, crit_degree=1,\
-										 lower = -np.inf, higher = np.inf,\
-										 eps = 1e-10):
+def lsq_boundary(graph, value = 0.0, crit_degree=1,
+				 lower = -np.inf, higher = np.inf,\
+				 eps = 1e-10):
 	n = graph.number_of_nodes()
 	lb = np.full((n,),lower); ub = np.full((n,),higher)
 	gb = boundary(graph,crit_degree)
@@ -40,23 +44,18 @@ def least_squares_boundary(graph, value = 0.0, crit_degree=1,\
 	return (lb,ub)
 
 def mass(graph):
-	m1 = nx.betweenness_centrality(graph)
+	m1 = nx.eigenvector_centrality(graph)
 	m1 = np.array(list(dict(m1).values()))
+	
 	return m1/np.sum(m1)
 
-def penrose_potential(graph : nx.Graph,mass : np.ndarray):
-	rho = mass.reshape(1,-1)
-	L = nx.laplacian_matrix(graph)
-	L_inv = scipy.linalg.pinv(L.todense())
-	return L_inv.dot(mass)
-
-def least_squares_potential(graph: nx.Graph, mass : np.ndarray):
+def lsq(graph: nx.Graph, mass : np.ndarray):
 	rho = mass.reshape(-1,1)
 	L = nx.laplacian_matrix(graph)
 	sol = scipy.sparse.linalg.lsmr(L, -rho,damp=1e-3)
 	return sol[0]
 
-def constrained_potential(graph: nx.Graph,
+def constrained_lsq(graph: nx.Graph,
 			  mass: np.ndarray, 
 			  boundary_value,
 			  crit_degree,
@@ -64,7 +63,7 @@ def constrained_potential(graph: nx.Graph,
 			  fast = True):
 	rho = mass.reshape(-1,)
 	L = nx.laplacian_matrix(graph)
-	bounds = least_squares_boundary(graph, boundary_value,\
+	bounds = lsq_boundary(graph, boundary_value,\
 														crit_degree, *bracket)
 	logging.info(f"Fast recalc: {fast}")
 	sol = scipy.optimize.lsq_linear(
@@ -75,7 +74,7 @@ def constrained_potential(graph: nx.Graph,
 	logging.info("Optimality: " + sol.message)
 	return sol.x
 
-def dirichlet_potential(graph: nx.Graph,
+def forced_boundary(graph: nx.Graph,
 			mass: np.ndarray,
 			boundary_value,
 			crit_degree,
