@@ -66,9 +66,7 @@ with nc() as conn:
 		dlg.advanced(conn)
 	elif op_mode == view_mode:
 		ui.separator()
-		full_graph = st.checkbox("Full graph",value=False)
-		communities = st.checkbox("Communities", value = False)
-	
+		full_graph = st.checkbox("Full graph",value=False)	
 		if full_graph:
 			center, radius = None, None
 		if not full_graph:
@@ -78,7 +76,7 @@ with nc() as conn:
 			center = st.selectbox("Choose nodes",fields,index = u)
 			radius = st.number_input("Radius",value=3)
 		G = chem.graph(conn,center,radius)
-		gv.graph_plot(G, conn,center,radius, communities)
+		gv.graph_plot(G, conn,center,radius)
 
 		mintree = st.checkbox("Minimum tree", value = False)
 		if mintree:	gv.mintree(G,conn)
