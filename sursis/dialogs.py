@@ -4,9 +4,11 @@ logging.basicConfig(filename="physics.log",level = logging.INFO)
 
 import streamlit as st
 from itertools import combinations
+import json
 from numpy.random import randint
 
 import ui_elems as ui
+import viz
 import graph_views as gv
 from backend import db
 from backend import graph_physics as chem
@@ -32,39 +34,39 @@ def spaths(conn):
 	gv.spaths(G,conn,node_1,node_2)
 
 def advanced(conn):
+	ui.separator()
+
 	dir_mode = "Dirichlet"
 	bvp_mode = "Constrained least squares"
 	penrose_mode = "Penrose"
-	mode = st.radio("Physics mode",[bvp_mode, dir_mode, penrose_mode])	
-	if mode == bvp_mode:
-		nb = chem.boundary(conn,"nodes",deg=2)
-		eb = chem.boundary(conn,"edges",deg=2)
-		nb = st.number_input("Node boundary values",step=0.001,format="%2.4e")
-		eb = st.number_input("Edge boundary values",step=0.001,format="%2.4e")
-		but = st.button("Recalculate physics")
-		if but: 
-			chem.update_physics(conn,model = "bvp",nb = nb, eb = eb, fast=False)
-			st.write(f"System energy: {chem.total_energy(conn):2.3f}")
-			ui.confirm()
-	elif mode == dir_mode:
-		nb = chem.boundary(conn,"nodes",deg=2)
-		eb = chem.boundary(conn,"edges",deg=2)
-		nb = st.number_input("Node boundary values",step=5e-3,format="%2.4e")
-		eb = st.number_input("Edge boundary values",step=0.0,format="%2.4e")
-		but = st.button("Recalculate physics")
-		if but: 
-			chem.update_physics(conn,model = "dirichlet",nb = nb, eb = eb, fast=False)
-			st.write(f"System energy: {chem.total_energy(conn):2.3f}")
-			ui.confirm()
 
-	elif mode == penrose_mode:
-		but = st.button("Recalculate physics")
-		if but: 
-			chem.update_physics(conn,model = "penrose",nb = 0, eb = 0, fast=False)
+	model_names = {dir_mode:"dirichlet",bvp_mode:"bvp",penrose_mode:"penrose"}
+	mode = st.radio("Physics mode",[dir_mode,bvp_mode, penrose_mode])	
 
-	
+	with open("physics.json","r") as f: pa = json.load(f)
+
+	od = st.number_input("Critical outer boundary degree",step=1,value=pa['crit_degree'])
+	cd = st.number_input("Critical core boundary number",step=1,value=pa['crit_core_number'])
+	nb = chem.boundary(conn,"nodes",deg=2)
+	eb = chem.boundary(conn,"edges",deg=2)
+	ui.separator()
+	nb = st.number_input("Outer boundary value",value=pa['outer_boundary_value'],format="%2.6f")
+	cb = st.number_input("Core boundary value",value=pa['core_boundary_value'],format="%2.6f")
+	but = st.button("Recalculate physics")
+
+
+	physics_args = {"outer_boundary_value":nb, "core_boundary_value":cb, "crit_degree": od,
+					"crit_core_number": cd, "fast": False}
+	if but: 
+		with open("physics.json","w") as f: json.dump(physics_args,f)
+		chem.update_physics(conn,model = model_names[mode], **physics_args)
+		ui.confirm()
+
+	ui.separator()
 	G = chem.graph(conn)
 	gv.view_energy(G,conn)
+	ui.separator()
+	viz.draw(G,conn,cmap="jet",labels=False)
 	gv.view_degrees(G,conn)
 	gv.view_spectrum(G,conn)
 

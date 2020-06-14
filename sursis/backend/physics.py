@@ -6,14 +6,14 @@ import scipy
 import numpy as np
 
 def mass(graph):
-	m1 = nx.eigenvector_centrality(graph)
+	m1 = nx.betweenness_centrality(graph)
 	m1 = np.array(list(dict(m1).values()))
 	
 	return m1/np.sum(m1)
 
-def physics(graph : nx.Graph, model : str, *args, **kwargs):
+def physics(graph : nx.Graph, model : str, fast: bool = False,  *args, **kwargs):
 	m = mass(graph).reshape(-1,1)
-
+	graph.remove_edges_from(nx.selfloop_edges(graph))
 	if model == "penrose":
 		phi = lsq(graph,m, *args, **kwargs)
 	elif model == "dirichlet": 
@@ -24,42 +24,56 @@ def physics(graph : nx.Graph, model : str, *args, **kwargs):
 
 ## SOLVERS
 
-def lsq(graph: nx.Graph, mass : np.ndarray):
+def lsq(graph: nx.Graph, mass : np.ndarray,*args, **kwargs):
 	laplacian = nx.laplacian_matrix(graph)
 	sol = scipy.sparse.linalg.lsmr(laplacian, -mass,damp=1e-3)
 	return sol[0]
 
 def constrained_lsq(graph: nx.Graph, mass: np.ndarray, 
-		 		    boundary_value: float,
+		 		    outer_boundary_value: float,
+		 		    core_boundary_value: float,
 				    crit_degree: int,
-				    bracket,
-				    fast = True):
-	sol = scipy.optimize.lsq_linear(
-		laplacian,
-		-mas,
-		bounds = boundary_bounds(graph, boundary_value, crit_degree, *bracket),
-		max_iter = 10 if fast else 5000)
+				    crit_core_number: int,
+				    max_iter: int = 50,
+				    tol : float = 1e-6):
+
+	n = graph.number_of_nodes()
+	outer_boundary_nodes = outer_boundary(graph,crit_degree)
+	core_boundary_nodes = core_boundary(graph,crit_core_number)
+	lb = np.full((n,),lower); ub = np.full((n,),higher)
+	lb[outer_boundary_nodes] = outer_boundary_value-eps
+	ub[outer_boundary_nodes] = outer_boundary_value+eps
+	lb[core_boundary_nodes] = core_boundary_value-eps
+	ub[core_boundary_nodes] = outer_boundary_value+eps
+	
+	sol = scipy.optimize.lsq_linear(laplacian,-mass,bounds = (lb,ub), max_iter = max_iter )
 	logging.info("Optimality: " + sol.message)
 	return sol.x
 
 def forced_boundary(graph: nx.Graph,
 			mass: np.ndarray,
-			boundary_value: float,
+			outer_boundary_value: float,
+			core_boundary_value: float,
 			crit_degree: int,
-			max_iter = 30,
-			tol = 1e-6):
+			crit_core_number: int,
+			max_iter = 330,
+			tol = 1e-1):
 
 	A = nx.adjacency_matrix(graph)
-	deg = list(dict(graph.degree()).values())
+	deg = np.array(list(dict(graph.degree()).values()))
+	deg = deg.reshape(-1,1)
+	core_boundary_nodes = core_boundary(graph,crit_core_number)
+	outer_boundary_nodes = outer_boundary(graph,crit_degree)
 
-	boundary_nodes = boundary(graph, crit_degree)
-	interior_nodes  = interior(graph, crit_degree)
+	interior_nodes = outer_interior(graph, crit_degree) \
+					+ core_interior(graph,crit_core_number)
 
 	# initial guess
-	phi = -0.1*np.ones((graph.number_of_nodes(),))
-
+	phi = lsq(graph,mass)
+	#phi = np.random.uniform(low=-0.001, high=0.001, size=(graph.number_of_nodes(),))
 	# fix boundary nodes
-	phi[boundary_nodes] = boundary_value
+	phi[core_boundary_nodes] = core_boundary_value
+	phi[outer_boundary_nodes] = outer_boundary_value
 
 	# solve for interior nodes
 	#
@@ -69,37 +83,40 @@ def forced_boundary(graph: nx.Graph,
 	# Apply this idea for L = (D-A) = D(I-inv(D)*A)
 	# iteration is phi' = inv(D)*(A*phi) + (-mass)
 
+
 	err = np.inf; iter = 0
 	while err>tol and iter < max_iter:
 		phi_update = phi.copy()
-		for row in interior_nodes:
+		sweep = interior_nodes.copy(); np.random.shuffle(sweep)
+		for row in sweep:
 			forward = np.dot(A[row,:].todense(),phi).reshape(-1,1)[0]
 			phi_update[row] = forward/deg[row] - mass[row]
 			
 		err = scipy.linalg.norm(phi_update - phi)
 		phi = phi_update.copy()
+		print(iter,err)
 		iter += 1
 	logging.info(f"After {iter} steps, estimate change of {err:.4e}")
 	return phi
 
 ## TOPOLOGY UTILS
 
-def boundary(graph,crit_degree):
+def outer_boundary(graph,crit_degree):
 	return [n for n,f in enumerate(graph.nodes)\
 	 	       if graph.degree[f]==crit_degree]
 
-def interior(graph,crit_degree):
+def outer_interior(graph,crit_degree):
 	return [n for n,f in enumerate(graph.nodes)\
 	 	       if graph.degree[f]!=crit_degree]
 
-def boundary_bounds(graph, value = 0.0, crit_degree=1,
-				 lower = -np.inf, higher = np.inf,\
-				 eps = 1e-10):
-	n = graph.number_of_nodes()
-	lb = np.full((n,),lower); ub = np.full((n,),higher)
-	gb = boundary(graph,crit_degree)
-	lb[gb] = value-eps
-	ub[gb] = value+eps
-	return (lb,ub)
 
+def core_boundary(graph,crit_core_number):
+	cores = nx.algorithms.core.core_number(graph)
+	return [n for n,f in enumerate(graph.nodes)\
+				if cores[f]==crit_core_number]
+
+def core_interior(graph,crit_core_number):
+	cores = nx.algorithms.core.core_number(graph)
+	return [n for n,f in enumerate(graph.nodes)\
+				if cores[f]!=crit_core_number]
 
