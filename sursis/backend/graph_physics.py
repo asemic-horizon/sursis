@@ -12,7 +12,7 @@ from numpy import array
 
 def get_physics(conn, index, table):
     query = f"SELECT {index}, energy, mass, degree FROM {table}"
-    return np.array(db.run_sql(conn,query).fetchall())
+    return db.run_sql(conn,query).fetchall()
 
 
 def graph(conn, center = None, radius = None, prop = "energy"):
@@ -27,11 +27,7 @@ def graph(conn, center = None, radius = None, prop = "energy"):
                 degree=int(db.surefloat(degree)))
     for u,v, energy, mass, degree in edges:
         if u in G.nodes() and v in G.nodes():
-            if energy and mass:
-                w = norm.cdf(0.1 - db.surefloat(energy)*db.surefloat(mass))
-            else:
-                w = 0.5
-            G.add_edge(u,v,weight=w if w>0 else 0, 
+            G.add_edge(u,v,
                 energy = db.surefloat(energy), 
                 mass = db.surefloat(mass),
                 degree = int(db.surefloat(degree)))
@@ -39,37 +35,27 @@ def graph(conn, center = None, radius = None, prop = "energy"):
         G = nx.ego_graph(G,n=center, radius=radius)
     return G
 
-def digraph(conn, center = None, radius = None, prop = "energy"):
-    nodes = get_physics(conn, index = "name", table =  "nodes")
-    edges = get_physics(conn, index = "node_1, node_2", table = "named_edges")
-    G = nx.DiGraph()
-    for node, energy, mass, degree in nodes:
-        G.add_node(node, 
-                weight=db.surefloat(energy), 
-                energy=db.surefloat(energy), 
-                mass = db.surefloat(mass), 
-                degree=int(db.surefloat(degree)))
-    for u,v, energy, mass, degree in edges:
-        if u in G.nodes() and v in G.nodes():
-            w = 1/norm.cdf(0.1 - db.surefloat(energy)*db.surefloat(mass))
-            if db.surefloat(energy) >= 0:
-                source, sink = u, v
-            else:
-                source, sink = v, u            
-            G.add_edge(source,sink,weight=w if w>0 else 0, 
-                energy = db.surefloat(energy), 
-                mass = db.surefloat(mass),
-                degree = int(db.surefloat(degree)))
-    if center and radius:
-        G = nx.ego_graph(G,n=center, radius=radius)
-    return G    
 
-
-def update_physics(conn,model="bvp", nb = None, eb = None, fast = True):
+def update_physics(conn,
+                   model="bvp",
+                   edges = False, 
+                   outer_boundary_value = None, 
+                   core_boundary_value = None,
+                   fast = True,
+                   crit_degree = 1,
+                   crit_core_number = 5,
+                   max_iter = 100,tol=0.1):
     G = graph(conn, center = None)
     logging.info("Calculate node physics")
-    # NODES
-    mass, energy = phys.physics(graph=G, model=model, boundary_value = nb, bracket=(-np.inf,np.inf),fast=fast)
+    # NODE
+    mass, energy = phys.physics(graph=G, 
+                                model=model, 
+                                outer_boundary_value = outer_boundary_value,
+                                core_boundary_value = core_boundary_value,
+                                crit_degree=crit_degree,
+                                crit_core_number = crit_core_number,
+                                max_iter = max_iter,tol=tol,
+                                fast = fast)
     for node, mass, energy in zip(G.nodes(), mass, energy):
         db.push(conn,\
             """UPDATE nodes SET mass = ?, energy = ?, degree = ? 
@@ -77,20 +63,30 @@ def update_physics(conn,model="bvp", nb = None, eb = None, fast = True):
                mass, energy, G.degree[node],node)
 
     # EDGES
-    logging.info("Calculate edge physics")
-    H = dual(G); del G
-    mass, energy = phys.physics(graph=H, model=model, boundary_value=eb,bracket=(-np.inf,np.inf),fast=fast)
-    values = [(u,v,m,p) for (u,v),m, p in zip(H.nodes(),mass,energy)]
+    if edges:
+        logging.info("Calculate edge physics")
+        H = dual(G); del G
+        mass, energy = phys.physics(graph=H, 
+                                    model=model, 
+                                    outer_boundary_value = outer_boundary_value,
+                                    core_boundary_value = core_boundary_value,
+                                    crit_degree=crit_degree,
+                                    crit_core_number = crit_core_number,
+                                    fast = fast)
+        values = [(u,v,m,p) for (u,v),m, p in zip(H.nodes(),mass,energy)]
 
-    for u, v,  mass, energy in values: 
-        n1 = min(u,v); n2 = max(u,v)
-        id_1, id_2 = db.get_node_id(conn,n1), db.get_node_id(conn,n2)
-        db.push(conn,\
-            """UPDATE edges SET mass = ?, energy = ?, degree = ? 
-                WHERE (left  = ? and right = ?)
-                   OR (right = ? and left  = ?) """, 
-                   mass, energy, H.degree[(u,v)], id_1, id_2, id_1, id_2)
+        for u, v,  mass, energy in values: 
+            n1 = min(u,v); n2 = max(u,v)
+            id_1, id_2 = db.get_node_id(conn,n1), db.get_node_id(conn,n2)
+            db.push(conn,\
+                """UPDATE edges SET mass = ?, energy = ?, degree = ? 
+                    WHERE (left  = ? and right = ?)
+                       OR (right = ? and left  = ?) """, 
+                       mass, energy, H.degree[(u,v)], id_1, id_2, id_1, id_2)
 
+def reset_physics(conn):
+    db.push(conn, "UPDATE nodes SET mass =0, energy = 0")
+    db.push(conn, "UPDATE edges SET mass = 0, energy = 0 ")
 
 def read_node_prop(conn,subgraph,prop="energy"):
     nodes = list(subgraph.nodes())

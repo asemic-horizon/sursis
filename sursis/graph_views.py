@@ -14,7 +14,8 @@ import viz
 #cmap = "RdYlBu"
 #cmap = "PuOr"
 #cmap = "jet"
-cmap = "coolwarm"
+cmap = "rainbow"
+#cmap = "coolwarm"
 #cmap = "bwr"
 #cmap = "gist_stern"
 #cmap = "PiYG_r"
@@ -90,45 +91,39 @@ def stats_view(graph):
 def sufficient(graph):
 	return graph.number_of_nodes() > 5
 
-def graph_plot(G, conn, center, radius, communities = False):
+def graph_plot(G, conn, center, radius):
 	full_graph = center is None
-	if full_graph: pos = nx.kamada_kawai_layout
+	if full_graph: pos = nx.spectral_layout
 	# a = -chem.subgraph_energy(conn,G)
 	# b = -chem.total_energy(conn)
 	# st.write(f"Net gravity = **{a:2.3f}** - {b:2.3f} = {a-b:2.3f}")
 	try:
 		leaves, expected_leaves, slope = stats.leaf_analysis(G)
-		print(leaves)
 		st.write(f"{leaves}/{expected_leaves:1.0f} = {slope:1.2f}")
 	except:
 		pass
 	viz.draw(G,conn,labels = not full_graph, cmap=cmap)
-	try:
-		out, coll = chem.gravity_partition(G,conn)
-		ui.separator()
-		st.write("### Expanding")
-		viz.draw(out,conn,cmap=cmap)
-		st.write("### Collapsing")
-		viz.draw(coll,conn,cmap=cmap)
-	except:
-		st.write("Couldn't make expanding/collapsing subsets")
 
 	if full_graph:
 		ui.separator()
-		st.write("### Components")
 		S = [G.subgraph(c).copy() for c in nx.connected_components(G)]
-		for subgraph in S:
-			viz.draw(subgraph, conn, cmap = cmap)
-			ui.separator()
+		if len(S)>1: 
+			st.write("### Components")
+			for subgraph in S:
+				viz.draw(subgraph, conn, cmap = cmap)
+				ui.separator()
 
-	if sufficient(G) and communities:
+	if sufficient(G):
 		u = nx.algorithms.community.kernighan_lin.kernighan_lin_bisection(G)
 		thresh = 4 if full_graph else 4
 		S = [G.subgraph(c).copy() for c in u if len(c)>thresh]
-		st.write("### Communities")
-		for subgraph in S:
-			viz.draw(subgraph, conn, cmap = cmap)
-			ui.separator()
+		side_a, side_b = S
+		st.write("### Side A")
+		viz.draw(side_a, conn, cmap = cmap,labels = not full_graph)
+		st.write("### Side B")
+		viz.draw(side_b, conn, cmap = cmap, labels = not full_graph)
+		ui.separator()
+
 
 def spaths(G,conn, source, target):
 	ps = nx.algorithms.shortest_paths.\
@@ -160,20 +155,21 @@ def lpaths(G, conn, source, target):
 
 
 def mintree(G,conn):
-
+	labels = G.number_of_nodes()<50
 	if sufficient(G):
 		H = nx.minimum_spanning_tree(G)
 		ui.separator()
 		st.write("#### Minimum tree")
-		viz.draw(H, conn, cmap = cmap)
+		viz.draw(H, conn, labels=labels, cmap = cmap)
 		st.pyplot()
 
 def maxtree(G,conn):
+	labels = G.number_of_nodes()<50
 
 	if sufficient(G):
 		J = nx.maximum_spanning_tree(G)
 		st.write("#### Maximum tree")
-		viz.draw(J, conn, cmap = cmap)
+		viz.draw(J, conn, labels = labels, cmap = cmap)
 		st.pyplot()
 
 def view_energy(G,conn):
