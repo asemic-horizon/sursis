@@ -114,16 +114,17 @@ def graph_plot(G, conn, center, radius):
 				ui.separator()
 
 	if sufficient(G):
-		u = nx.algorithms.community.kernighan_lin.kernighan_lin_bisection(G)
-		thresh = 4 if full_graph else 4
-		S = [G.subgraph(c).copy() for c in u if len(c)>thresh]
-		side_a, side_b = S
-		st.write("### Side A")
-		viz.draw(side_a, conn, cmap = cmap,labels = not full_graph)
-		st.write("### Side B")
-		viz.draw(side_b, conn, cmap = cmap, labels = not full_graph)
-		ui.separator()
-
+		try:
+			u = nx.algorithms.community.kernighan_lin.kernighan_lin_bisection(G)
+			thresh = 4 if full_graph else 4
+			S = [G.subgraph(c).copy() for c in u if len(c)>thresh]
+			side_a, side_b = S[0],S[1]
+			st.write("### Side A")
+			viz.draw(side_a, conn, cmap = cmap,labels = not full_graph)
+			st.write("### Side B")
+			viz.draw(side_b, conn, cmap = cmap, labels = not full_graph)
+			ui.separator()
+		except: pass
 
 def spaths(G,conn, source, target):
 	ps = nx.algorithms.shortest_paths.\
