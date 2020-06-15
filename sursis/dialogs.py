@@ -50,8 +50,8 @@ def advanced(conn):
 	nb = chem.boundary(conn,"nodes",deg=2)
 	eb = chem.boundary(conn,"edges",deg=2)
 	ui.separator()
-	nb = st.number_input("Outer boundary value",value=pa['outer_boundary_value'],format="%2.6f")
-	cb = st.number_input("Core boundary value",value=pa['core_boundary_value'],format="%2.6f")
+	nb = st.number_input("Outer boundary value",value=pa['outer_boundary_value'],step=0.1,format="%2.6f")
+	cb = st.number_input("Core boundary value",value=pa['core_boundary_value'],step=0.1,format="%2.6f")
 	but = st.button("Recalculate physics")
 
 
