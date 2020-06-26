@@ -44,7 +44,7 @@ def update_physics(conn,
                    fast = True,
                    crit_degree = 1,
                    crit_core_number = 5,
-                   max_iter = 100,tol=0.1):
+                   max_iter = 100,tol=1e-4):
     G = graph(conn, center = None)
     logging.info("Calculate node physics")
     # NODE

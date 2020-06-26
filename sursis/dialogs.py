@@ -4,8 +4,10 @@ logging.basicConfig(filename="physics.log",level = logging.INFO)
 
 import streamlit as st
 from itertools import combinations
+import networkx as nx
 import json
 from numpy.random import randint
+from scipy.linalg import norm
 
 import ui_elems as ui
 import viz
@@ -64,6 +66,7 @@ def advanced(conn):
 
 	ui.separator()
 	G = chem.graph(conn)
+
 	gv.view_energy(G,conn)
 	ui.separator()
 	viz.draw(G,conn,cmap="jet",labels=False)

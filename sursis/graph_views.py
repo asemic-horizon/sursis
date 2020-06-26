@@ -14,7 +14,7 @@ import viz
 #cmap = "RdYlBu"
 #cmap = "PuOr"
 #cmap = "jet"
-cmap = "rainbow"
+cmap = "inferno"
 #cmap = "coolwarm"
 #cmap = "bwr"
 #cmap = "gist_stern"

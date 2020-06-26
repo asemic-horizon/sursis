@@ -71,8 +71,8 @@ def draw(G, conn, labels = True, cmap = "terrain_r"):
         energy = np.array(chem.read_node_prop(conn,G,"energy"))
         mass = np.array(chem.read_node_prop(conn,G,"mass"))
         minm, maxm, avgm, medm = chem.prop_bounds(conn,prop="mass")
-        multiplier = -3200/np.log10(avgm)
-        node_size = 15+multiplier*mass
+        multiplier = -30800/np.log10(avgm)
+        node_size =30+multiplier*mass
         minv, maxv, avgv, medv = chem.prop_bounds(conn,slices=10)
 
         #center = chem.boundary(conn,"nodes")

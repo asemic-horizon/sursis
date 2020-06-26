@@ -6,7 +6,7 @@ import scipy
 import numpy as np
 
 def mass(graph):
-	m1 = nx.betweenness_centrality(graph)
+	m1 = nx.closeness_centrality(graph)
 	m1 = np.array(list(dict(m1).values()))
 	
 	return m1/np.sum(m1)
@@ -57,7 +57,7 @@ def forced_boundary(graph: nx.Graph,
 			crit_degree: int,
 			crit_core_number: int,
 			max_iter = 330,
-			tol = 1e-1):
+			tol = 1e-3):
 
 	A = nx.adjacency_matrix(graph)
 	deg = np.array(list(dict(graph.degree()).values()))
@@ -68,6 +68,10 @@ def forced_boundary(graph: nx.Graph,
 	interior_nodes = outer_interior(graph, crit_degree) \
 					+ core_interior(graph,crit_core_number)
 
+	# for error calculation
+
+	L = nx.laplacian_matrix(graph)
+	n = len(mass)
 	# initial guess
 	phi = lsq(graph,mass)
 	#phi = np.random.uniform(low=-0.001, high=0.001, size=(graph.number_of_nodes(),))
@@ -84,19 +88,26 @@ def forced_boundary(graph: nx.Graph,
 	# iteration is phi' = inv(D)*(A*phi) + (-mass)
 
 
-	err = np.inf; iter = 0
+	err = np.inf; iter = 0; eps = 0
+	error_history = np.empty((max_iter,))
 	while err>tol and iter < max_iter:
+		err_ = err;
 		phi_update = phi.copy()
 		sweep = interior_nodes.copy(); np.random.shuffle(sweep)
 		for row in sweep:
 			forward = np.dot(A[row,:].todense(),phi).reshape(-1,1)[0]
 			phi_update[row] = forward/deg[row] - mass[row]
 			
-		err = scipy.linalg.norm(phi_update - phi)
-		phi = phi_update.copy()
-		print(iter,err)
-		iter += 1
-	logging.info(f"After {iter} steps, estimate change of {err:.4e}")
+		err = scipy.linalg.norm(L.multiply(phi_update) - mass)/n
+		error_history[iter] = err
+		if iter>10 and err>np.mean(error_history[iter-10:iter]):
+			print(f"Difvergibg at iter {iter}, err={err}")
+			break
+		else:
+			phi = phi_update.copy()
+			print(iter,err)	
+			iter += 1
+	logging.info(f"After {iter} steps, estimate error of {err:.4e}")
 	return phi
 
 ## TOPOLOGY UTILS
