@@ -7,7 +7,7 @@ def initialize(conn):
   sql_nodes_table =\
   """CREATE TABLE IF NOT EXISTS nodes (
           id integer PRIMARY KEY,
-          name text NOT NULL,
+          name text NOT NULL UNIQUE,
           mass real,
           energy real,
           degree real);"""
@@ -55,8 +55,9 @@ def reset(conn, G):
   H = dual(G)
   for edge, data in H.nodes(data = True):
       n1 = min(edge); n2 = max(edge)
-      id_1, id_2 = db.get_node_id(conn,n1), db.get_node_id(conn,n2)
       db.push(conn,\
       	"""INSERT INTO edges (left, right, mass, energy, degree)
-      	   VALUES (?, ?, ?, ?, ?)""",
-      	   id_1, id_2, data["mass"], data["energy"], H.degree[edge])
+      	   VALUES ((SELECT id FROM nodes WHERE name LIKE ?),
+                   (SELECT id FROM nodes WHERE name LIKE ?), 
+                   ?, ?, ?)""",
+      	   n1,n2, data["mass"], data["energy"], H.degree[edge])

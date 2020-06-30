@@ -90,20 +90,16 @@ def edge_exists(conn, node_1, node_2):
     res2 = run_sql(conn,query, node_2, node_1).fetchall()
     return len(res1)>0 and len(res2)>0
 
-# This helper is necessary for inserts given as node names
-def get_node_id(conn,node):
-    try:
-        return run_sql(conn,"SELECT id FROM nodes WHERE name = ? LIMIT 1",node).fetchall()[0][0]
-    except:    
-        logging.error("Error fetching id for node " + node)
 
 # edges are written in one direction, but are assumed to be undirected
 def insert_edge(conn, node_1, node_2):
     try:
         # ensure pattern for edges where n1 dominates alphabetically
         n1, n2 = min(node_1, node_2), max(node_1,node_2)
-        id_1, id_2 = get_node_id(conn,n1),get_node_id(conn,n2)
-        return run_sql(conn,"INSERT INTO edges (left,right) VALUES (?,?)",id_1,id_2).lastrowid
+        return push(conn,
+            """INSERT INTO edges (left,right) 
+                VALUES ((SELECT id FROM nodes WHERE name LIKE ? LIMIT 1),
+                        (SELECT id FROM nodes WHERE name LIKE ? LIMIT 1))""",n1,n2)
     except:
         logging.error(f"Couldn't create edge {node_1}-{node_2}")
 
@@ -111,11 +107,12 @@ def insert_edge(conn, node_1, node_2):
 # therefore must check both ways
 
 def delete_edge(conn, node_1, node_2):
-    query = "DELETE FROM edges WHERE left = ? and right = ?"
+    query = """DELETE FROM edges WHERE 
+            left = (SELECT id FROM nodes WHERE name LIKE ?) AND
+            right = (SELECT id FROM nodes WHERE name LIKE ?);"""
     try:
-        id_1, id_2 = get_node_id(conn,node_1),get_node_id(conn,node_2)
-        run_sql(conn,query,id_1,id_2)
-        run_sql(conn,query,id_2,id_1)
+        run_sql(conn,query,node_1,node_2)
+        run_sql(conn,query,node_2,node_1)
     except:
         logging.error(f"Couldn't get nodes {node_1}-{node_2}")
 
