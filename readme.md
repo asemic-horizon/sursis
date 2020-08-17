@@ -7,7 +7,8 @@ Its basic purpose is to have a personal notebook or journal to jot down ideas, m
 The particular conceit of `Sursis` is that this journal is not written sequentially, but as a network/graph. (It's been recently compared to mind-mapping, but without exception every such tool seems to expect you to figure out a tree-like outline. `Sursis` is much, much more general if that's the comparison to be made).
 
 
-Sursis runs locally. My personal suggestion is to set it up on a cheap VPS/Digital Ocean-type VM so you'll be able to use it on your phone. I've been having great fun with it from day zero and polishing it a little more each day.
+Sursis runs locally. My personal suggestion is to set it up on a cheap VPS/Digital Ocean-type VM so you'll be able to use it on your phone. I've been having great fun with it from day zero and polishing it a little more each day. (The screenshots below are very out of date.)
+
 
 ## Input modes
 
