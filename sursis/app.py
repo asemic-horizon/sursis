@@ -1,4 +1,7 @@
 import streamlit as st
+st.set_option('deprecation.showPyplotGlobalUse', False)
+#st.beta_set_page_config(layout="wide")
+
 import networkx as nx
 #
 import backend.db as db
@@ -13,10 +16,10 @@ from backend.db import nc
 ###
 
 
-node_mode = "Nodes"
-edge_mode = "Connections"
+node_mode = "New node"
+edge_mode = "Connect"
 cluster_mode = "Cluster"
-trail_mode = "Trailing"
+trail_mode = "Trailing new"
 dyad_mode = "Dyad"
 triad_mode = "Triad"
 merge_mode = "Merge"
@@ -26,11 +29,18 @@ spath_mode = "Spath"
 
 with nc() as conn:
 	st.write("## `sursis`")
+	col1, col2 = st.beta_columns(2)
 
-	op_mode = st.radio(label="Operation mode",\
-		options=[view_mode,node_mode,trail_mode, edge_mode,
-		 cluster_mode, dyad_mode, triad_mode, merge_mode,
-		 spath_mode, stats_mode,])
+	major_mode = col1.radio(label="Major mode",\
+                              options=["Browse","Edit"])
+	if major_mode == "Browse":
+		op_mode=col2.radio(label="Operation mode",\
+			options=[view_mode, spath_mode, stats_mode])
+	elif major_mode == "Edit":
+		op_mode = col2.radio(label="Operation mode",\
+			options=[trail_mode, dyad_mode, triad_mode,merge_mode, edge_mode,
+			 node_mode,
+		 	])
 
 	if op_mode == node_mode:
 		ui.separator()
@@ -66,17 +76,19 @@ with nc() as conn:
 		dlg.advanced(conn)
 	elif op_mode == view_mode:
 		ui.separator()
-		full_graph = st.checkbox("Full graph",value=False)
-		communities = st.checkbox("Communities", value = False)
-	
+		c1, c2 = st.beta_columns(2)
+		full_graph = c1.checkbox("Full graph",value=False)
+		communities = True if full_graph else False #st.checkbox("Communities", value = False)
+
 		if full_graph:
 			center, radius = None, None
 		if not full_graph:
-			order = st.checkbox("Order by energy", value=False)
+			order = c2.checkbox("Order by energy", value=False)
 			fields = list(reversed(db.list_nodes(conn, order = order)))
 			u = 0
-			center = st.selectbox("Choose nodes",fields,index = u)
-			radius = st.number_input("Radius",value=3)
+			d1,d2 = st.beta_columns(2)
+			center = d1.selectbox("Choose nodes",fields,index = u)
+			radius = d2.number_input("Radius",value=3)
 		G = chem.graph(conn,center,radius)
 		gv.graph_plot(G, conn,center,radius, communities)
 
