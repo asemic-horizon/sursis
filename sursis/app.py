@@ -1,5 +1,6 @@
 import streamlit as st
 st.set_option('deprecation.showPyplotGlobalUse', False)
+st.set_page_config(layout='wide',page_title='casino rhizome',page_icon=":brain:")
 #st.beta_set_page_config(layout="wide")
 
 import networkx as nx
@@ -28,7 +29,7 @@ stats_mode = "Advanced"
 spath_mode = "Spath"
 
 with nc() as conn:
-	st.write("## `sursis`")
+#	st.write("## `sursis`")
 	col1, col2 = st.beta_columns(2)
 
 	major_mode = col1.radio(label="Major mode",\
@@ -75,7 +76,7 @@ with nc() as conn:
 	elif op_mode == stats_mode:
 		dlg.advanced(conn)
 	elif op_mode == view_mode:
-		ui.separator()
+		#ui.separator()
 		c1, c2 = st.beta_columns(2)
 		full_graph = c1.checkbox("Full graph",value=False)
 		communities = True if full_graph else False #st.checkbox("Communities", value = False)
@@ -95,8 +96,8 @@ with nc() as conn:
 		mintree = st.checkbox("Minimum tree", value = False)
 		if mintree:	gv.mintree(G,conn)
 
-		maxtree = st.checkbox("Maximum tree", value = False)
-		if maxtree: gv.maxtree(G,conn)
+		#maxtree = st.checkbox("Maximum tree", value = False)
+		#if maxtree: gv.maxtree(G,conn)
 
 		energy_density = st.checkbox("Energy density", value = True)
 		if energy_density:

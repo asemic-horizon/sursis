@@ -79,36 +79,42 @@ def dirichlet_potential(graph: nx.Graph,
 			mass: np.ndarray,
 			boundary_value,
 			crit_degree,
-			max_iter = 30,
-			tol = 1e-6):
+			max_iter = 40,
+			tol = 1e-7):
 	boundary_nodes = boundary(graph, crit_degree)
 	internal_nodes  = internal(graph, crit_degree)
 	deg = list(dict(graph.degree()).values())
-	
+
 	A = nx.adjacency_matrix(graph)
-	phi = -0.1*np.ones((graph.number_of_nodes(),))
+	print(np.linalg.eigvals(A.todense()))
+	dominant = 1.02*max(np.absolute(np.linalg.eigvals(A.todense())))
+	dominant = dominant/max(deg)
+	print(f"Scale by {dominant:3.2f}")
+	A = (1/dominant)*A
+	phi = -0.001*np.ones(shape=(graph.number_of_nodes(),))
 	
 	phi[boundary_nodes] = boundary_value
-
+        
 	# A fixed point of x[n+1]=C*x[n]+b is such that
 	# x = Cx+b => (I-C) x = b =>x = inv(I-C)*b
 	# Hence this iteration can be used to invert I-C.
 	#
 	# Now, Ly = (D-A)y = D(I-inv(D)*A) = mass
-	# Hence the iteration x(n+1)=inv(D)*A +mass
+	# Hence the iteration x(n+1)=inv(D)*A*x(n) +mass
 	#
 	# But only on internal nodes. 
 
 	err = np.inf; iter = 0
-	while err>tol and iter < max_iter:
+	while err>tol or iter < max_iter:
 		phi_hat = phi.copy()
 		for row in internal_nodes:
 			z = np.dot(A[row,:].todense(),phi)
-			phi_hat[row] = z.reshape(-1,)[0]/deg[row] - mass[row]
+			if deg[row]>0:
+				phi_hat[row] = z.reshape(-1,)[0]/deg[row] - mass[row]
 			
-		err = scipy.linalg.norm(phi_hat - phi)
+		err = scipy.linalg.norm(phi - phi_hat)
 		print(iter,err)
 		phi = phi_hat.copy()
 		iter += 1
 	logging.info(f"After {iter} steps, estimate change of {err:.4e}")
-	return phi
+	return dominant*phi

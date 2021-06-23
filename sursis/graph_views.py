@@ -13,8 +13,8 @@ import viz
 
 #cmap = "RdYlBu"
 #cmap = "PuOr"
-#cmap = "jet"
-cmap = "coolwarm"
+cmap = "jet"
+#cmap = "coolwarm"
 #cmap = "bwr"
 #cmap = "gist_stern"
 #cmap = "PiYG_r"

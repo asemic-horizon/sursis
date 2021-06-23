@@ -27,12 +27,13 @@ def graph(conn, center = None, radius = None, prop = "energy"):
                 degree=int(db.surefloat(degree)))
     for u,v, energy, mass, degree in edges:
         if u in G.nodes() and v in G.nodes():
-            if energy and mass:
-                w = norm.cdf(0.1 - db.surefloat(energy)*db.surefloat(mass))
+            if degree and db.surefloat(degree)>0:
+                 w = db.surefloat(degree)/(4+db.surefloat(energy))
+#                w = norm.cdf(0.1 - db.surefloat(energy)*db.surefloat(mass))
             else:
                 w = 0.5
-            G.add_edge(u,v,weight=w if w>0 else 0, 
-                energy = db.surefloat(energy), 
+            G.add_edge(u,v,weight=w if w>0 else 0,
+                energy = db.surefloat(energy),
                 mass = db.surefloat(mass),
                 degree = int(db.surefloat(degree)))
     if center and radius:
