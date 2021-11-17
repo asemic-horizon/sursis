@@ -30,7 +30,7 @@ spath_mode = "Spath"
 
 with nc() as conn:
 #	st.write("## `sursis`")
-	col1, col2 = st.beta_columns(2)
+	col1, col2 = st.columns(2)
 
 	major_mode = col1.radio(label="Major mode",\
                               options=["Browse","Edit"])
